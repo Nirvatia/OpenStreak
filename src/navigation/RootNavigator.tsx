@@ -2,8 +2,8 @@
  * Навигация «Мульта»: вкладки Сегодня · Дела · Привычки · Цели · Стая (свой таб-бар из src/ui)
  * и экраны поверх вкладок (настройки; позже — карточка привычки, итог дня).
  *
- * Пока экраны «Привычки», «Цели» и «Стая» не перенесены на «Мульт», на их вкладках
- * открываются старые экраны (Привычки, Отсчёт, Статистика).
+ * Пока экраны «Цели» и «Стая» не перенесены на «Мульт», на их вкладках открываются старые
+ * экраны (Отсчёт, Статистика).
  */
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import {
@@ -11,18 +11,19 @@ import {
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import React from 'react';
+import { HabitScreen } from '../features/habits/HabitScreen';
+import { HabitsScreen } from '../features/habits/HabitsScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { TasksScreen } from '../features/tasks/TasksScreen';
 import { TodayScreen } from '../features/today/TodayScreen';
 import { CountdownScreen } from '../screens/CountdownScreen';
-import { HabitsScreen } from '../screens/HabitsScreen';
 import { StatsScreen } from '../screens/StatsScreen';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
 import { TabBar, type TabItem } from '../ui/TabBar';
 
 export type TabKey = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
-export type RootStack = { tabs: undefined; settings: undefined };
+export type RootStack = { tabs: undefined; settings: undefined; habit: { id: string } };
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStack>();
@@ -52,7 +53,9 @@ function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
         {() => <TodayScreen onOpenSettings={() => navigation.navigate('settings')} />}
       </Tab.Screen>
       <Tab.Screen name="tasks" component={TasksScreen} />
-      <Tab.Screen name="habits" component={HabitsScreen} />
+      <Tab.Screen name="habits">
+        {() => <HabitsScreen onOpen={(id) => navigation.navigate('habit', { id })} />}
+      </Tab.Screen>
       <Tab.Screen name="goals" component={CountdownScreen} />
       <Tab.Screen name="pack" component={StatsScreen} />
     </Tab.Navigator>
@@ -66,6 +69,11 @@ export function RootNavigator() {
       screenOptions={{ headerShown: false, contentStyle: { backgroundColor: p.bg } }}
     >
       <Stack.Screen name="tabs" component={Tabs} />
+      <Stack.Screen name="habit">
+        {({ navigation, route }) => (
+          <HabitScreen habitId={route.params.id} onBack={() => navigation.goBack()} />
+        )}
+      </Stack.Screen>
       <Stack.Screen name="settings">
         {({ navigation }) => <SettingsScreen onBack={() => navigation.goBack()} />}
       </Stack.Screen>

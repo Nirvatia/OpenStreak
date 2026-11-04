@@ -35,6 +35,9 @@ export const TYPE = {
   numberXL: display(44, 'extrabold', 1.05, -0.02),
   /** вторая часть счёта: « / 8» */
   numberXLLight: display(44, 'semibold', 1.05, -0.02),
+  /** счёт на карточке привычки: «60 / 100» */
+  numberScore: display(34, 'extrabold', 1.05, -0.02),
+  numberScoreLight: display(34, 'semibold', 1.05, -0.02),
   /** заголовок экрана: «Привычки» */
   title: display(30, 'extrabold', 1.15, -0.02),
   /** звание: «Волк» */

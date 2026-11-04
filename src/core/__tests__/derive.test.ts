@@ -505,3 +505,23 @@ describe('вычеркнуть и вернуть', () => {
     expect(useDataStore.getState().data.tasks[id].updatedAt).toBe(after.updatedAt);
   });
 });
+
+describe('правка привычки из шторки', () => {
+  beforeEach(async () => {
+    resetForTests();
+    await initData({ storage: new MemoryStorage() });
+  });
+
+  test('меняет название, вид и напоминание; у вредной напоминания нет; пустое имя — без изменений', () => {
+    const id = A.createQuickHabit({ name: 'Подъём', kind: 'good', remindAt: '06:00' });
+    A.editHabitBasics(id, { name: '  Подъём в 6:00 ', kind: 'good', remindAt: '05:50' });
+    expect(useDataStore.getState().data.habits[id]).toMatchObject({
+      name: 'Подъём в 6:00',
+      remindAt: '05:50',
+    });
+    A.editHabitBasics(id, { name: 'Не курить', kind: 'bad', remindAt: '07:00' });
+    expect(useDataStore.getState().data.habits[id]).toMatchObject({ kind: 'bad', remindAt: '' });
+    A.editHabitBasics(id, { name: '   ', kind: 'good', remindAt: '' });
+    expect(useDataStore.getState().data.habits[id].name).toBe('Не курить');
+  });
+});

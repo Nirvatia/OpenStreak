@@ -261,6 +261,24 @@ export function createQuickHabit(input: {
   });
 }
 
+/** Правка из шторки: название, вид и напоминание; остальные поля привычки не трогаем. */
+export function editHabitBasics(
+  id: string,
+  input: { name: string; kind: HabitKind; remindAt: string }
+): void {
+  const name = input.name.trim();
+  if (!name) return;
+  commit(
+    compact([
+      draftPatch('habits', id, {
+        name,
+        kind: input.kind,
+        remindAt: input.kind === 'bad' ? '' : input.remindAt,
+      }),
+    ])
+  );
+}
+
 export function updateHabit(id: string, input: HabitInput): void {
   commit(compact([draftPatch('habits', id, habitFields(input))]));
 }

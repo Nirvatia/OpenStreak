@@ -79,6 +79,8 @@ type TagProps = {
   font?: 'label' | 'date' | 'badge';
   /** тень наклейки */
   shadow?: ShadowSize;
+  /** красная обводка — заметка о сливе */
+  alert?: boolean;
 };
 
 /** Плашка под углом: заголовки разделов, дата, «Договор № 007». */
@@ -90,6 +92,7 @@ export function Tag({
   header = true,
   font = 'label',
   shadow = 'none',
+  alert = false,
 }: TagProps) {
   const p = usePalette();
   return (
@@ -97,7 +100,7 @@ export function Tag({
       accessibilityRole={header ? 'header' : undefined}
       style={[
         styles.tag,
-        { backgroundColor: p[tone], borderColor: p.line },
+        { backgroundColor: p[tone], borderColor: alert ? p.red : p.line },
         hardShadow(p, shadow),
         tiltStyle(tilt),
       ]}

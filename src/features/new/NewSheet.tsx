@@ -42,24 +42,28 @@ export function NewSheet() {
 function NewSheetForm() {
   const t = useT();
   const today = useDataStore((s) => s.today);
-  const { open, kind: initialKind, editId, areaId: initialArea, hide } = useNewSheet();
+  const { open, kind: initialKind, editId, editHabitId, areaId: initialArea, hide } = useNewSheet();
   const toast = useToast((s) => s.show);
   const editing = useDataStore((s) => {
     const task = editId ? s.data.tasks[editId] : undefined;
     return task && task.deletedAt === null ? task : undefined;
   });
+  const editingHabit = useDataStore((s) => {
+    const habit = editHabitId ? s.data.habits[editHabitId] : undefined;
+    return habit && habit.deletedAt === null ? habit : undefined;
+  });
   const areas = useDataStore((s) => s.data.areas);
   const areaList = useMemo(() => live(areas).sort((a, b) => a.createdAt - b.createdAt), [areas]);
 
   const [kind, setKind] = useState<NewKind>(initialKind);
-  const [title, setTitle] = useState(editing?.title ?? '');
+  const [title, setTitle] = useState(editing?.title ?? editingHabit?.name ?? '');
   const [date, setDate] = useState<ISODate | null>(
     editing ? editing.date : initialKind === 'goal' ? null : today
   );
   const [priority, setPriority] = useState<Priority>(editing?.priority ?? 0);
-  const [remindAt, setRemindAt] = useState(editing?.remindAt ?? '');
+  const [remindAt, setRemindAt] = useState(editing?.remindAt ?? editingHabit?.remindAt ?? '');
   const [areaId, setAreaId] = useState<string | null>(editing ? editing.areaId : initialArea);
-  const [bad, setBad] = useState(false);
+  const [bad, setBad] = useState(editingHabit?.kind === 'bad');
   const [criterion, setCriterion] = useState('');
   const [reward, setReward] = useState('');
   const [penalty, setPenalty] = useState('');
@@ -76,7 +80,9 @@ function NewSheetForm() {
 
   const save = () => {
     if (!canSave) return;
-    if (editing) {
+    if (editingHabit) {
+      A.editHabitBasics(editingHabit.id, { name: title, kind: bad ? 'bad' : 'good', remindAt });
+    } else if (editing) {
       A.updateTask(editing.id, { title, date, priority, remindAt, areaId });
     } else if (kind === 'task') {
       A.createTask({ title, date, priority, remindAt, areaId });
@@ -103,12 +109,16 @@ function NewSheetForm() {
     <Sheet
       visible={open}
       onClose={hide}
-      title={t(editing ? 'new.kind.task' : 'new.title')}
+      title={t(editing ? 'new.kind.task' : editingHabit ? 'edit.habit' : 'new.title')}
       footer={
-        <Button label={t(editing ? 'edit.save' : 'new.save')} onPress={save} disabled={!canSave} />
+        <Button
+          label={t(editing || editingHabit ? 'edit.save' : 'new.save')}
+          onPress={save}
+          disabled={!canSave}
+        />
       }
     >
-      {!editing && (
+      {!editing && !editingHabit && (
         <Segmented<NewKind>
           label={t('new.kind')}
           on="bg"
@@ -122,7 +132,7 @@ function NewSheetForm() {
         label={t(kind === 'task' ? 'new.task' : kind === 'habit' ? 'new.habit' : 'new.goal')}
         value={title}
         onChangeText={setTitle}
-        autoFocus={!editing}
+        autoFocus={!editing && !editingHabit}
         returnKeyType="done"
         onSubmitEditing={save}
       />
