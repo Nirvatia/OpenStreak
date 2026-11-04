@@ -10,7 +10,7 @@ async function loadFs(): Promise<FsBundle> {
     if (legacy.documentDirectory && typeof legacy.writeAsStringAsync === 'function') {
       return { kind: 'legacy', mod: legacy };
     }
-  } catch (e) {
+  } catch {
     // легаси нет — пробуем новый API
   }
   const modern = await import('expo-file-system');

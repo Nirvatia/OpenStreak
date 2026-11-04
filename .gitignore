@@ -43,3 +43,5 @@ yarn-error.*
 # AI scripts
 scaffold.py
 scaffold.txt
+# tests
+coverage/

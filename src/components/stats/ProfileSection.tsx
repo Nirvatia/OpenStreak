@@ -47,7 +47,7 @@ export const ProfileSection: React.FC = () => {
 
       setImportSure(false);
       showToast('Профиль импортирован ✔');
-    } catch (e) {
+    } catch {
       setImportSure(false);
       showToast('Не удалось прочитать файл');
     }

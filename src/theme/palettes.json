@@ -1,0 +1,52 @@
+{
+  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x): text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3.",
+  "themes": {
+    "light": {
+      "bg": "#E4E1DA",
+      "paper": "#F1EFE9",
+      "ink": "#151515",
+      "pencil": "#5A5650",
+      "stamp": "#C8102E",
+      "debt": "#A50D26",
+      "rest": "#1F3FA8",
+      "nav": "#151515",
+      "navText": "#E4E1DA",
+      "navMuted": "#9A968E",
+      "onInk": "#E4E1DA",
+      "onInkMuted": "#BDBAB3",
+      "onStamp": "#E4E1DA"
+    },
+    "dark": {
+      "bg": "#141413",
+      "paper": "#1E1D1B",
+      "ink": "#ECE8DF",
+      "pencil": "#A39E93",
+      "stamp": "#FF5A67",
+      "debt": "#FF7A85",
+      "rest": "#8FA6FF",
+      "nav": "#0A0A09",
+      "navText": "#ECE8DF",
+      "navMuted": "#8F8A80",
+      "onInk": "#141413",
+      "onInkMuted": "#3A3835",
+      "onStamp": "#141413"
+    }
+  },
+  "checks": [
+    ["ink", "bg", "text"],
+    ["ink", "paper", "text"],
+    ["pencil", "bg", "text"],
+    ["pencil", "paper", "text"],
+    ["debt", "bg", "text"],
+    ["debt", "paper", "text"],
+    ["stamp", "bg", "text"],
+    ["stamp", "paper", "text"],
+    ["rest", "bg", "text"],
+    ["rest", "paper", "text"],
+    ["onInk", "ink", "text"],
+    ["onInkMuted", "ink", "text"],
+    ["onStamp", "stamp", "text"],
+    ["navText", "nav", "text"],
+    ["navMuted", "nav", "text"]
+  ]
+}
