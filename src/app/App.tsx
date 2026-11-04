@@ -11,6 +11,8 @@ import { usePrefsStore } from '../store/prefsStore';
 import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
+import { CatalogScreen } from '../ui/catalog/CatalogScreen';
+import { isCatalogRequested } from '../ui/catalog/isCatalog';
 import { bootstrap } from './bootstrap';
 import { WebFrame } from './WebFrame';
 
@@ -38,6 +40,17 @@ export const App: React.FC = () => {
       >
         <ActivityIndicator size="large" color={currentTheme.colors.accent} />
       </View>
+    );
+  }
+
+  if (isCatalogRequested()) {
+    return (
+      <WebFrame>
+        <SafeAreaProvider>
+          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+          <CatalogScreen />
+        </SafeAreaProvider>
+      </WebFrame>
     );
   }
 
