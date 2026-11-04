@@ -395,7 +395,7 @@ describe('план напоминаний', () => {
     A.createTask({ title: 'Утро', remindAt: '08:00' }); // уже прошло
     const done = A.createTask({ title: 'Готово', remindAt: '19:00' });
     A.toggleTask(done);
-    const plan = planReminders(data(), new Date(NOW));
+    const plan = planReminders(data(), new Date(NOW)).filter((p) => p.kind === 'task');
     expect(plan.map((p) => p.title)).toEqual(['Отчёт']);
     expect(plan[0].at.getHours()).toBe(18);
   });
@@ -404,7 +404,9 @@ describe('план напоминаний', () => {
     const id = habit({ days: [1, 2, 3, 4, 5] }); // будни
     A.toggleCheck(id, TODAY); // сегодня уже сделано
     A.addRest(id, '2026-11-06', '2026-11-06'); // пятница — отдых
-    const days = planReminders(data(), new Date(NOW)).map((p) => p.at.toDateString());
+    const days = planReminders(data(), new Date(NOW))
+      .filter((p) => p.kind === 'habit')
+      .map((p) => p.at.toDateString());
     // ср 4 — сделано, пт 6 — отдых, сб/вс — не в плане; остаются чт 5, пн 9, вт 10
     expect(days).toEqual([
       new Date('2026-11-05T21:00').toDateString(),
@@ -415,7 +417,25 @@ describe('план напоминаний', () => {
 
   test('для вредной привычки напоминаний нет', () => {
     habit({ kind: 'bad' });
-    expect(planReminders(data(), new Date(NOW))).toHaveLength(0);
+    expect(planReminders(data(), new Date(NOW)).filter((p) => p.kind === 'habit')).toHaveLength(0);
+  });
+
+  test('итог дня: каждый вечер в выбранное время, кроме закрытых дней; выключено — нет', () => {
+    A.saveReview('2026-11-05', 4, '');
+    const plan = planReminders(data(), new Date(NOW)).filter((p) => p.kind === 'review');
+    // по умолчанию 21:30; 5 ноября уже закрыт заранее — пропускаем
+    expect(plan.map((p) => p.subjectId)).toEqual([
+      TODAY,
+      '2026-11-06',
+      '2026-11-07',
+      '2026-11-08',
+      '2026-11-09',
+      '2026-11-10',
+    ]);
+    expect(plan[0].at.getHours()).toBe(21);
+    expect(plan[0].at.getMinutes()).toBe(30);
+    A.updateSettings({ reviewAt: '' });
+    expect(planReminders(data(), new Date(NOW)).filter((p) => p.kind === 'review')).toHaveLength(0);
   });
 
   test('не больше лимита iOS и по порядку времени', () => {

@@ -1,22 +1,34 @@
 /**
  * Настройки (design/mult/M-Settings): тема, характер (тон, цитаты, звания), дни.
- * Всё хранится в настройках в данных и синхронизируется. Язык, итог дня, места и бэкап
- * появятся вместе со своими экранами.
+ * Всё хранится в настройках в данных и синхронизируется. Итог дня — время и напоминание;
+ * данные — бэкап в файл и восстановление. Язык появится вместе с en/es, места — на этапе 5.
  */
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
 import { settingsOf } from '../../core/settings';
-import { useDataStore } from '../../core/store';
+import { replaceAll, useDataStore } from '../../core/store';
+import { exportData, importData } from '../../services/exportImport';
+import { askNotificationPermission } from '../../services/notifications';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Scheme, type ThemeMode } from '../../theme/palette';
 import { SPACE, TILT } from '../../theme/metrics';
 import { ScreenHeader, SectionTitle } from '../../ui/ScreenHeader';
 import { SettingRow } from '../../ui/SettingRow';
 import { Card } from '../../ui/Sticker';
 import { ThemeTile } from '../../ui/ThemeTile';
+import { UNDO_MS, useToast } from '../../ui/toast';
+
+/** Системный выбор времени есть только на телефонах. */
+const HAS_PICKER = Platform.OS !== 'web';
+/** Время итога, которое ставим при включении напоминания. */
+const DEFAULT_REVIEW_AT = '21:30';
+
+const clock = (d: Date) =>
+  `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 
 /** Порядок плиток как в макете: День, Вечер, как в системе. */
 const ORDER: ThemeMode[] = ['light', 'dark', 'system'];
@@ -31,7 +43,47 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
-  const s = settingsOf(useDataStore((st) => st.data));
+  const data = useDataStore((st) => st.data);
+  const s = settingsOf(data);
+  const scheme = useThemeStore((st) => st.scheme);
+  const toast = useToast((st) => st.show);
+  const [picker, setPicker] = useState(false);
+  const [importArmed, setImportArmed] = useState(false);
+
+  const toggleReview = async (on: boolean) => {
+    A.updateSettings({ reviewAt: on ? DEFAULT_REVIEW_AT : '' });
+    if (on) await askNotificationPermission();
+  };
+
+  const exportBackup = async () => {
+    try {
+      await exportData(scheme);
+    } catch {
+      toast(t('toast.exportFailed'));
+    }
+  };
+
+  // Импорт заменяет всё — первое нажатие только предупреждает.
+  const importBackup = async () => {
+    const hasData = Object.values(data.tasks).length + Object.values(data.habits).length > 0;
+    if (hasData && !importArmed) {
+      setImportArmed(true);
+      toast(t('toast.importConfirm'));
+      setTimeout(() => setImportArmed(false), UNDO_MS);
+      return;
+    }
+    setImportArmed(false);
+    try {
+      const result = await importData();
+      if (!result) return;
+      await replaceAll(result.snapshot);
+      // Старый формат хранил тему отдельно от данных.
+      if (result.format === 4 && result.theme) A.updateSettings({ theme: result.theme });
+      toast(t('toast.imported'));
+    } catch {
+      toast(t('toast.importFailed'));
+    }
+  };
 
   return (
     <ScrollView
@@ -91,10 +143,54 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
             label={t('settings.weekStart')}
             value={t(s.weekStart === 1 ? 'week.from.1' : 'week.from.0')}
             onPress={() => A.updateSettings({ weekStart: s.weekStart === 1 ? 0 : 1 })}
+          />
+          <SettingRow
+            label={t('settings.reviewRemind')}
+            hint={t('settings.reviewRemindHint')}
+            value={!!s.reviewAt}
+            onChange={toggleReview}
+            last={!s.reviewAt}
+          />
+          {!!s.reviewAt && (
+            <SettingRow
+              label={t('settings.reviewAt')}
+              value={s.reviewAt}
+              onPress={() => HAS_PICKER && setPicker(true)}
+              last
+            />
+          )}
+        </Card>
+      </View>
+
+      <View style={styles.group}>
+        <SectionTitle title={t('settings.data')} tilt={1} />
+        <Card padded={false}>
+          <SettingRow
+            label={t('settings.export')}
+            hint={t('settings.exportHint')}
+            value={t('settings.exportValue')}
+            onPress={exportBackup}
+          />
+          <SettingRow
+            label={t('settings.import')}
+            hint={t('settings.importHint')}
+            value={t('settings.importValue')}
+            onPress={importBackup}
             last
           />
         </Card>
       </View>
+
+      {picker && (
+        <DateTimePicker
+          mode="time"
+          value={new Date(`2000-01-01T${s.reviewAt || DEFAULT_REVIEW_AT}:00`)}
+          onChange={(e: DateTimePickerEvent, value?: Date) => {
+            setPicker(false);
+            if (e.type === 'set' && value) A.updateSettings({ reviewAt: clock(value) });
+          }}
+        />
+      )}
     </ScrollView>
   );
 }

@@ -4,6 +4,8 @@
  * даже если приложение закрыто.
  */
 import * as Notifications from 'expo-notifications';
+import { translate, type MessageKey } from '../i18n';
+import { usePrefsStore } from '../store/prefsStore';
 import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 import { REMINDER_ID_PREFIX, type PlannedReminder } from '../core/reminders';
@@ -56,9 +58,17 @@ export async function askNotificationPermission(): Promise<boolean> {
 }
 
 function content(r: PlannedReminder): Notifications.NotificationContentInput {
-  return r.kind === 'task'
-    ? { title: 'Задача', body: r.title, data: { kind: r.kind, id: r.subjectId } }
-    : { title: r.title, body: 'Не забудь сегодня', data: { kind: r.kind, id: r.subjectId } };
+  const { locale, tone } = usePrefsStore.getState();
+  const t = (key: MessageKey) => translate(locale, tone, key);
+  const data = { kind: r.kind, id: r.subjectId };
+  switch (r.kind) {
+    case 'task':
+      return { title: t('notify.task'), body: r.title, data };
+    case 'habit':
+      return { title: r.title, body: t('notify.habit'), data };
+    case 'review':
+      return { title: t('notify.reviewTitle'), body: t('notify.reviewBody'), data };
+  }
 }
 
 /**

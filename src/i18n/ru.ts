@@ -399,6 +399,30 @@ export const ru = {
   'closed.streak': 'серия {count}',
   'closed.ok': { plain: 'Хорошо', bro: 'Понял' },
   'closed.tomorrow': 'завтра первое — в {time}: {title}',
+  // Уведомления
+  'notify.task': 'Задача',
+  'notify.habit': 'Не забудь сегодня',
+  'notify.reviewTitle': 'Итог дня',
+  'notify.reviewBody': { plain: 'Как прошёл день? Подведи итог.', bro: 'Как день? Закрой его.' },
+
+  // Настройки: итог дня и данные
+  'settings.reviewRemind': 'Напоминать об итоге',
+  'settings.reviewRemindHint': 'вечером, пока день не закрыт',
+  'settings.reviewAt': 'Итог дня',
+  'settings.data': 'Данные',
+  'settings.export': 'Сохранить бэкап',
+  'settings.exportHint': 'дела, привычки и цели — в файл',
+  'settings.exportValue': 'файл',
+  'settings.import': 'Восстановить из бэкапа',
+  'settings.importHint': 'заменит текущие данные',
+  'settings.importValue': 'выбрать',
+  'toast.importConfirm': {
+    plain: 'Текущие данные заменятся. Нажмите ещё раз',
+    bro: 'Всё текущее заменится. Жми ещё раз.',
+  },
+  'toast.imported': { plain: 'Данные восстановлены', bro: 'Восстановил. Всё на месте.' },
+  'toast.importFailed': 'Не удалось прочитать файл',
+  'toast.exportFailed': 'Не удалось сохранить файл',
 } as const satisfies Record<string, Message>;
 
 export type MessageKey = keyof typeof ru;

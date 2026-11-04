@@ -11,13 +11,14 @@ import {
   type RestPeriod,
   type Snapshot,
 } from './model';
+import { settingsOf } from './settings';
 
 export type PlannedReminder = {
   /** Стабильный идентификатор: меняется, только если меняется смысл или время. */
   id: string;
-  kind: 'task' | 'habit';
+  kind: 'task' | 'habit' | 'review';
   subjectId: string;
-  /** название задачи/привычки — текст уведомления собирает сервис */
+  /** название задачи/привычки (для итога дня — пусто) — текст уведомления собирает сервис */
   title: string;
   at: Date;
 };
@@ -86,6 +87,25 @@ export function planReminders(snap: Snapshot, now: Date): PlannedReminder[] {
         kind: 'habit',
         subjectId: h.id,
         title: h.name,
+        at: when,
+      });
+    }
+  }
+
+  // Итог дня: каждый вечер в выбранное время, пока день не закрыт.
+  const { reviewAt } = settingsOf(snap);
+  if (reviewAt) {
+    for (let i = 0; i < HABIT_HORIZON_DAYS; i++) {
+      const d = addDays(today, i);
+      const review = snap.reviews[d];
+      if (review && review.deletedAt === null) continue;
+      const when = at(d, reviewAt);
+      if (when <= now) continue;
+      out.push({
+        id: `${REMINDER_ID_PREFIX}r:${d}:${reviewAt}`,
+        kind: 'review',
+        subjectId: d,
+        title: '',
         at: when,
       });
     }

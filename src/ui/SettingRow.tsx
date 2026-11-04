@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     gap: SPACE.md,
     minHeight: 54,
     paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   text: { flex: 1 },
   value: { flexDirection: 'row', alignItems: 'center', gap: SPACE.tight },
