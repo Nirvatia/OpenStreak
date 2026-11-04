@@ -11,18 +11,25 @@ import {
   GolosText_600SemiBold,
   GolosText_700Bold,
 } from '@expo-google-fonts/golos-text';
+import {
+  useFonts as useOswald,
+  Oswald_600SemiBold,
+  Oswald_700Bold,
+} from '@expo-google-fonts/oswald';
 
 export function useAppFonts() {
-  const [mLoaded] = useManrope({
-    Manrope_500Medium,
-    Manrope_700Bold,
-    Manrope_800ExtraBold,
-  });
+  const [oLoaded] = useOswald({ Oswald_600SemiBold, Oswald_700Bold });
   const [gLoaded] = useGolos({
     GolosText_400Regular,
     GolosText_500Medium,
     GolosText_600SemiBold,
     GolosText_700Bold,
   });
-  return mLoaded && gLoaded;
+  // Manrope — только для старых экранов.
+  const [mLoaded] = useManrope({
+    Manrope_500Medium,
+    Manrope_700Bold,
+    Manrope_800ExtraBold,
+  });
+  return oLoaded && gLoaded && mLoaded;
 }
