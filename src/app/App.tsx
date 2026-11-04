@@ -12,6 +12,7 @@ import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
 import { CatalogScreen } from '../ui/catalog/CatalogScreen';
+import { ToastHost } from '../ui/ToastHost';
 import { isCatalogRequested } from '../ui/catalog/isCatalog';
 import { bootstrap } from './bootstrap';
 import { WebFrame } from './WebFrame';
@@ -46,10 +47,13 @@ export const App: React.FC = () => {
   if (isCatalogRequested()) {
     return (
       <WebFrame>
-        <SafeAreaProvider>
-          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-          <CatalogScreen />
-        </SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+            <CatalogScreen />
+            <ToastHost />
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
       </WebFrame>
     );
   }

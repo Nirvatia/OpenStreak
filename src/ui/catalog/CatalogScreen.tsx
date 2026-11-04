@@ -12,6 +12,7 @@ import { LINE, SPACE } from '../../theme/stamp';
 import { TYPE, type TypeVariant } from '../../theme/type';
 import { CatalogControls } from './CatalogControls';
 import { CatalogRows } from './CatalogRows';
+import { CatalogShell } from './CatalogShell';
 import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, WolfSeal, type UiIconName } from '../icons';
 
 const SWATCHES: (keyof Palette)[] = [
@@ -158,6 +159,7 @@ export function CatalogScreen() {
 
       <CatalogRows Section={Section} />
       <CatalogControls Section={Section} />
+      <CatalogShell Section={Section} />
     </ScrollView>
   );
 }
