@@ -525,3 +525,43 @@ describe('правка привычки из шторки', () => {
     expect(useDataStore.getState().data.habits[id].name).toBe('Не курить');
   });
 });
+
+describe('договор: правка, удаление и возврат', () => {
+  beforeEach(async () => {
+    resetForTests();
+    await initData({ storage: new MemoryStorage() });
+  });
+
+  test('правка меняет поля, пустой текст — без изменений; удалённый возвращается как был', () => {
+    const id = A.createGoal(null, {
+      text: 'Полумарафон',
+      criterion: '',
+      reward: '',
+      penalty: '',
+      deadline: null,
+    });
+    A.editGoal(id, {
+      text: ' Пробежать полумарафон ',
+      criterion: '21,1 км',
+      reward: 'Кроссы',
+      penalty: '5 000 ₽ в общак',
+      deadline: '2026-12-20',
+    });
+    const g = useDataStore.getState().data.goals[id];
+    expect(g).toMatchObject({
+      text: 'Пробежать полумарафон',
+      deadline: '2026-12-20',
+      areaId: null,
+    });
+    A.editGoal(id, { text: ' ', criterion: '', reward: '', penalty: '', deadline: null });
+    expect(useDataStore.getState().data.goals[id].text).toBe('Пробежать полумарафон');
+    A.deleteGoal(id);
+    expect(useDataStore.getState().data.goals[id].deletedAt).not.toBeNull();
+    A.restoreGoal(id);
+    expect(useDataStore.getState().data.goals[id]).toMatchObject({
+      deletedAt: null,
+      reward: 'Кроссы',
+      createdAt: g.createdAt,
+    });
+  });
+});

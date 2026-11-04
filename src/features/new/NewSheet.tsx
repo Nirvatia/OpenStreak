@@ -42,7 +42,15 @@ export function NewSheet() {
 function NewSheetForm() {
   const t = useT();
   const today = useDataStore((s) => s.today);
-  const { open, kind: initialKind, editId, editHabitId, areaId: initialArea, hide } = useNewSheet();
+  const {
+    open,
+    kind: initialKind,
+    editId,
+    editHabitId,
+    editGoalId,
+    areaId: initialArea,
+    hide,
+  } = useNewSheet();
   const toast = useToast((s) => s.show);
   const editing = useDataStore((s) => {
     const task = editId ? s.data.tasks[editId] : undefined;
@@ -52,21 +60,34 @@ function NewSheetForm() {
     const habit = editHabitId ? s.data.habits[editHabitId] : undefined;
     return habit && habit.deletedAt === null ? habit : undefined;
   });
+  const editingGoal = useDataStore((s) => {
+    const goal = editGoalId ? s.data.goals[editGoalId] : undefined;
+    return goal && goal.deletedAt === null ? goal : undefined;
+  });
+  const editingAny = !!(editing || editingHabit || editingGoal);
   const areas = useDataStore((s) => s.data.areas);
   const areaList = useMemo(() => live(areas).sort((a, b) => a.createdAt - b.createdAt), [areas]);
 
   const [kind, setKind] = useState<NewKind>(initialKind);
-  const [title, setTitle] = useState(editing?.title ?? editingHabit?.name ?? '');
+  const [title, setTitle] = useState(
+    editing?.title ?? editingHabit?.name ?? editingGoal?.text ?? ''
+  );
   const [date, setDate] = useState<ISODate | null>(
-    editing ? editing.date : initialKind === 'goal' ? null : today
+    editing
+      ? editing.date
+      : editingGoal
+        ? editingGoal.deadline
+        : initialKind === 'goal'
+          ? null
+          : today
   );
   const [priority, setPriority] = useState<Priority>(editing?.priority ?? 0);
   const [remindAt, setRemindAt] = useState(editing?.remindAt ?? editingHabit?.remindAt ?? '');
   const [areaId, setAreaId] = useState<string | null>(editing ? editing.areaId : initialArea);
   const [bad, setBad] = useState(editingHabit?.kind === 'bad');
-  const [criterion, setCriterion] = useState('');
-  const [reward, setReward] = useState('');
-  const [penalty, setPenalty] = useState('');
+  const [criterion, setCriterion] = useState(editingGoal?.criterion ?? '');
+  const [reward, setReward] = useState(editingGoal?.reward ?? '');
+  const [penalty, setPenalty] = useState(editingGoal?.penalty ?? '');
   const [picker, setPicker] = useState<'date' | 'time' | null>(null);
 
   const changeKind = (k: NewKind) => {
@@ -80,7 +101,9 @@ function NewSheetForm() {
 
   const save = () => {
     if (!canSave) return;
-    if (editingHabit) {
+    if (editingGoal) {
+      A.editGoal(editingGoal.id, { text: title, criterion, reward, penalty, deadline: date });
+    } else if (editingHabit) {
       A.editHabitBasics(editingHabit.id, { name: title, kind: bad ? 'bad' : 'good', remindAt });
     } else if (editing) {
       A.updateTask(editing.id, { title, date, priority, remindAt, areaId });
@@ -93,6 +116,14 @@ function NewSheetForm() {
     }
     hide();
     toast(t('toast.saved'));
+  };
+
+  const removeGoal = () => {
+    if (!editingGoal) return;
+    const id = editingGoal.id;
+    A.deleteGoal(id);
+    hide();
+    toast(t('toast.goalDeleted'), { label: t('common.return'), onPress: () => A.restoreGoal(id) });
   };
 
   const onPick = (e: DateTimePickerEvent, value?: Date) => {
@@ -109,16 +140,28 @@ function NewSheetForm() {
     <Sheet
       visible={open}
       onClose={hide}
-      title={t(editing ? 'new.kind.task' : editingHabit ? 'edit.habit' : 'new.title')}
+      title={t(
+        editing
+          ? 'new.kind.task'
+          : editingHabit
+            ? 'edit.habit'
+            : editingGoal
+              ? 'edit.goal'
+              : 'new.title'
+      )}
       footer={
-        <Button
-          label={t(editing || editingHabit ? 'edit.save' : 'new.save')}
-          onPress={save}
-          disabled={!canSave}
-        />
+        <View style={styles.footer}>
+          {editingGoal && <Button label={t('edit.delete')} variant="danger" onPress={removeGoal} />}
+          <Button
+            label={t(editingAny ? 'edit.save' : 'new.save')}
+            onPress={save}
+            disabled={!canSave}
+            style={styles.grow}
+          />
+        </View>
       }
     >
-      {!editing && !editingHabit && (
+      {!editingAny && (
         <Segmented<NewKind>
           label={t('new.kind')}
           on="bg"
@@ -132,7 +175,7 @@ function NewSheetForm() {
         label={t(kind === 'task' ? 'new.task' : kind === 'habit' ? 'new.habit' : 'new.goal')}
         value={title}
         onChangeText={setTitle}
-        autoFocus={!editing && !editingHabit}
+        autoFocus={!editingAny}
         returnKeyType="done"
         onSubmitEditing={save}
       />
@@ -301,6 +344,8 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 }
 
 const styles = StyleSheet.create({
+  footer: { flexDirection: 'row', gap: SPACE.md },
+  grow: { flex: 1 },
   group: { gap: SPACE.sm },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
   tiles: { flexDirection: 'row', gap: SPACE.tight },

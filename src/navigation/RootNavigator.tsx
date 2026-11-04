@@ -1,9 +1,6 @@
 /**
  * Навигация «Мульта»: вкладки Сегодня · Дела · Привычки · Цели · Стая (свой таб-бар из src/ui)
- * и экраны поверх вкладок (настройки; позже — карточка привычки, итог дня).
- *
- * Пока экраны «Цели» и «Стая» не перенесены на «Мульт», на их вкладках открываются старые
- * экраны (Отсчёт, Статистика).
+ * и экраны поверх вкладок: карточка привычки, настройки (позже — итог дня).
  */
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import {
@@ -11,13 +8,13 @@ import {
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import React from 'react';
+import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
 import { HabitsScreen } from '../features/habits/HabitsScreen';
+import { PackScreen } from '../features/pack/PackScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { TasksScreen } from '../features/tasks/TasksScreen';
 import { TodayScreen } from '../features/today/TodayScreen';
-import { CountdownScreen } from '../screens/CountdownScreen';
-import { StatsScreen } from '../screens/StatsScreen';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
 import { TabBar, type TabItem } from '../ui/TabBar';
@@ -56,8 +53,8 @@ function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
       <Tab.Screen name="habits">
         {() => <HabitsScreen onOpen={(id) => navigation.navigate('habit', { id })} />}
       </Tab.Screen>
-      <Tab.Screen name="goals" component={CountdownScreen} />
-      <Tab.Screen name="pack" component={StatsScreen} />
+      <Tab.Screen name="goals" component={GoalsScreen} />
+      <Tab.Screen name="pack" component={PackScreen} />
     </Tab.Navigator>
   );
 }

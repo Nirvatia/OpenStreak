@@ -188,6 +188,28 @@ export function toggleGoal(id: string): void {
   commit(compact([draftPatch('goals', id, { doneOn: g.doneOn ? null : todayStr() })]));
 }
 
+/** Правка договора из шторки: текст, срок, зачёт, награда, «если слил». Пустой текст — без изменений. */
+export function editGoal(id: string, input: Omit<GoalInput, 'doneOn'>): void {
+  const text = input.text.trim();
+  if (!text) return;
+  commit(
+    compact([
+      draftPatch('goals', id, {
+        text,
+        criterion: input.criterion.trim(),
+        reward: input.reward.trim(),
+        penalty: input.penalty.trim(),
+        deadline: input.deadline,
+      }),
+    ])
+  );
+}
+
+/** Отменить удаление цели. */
+export function restoreGoal(id: string): void {
+  commit(compact([draftRestore('goals', id)]));
+}
+
 export function deleteGoal(id: string): void {
   commit(compact([draftDelete('goals', id)]));
 }
