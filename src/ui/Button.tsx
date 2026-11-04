@@ -1,13 +1,21 @@
 /**
- * Кнопки «Луны»: главная — лунным светом (инверсия), второстепенная — в тонкой рамке,
- * опасная — красной рамкой. Нажатие — смена подложки; прозрачность не меняем (правила контраста).
+ * Кнопки «Мульта»: главная — жёлтая наклейка (Unbounded), второго плана — светлая наклейка,
+ * опасная — красная обводка («Слил сегодня»). Нажатие — тень пропадает, кнопка «вдавливается»;
+ * прозрачность не меняем (правила контраста).
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE, SIZE } from '../theme/metrics';
+import { RADIUS, SHADOW, SIZE, SPACE, STROKE } from '../theme/metrics';
+import { hardShadow, type ShadowSize } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
+
+/** Смещение «вдавленной» наклейки: тень исчезает, кнопка садится на её место. */
+function pressed(size: Exclude<ShadowSize, 'none'>): ViewStyle {
+  const o = SHADOW[size];
+  return { transform: [{ translateX: o }, { translateY: o }] };
+}
 
 type ButtonProps = {
   label: string;
@@ -20,27 +28,29 @@ type ButtonProps = {
 export function Button({ label, onPress, variant = 'primary', disabled, style }: ButtonProps) {
   const p = usePalette();
   const primary = variant === 'primary';
-  const fg = primary ? p.onText : variant === 'danger' ? p.blood : p.text;
+  const danger = variant === 'danger';
+  const bg = primary ? (disabled ? p.track : p.sun) : p.surface;
+  const fg = primary ? (disabled ? p.muted : p.onSun) : danger ? p.red : p.text;
+  const shadow = primary ? 'lg' : 'sm';
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [
+      style={({ pressed: down }) => [
         styles.button,
-        primary
-          ? { backgroundColor: disabled ? p.muted : pressed ? p.textShade : p.text }
-          : {
-              height: 48,
-              borderWidth: LINE.hair,
-              borderColor: variant === 'danger' ? p.blood : p.line,
-              backgroundColor: pressed ? p.surface : 'transparent',
-            },
+        {
+          height: primary ? SIZE.action : SIZE.button,
+          backgroundColor: bg,
+          borderColor: danger ? p.red : p.line,
+          borderRadius: primary ? 18 : RADIUS.md,
+        },
+        !danger && !disabled && (down ? pressed(shadow) : hardShadow(p, shadow)),
         style,
       ]}
     >
-      <Text style={[primary ? TYPE.button : TYPE.item, { color: fg }]}>{label}</Text>
+      <Text style={[primary ? TYPE.button : TYPE.control, { color: fg }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -50,53 +60,76 @@ type IconButtonProps = {
   /** обязательно: у кнопки нет текста */
   label: string;
   onPress?: () => void;
-  /** bare — только иконка; solid — квадрат лунного цвета («+ привычка») */
-  variant?: 'bare' | 'solid';
+  /** round — круглая наклейка (шапка), sun — жёлтая круглая («+»), bare — только значок */
+  variant?: 'round' | 'sun' | 'bare';
   tone?: 'text' | 'muted';
+  /** подложка круглой кнопки: фон экрана внутри шторки */
+  on?: 'surface' | 'bg';
 };
 
 export function IconButton({
   icon,
   label,
   onPress,
-  variant = 'bare',
+  variant = 'round',
   tone = 'text',
+  on = 'surface',
 }: IconButtonProps) {
   const p = usePalette();
-  const solid = variant === 'solid';
+  if (variant === 'bare') {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={onPress}
+        hitSlop={4}
+        style={({ pressed: down }) => [
+          styles.bare,
+          down && { backgroundColor: p.tag, borderRadius: RADIUS.pill },
+        ]}
+      >
+        <Icon name={icon} size={22} tone={tone} />
+      </Pressable>
+    );
+  }
+  const sun = variant === 'sun';
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      hitSlop={solid ? 0 : 4}
-      style={({ pressed }) => [
-        styles.icon,
-        solid && { backgroundColor: pressed ? p.textShade : p.text },
-        !solid && pressed && { backgroundColor: p.surface },
+      style={({ pressed: down }) => [
+        styles.round,
+        { backgroundColor: sun ? p.sun : p[on], borderColor: p.line },
+        down ? pressed('sm') : on === 'surface' && hardShadow(p, 'sm'),
       ]}
     >
-      <Icon name={icon} size={solid ? 18 : 22} tone={solid ? 'onText' : tone} />
+      <Icon name={icon} size={20} tone={sun ? 'onSun' : tone} />
     </Pressable>
   );
 }
 
-/** Строка-приглашение вверху списка: «+ Запиши дело или привычку» (вместо плавающей «+»). */
+/** Строка-приглашение: «+ Запиши дело или привычку» — пунктирная рамка, жёлтый кружок с плюсом. */
 export function AddRow({ label, onPress }: { label: string; onPress?: () => void }) {
   const p = usePalette();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.add, { backgroundColor: pressed ? p.raised : p.surface }]}
+      style={({ pressed: down }) => [
+        styles.add,
+        { borderColor: p.line, backgroundColor: down ? p.tag : 'transparent' },
+      ]}
     >
-      <Icon name="plus" size={18} tone="text" />
-      <Text style={[TYPE.body, { color: p.muted }]}>{label}</Text>
+      <View style={[styles.plus, { backgroundColor: p.sun, borderColor: p.line }]}>
+        <Icon name="plus" size={16} tone="onSun" />
+      </View>
+      <Text style={[TYPE.item, { color: p.text }]}>{label}</Text>
     </Pressable>
   );
 }
 
-/** Строка-ссылка с текстом и стрелкой: «Итог дня →». */
+/** Строка-ссылка-наклейка с текстом и стрелкой: «Итог дня →». */
 export function LinkRow({
   title,
   sub,
@@ -111,37 +144,62 @@ export function LinkRow({
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.link, { backgroundColor: pressed ? p.raised : p.surface }]}
+      style={({ pressed: down }) => [
+        styles.link,
+        { backgroundColor: p.surface, borderColor: p.line },
+        down ? pressed('md') : hardShadow(p, 'md'),
+      ]}
     >
       <View style={{ flex: 1 }}>
         <Text style={[TYPE.itemStrong, { color: p.text }]}>{title}</Text>
         {!!sub && <Text style={[TYPE.meta, { color: p.muted }]}>{sub}</Text>}
       </View>
-      <Icon name="arrow" size={18} tone="muted" />
+      <Icon name="arrow" size={20} tone="text" />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    height: SIZE.action,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 22,
+    borderWidth: STROKE.outline,
   },
-  icon: { width: SIZE.touch, height: SIZE.touch, alignItems: 'center', justifyContent: 'center' },
+  bare: { width: SIZE.touch, height: SIZE.touch, alignItems: 'center', justifyContent: 'center' },
+  round: {
+    width: SIZE.roundButton,
+    height: SIZE.roundButton,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: STROKE.outline,
+    borderRadius: RADIUS.pill,
+  },
   add: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    minHeight: 48,
+    gap: SPACE.md,
+    minHeight: 54,
     paddingHorizontal: 14,
+    borderWidth: STROKE.outline,
+    borderStyle: 'dashed',
+    borderRadius: RADIUS.md,
+  },
+  plus: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: STROKE.outline,
+    borderRadius: RADIUS.pill,
   },
   link: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    minHeight: 56,
-    paddingHorizontal: 14,
+    gap: SPACE.md,
+    minHeight: SIZE.row,
+    paddingHorizontal: SPACE.lg,
+    borderWidth: STROKE.outline,
+    borderRadius: RADIUS.lg,
   },
 });

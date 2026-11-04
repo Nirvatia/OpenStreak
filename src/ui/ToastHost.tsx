@@ -1,5 +1,5 @@
 /**
- * Показ тоста: плашка лунного цвета (инверсия) у нижнего края, над таб-баром и над
+ * Показ тоста: наклейка в цвет, обратный теме, у нижнего края, над таб-баром и над
  * системной полосой навигации (нижний отступ безопасной зоны). `bottom` — высота таб-бара
  * без системного отступа, если он есть на экране. Появляется сдвигом снизу (без прозрачности — в нём текст). Объявляется для чтения с экрана.
  */
@@ -13,7 +13,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { usePalette } from '../store/themeStore';
-import { SPACE } from '../theme/metrics';
+import { RADIUS, SPACE, STROKE } from '../theme/metrics';
+import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { useToast } from './toast';
 
@@ -45,9 +46,14 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
       <Animated.View
         pointerEvents={visible ? 'auto' : 'none'}
         accessibilityLiveRegion="polite"
-        style={[styles.toast, { backgroundColor: p.text }, slide]}
+        style={[
+          styles.toast,
+          { backgroundColor: p.toast, borderColor: p.line },
+          hardShadow(p, 'md'),
+          slide,
+        ]}
       >
-        <Text style={[TYPE.item, styles.text, { color: p.onText }]}>{current.text}</Text>
+        <Text style={[TYPE.control, styles.text, { color: p.onToast }]}>{current.text}</Text>
         {current.action && (
           <Pressable
             accessibilityRole="button"
@@ -55,13 +61,11 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
             hitSlop={8}
             style={({ pressed }) => [
               styles.action,
-              { borderLeftColor: p.textShade },
-              pressed && { backgroundColor: p.textShade },
+              { backgroundColor: p.sun, borderColor: p.line },
+              pressed && { transform: [{ scale: 0.96 }] },
             ]}
           >
-            <Text style={[TYPE.button, { fontSize: 15, color: p.onText }]}>
-              {current.action.label}
-            </Text>
+            <Text style={[TYPE.label, { color: p.onSun }]}>{current.action.label}</Text>
           </Pressable>
         )}
       </Animated.View>
@@ -71,12 +75,22 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
 
 const styles = StyleSheet.create({
   layer: { justifyContent: 'flex-end', paddingHorizontal: SPACE.screenX },
-  toast: { flexDirection: 'row', alignItems: 'center', minHeight: 52 },
-  text: { flex: 1, paddingVertical: 12, paddingHorizontal: 16 },
+  toast: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: 56,
+    padding: SPACE.sm,
+    paddingLeft: SPACE.lg,
+    gap: SPACE.md,
+    borderWidth: STROKE.outline,
+    borderRadius: RADIUS.md,
+  },
+  text: { flex: 1 },
   action: {
-    alignSelf: 'stretch',
+    height: 40,
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    borderLeftWidth: 1,
+    paddingHorizontal: 14,
+    borderWidth: STROKE.thin,
+    borderRadius: 12,
   },
 });

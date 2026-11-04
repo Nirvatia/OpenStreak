@@ -6,7 +6,8 @@ import { usePalette } from '../../store/themeStore';
 import { SPACE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { AddRow, LinkRow } from '../Button';
-import { HabitGlyph } from '../icons';
+import { IconTile } from '../icons';
+import { Badge, Card, Pill } from '../Sticker';
 import type { DayState } from '../moon';
 import { LogRow, MoonRow } from '../MoonRow';
 import { Notches } from '../Notches';
@@ -41,44 +42,47 @@ export function CatalogRows() {
     <>
       <Section title="Строки">
         <AddRow label={t('common.addPrompt')} />
-        <View>
-          <SectionTitle title="Осталось" count={4} />
-          <MoonRow
-            title="Отжимания"
-            sub="ещё 40 · серия 14"
-            phase={done.push ? 1 : 0.6}
-            done={!!done.push}
-            onToggle={toggle('push')}
-            toggleLabel="Добавить подходы: Отжимания"
-            right={meta('60/100')}
-          />
-          <MoonRow
-            title="Читать 20 минут"
-            phase={done.read ? 1 : 0}
-            done={!!done.read}
-            onToggle={toggle('read')}
-            right={meta('9 дн')}
-          />
-          <MoonRow
-            title="Закрыть долг Сане"
-            sub="со вчера"
-            debt
-            phase={done.debt ? 1 : 0}
-            done={!!done.debt}
-            onToggle={toggle('debt')}
-            right={meta(t('mark.debt'), p.blood)}
-          />
-          <MoonRow
-            title="Записаться в зал"
-            sub="напомню у зала"
-            phase={done.gym ? 1 : 0}
-            done={!!done.gym}
-            onToggle={toggle('gym')}
-            right={<PriorityMarks level={2} />}
-          />
+        <View style={{ gap: SPACE.md }}>
+          <SectionTitle title="Осталось" count={4} tone="sun" tilt={-3} />
+          <Card padded={false}>
+            <MoonRow
+              title="Отжимания"
+              sub="ещё 40 · серия 14"
+              phase={done.push ? 1 : 0.6}
+              done={!!done.push}
+              onToggle={toggle('push')}
+              toggleLabel="Добавить подходы: Отжимания"
+              right={meta('60/100')}
+            />
+            <MoonRow
+              title="Читать 20 минут"
+              phase={done.read ? 1 : 0}
+              done={!!done.read}
+              onToggle={toggle('read')}
+              right={meta('9 дн')}
+            />
+            <MoonRow
+              title="Закрыть долг Сане"
+              sub="со вчера"
+              debt
+              phase={done.debt ? 1 : 0}
+              done={!!done.debt}
+              onToggle={toggle('debt')}
+              right={<Pill label={t('mark.debt')} tone="red" filled />}
+            />
+            <MoonRow
+              title="Записаться в зал"
+              sub="напомню у зала"
+              phase={done.gym ? 1 : 0}
+              done={!!done.gym}
+              onToggle={toggle('gym')}
+              right={<PriorityMarks level={2} />}
+              last
+            />
+          </Card>
         </View>
-        <View>
-          <SectionTitle title="Сделано" count={3} />
+        <View style={{ gap: SPACE.md }}>
+          <SectionTitle title="Сделано" count={3} tone="teal" tilt={1.5} />
           <LogRow time="13:20" title="Вода 2 литра" mark={t('mark.done')} />
           <LogRow time="08:00" title="Не курить" mark={t('mark.clean')} />
           <LogRow time="07:05" title="Подъём в 6:00" mark={t('mark.slip')} bad />
@@ -87,20 +91,17 @@ export function CatalogRows() {
       </Section>
 
       <Section title="Привычка: неделя лунами">
-        <View style={{ gap: SPACE.md, padding: 14, backgroundColor: p.surface }}>
+        <Card style={{ gap: SPACE.md }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <HabitGlyph icon="dumbbell" size={26} />
+            <IconTile icon="dumbbell" />
             <View style={{ flex: 1 }}>
               <Text style={[TYPE.itemStrong, { color: p.text }]}>Отжимания</Text>
               {meta('100 в день · сегодня 60')}
             </View>
-            <View style={{ alignItems: 'flex-end' }}>
-              <Text style={[TYPE.numberM, { color: p.text }]}>14</Text>
-              {meta('дней')}
-            </View>
+            <Badge value={14} label="дней" tilt={8} />
           </View>
           <WeekMoons days={week('ddddddp')} />
-        </View>
+        </Card>
         <WeekMoons days={week('ddrrdxt', 0)} />
         <WeekMoons days={week('ccccccc')} />
       </Section>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Дела — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+input::placeholder{color:inherit;opacity:1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 46px 20px 120px; display: flex; flex-direction: column; gap: 16px;">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 13px; color: {{c.muted}}; font-variant-numeric: tabular-nums;">7 в работе · 1 долг</span>
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em;">Дела</h1>
+</div>
+<a href="M-New.dc.html" aria-label="Новое дело" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.sun}}; border: 2.5px solid {{c.line}}; border-radius: 50%; box-shadow: 3px 3px 0 {{c.shadow}};">
+<dc-import name="M-Icon" icon="plus" size="20" color="{{c.onSun}}" hint-size="20px,20px"></dc-import>
+</a>
+</div>
+
+<label style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 14px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 16px; color: {{c.muted}};">
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 10.5a6.5 6.5 0 1 0 13 0a6.5 6.5 0 1 0 -13 0 M15.5 15.5L20 20"></path></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Поиск</span>
+<input placeholder="Найти дело" style="flex: 1; min-width: 0; border: none; outline: none; background: transparent; font: inherit; font-size: 16px; color: {{c.text}};">
+</label>
+
+<div role="radiogroup" aria-label="Сферы" style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{areas}}" as="a" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{a.checked}}" onClick="{{a.tap}}" style="height: 38px; padding: 0 14px; border: 2px solid {{c.line}}; border-radius: 999px; background: {{a.bg}}; color: {{a.fg}}; font-size: 14px; font-weight: {{a.weight}}; box-shadow: {{a.shadow}};">{{a.label}}</button>
+</sc-for>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+<section aria-label="{{g.label}}" style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 4px 0 0; align-self: flex-start; transform: rotate({{g.tilt}}); padding: 4px 12px; background: {{g.bg}}; color: {{g.fg}}; border: 2.5px solid {{c.line}}; border-radius: 10px; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;">{{g.label}} · {{g.count}}</h2>
+<div style="background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{c.shadow}}; overflow: hidden;">
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+<div style="position: relative; border-bottom: {{r.divider}};">
+<sc-if value="{{r.swiped}}" hint-placeholder-val="{{false}}">
+<div aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-right: 18px; background: {{c.tag}}; color: {{c.text}}; font-size: 14px; font-weight: 700;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16 M9 7V4h6v3 M6 7l1 13h10l1-13"></path></svg>вычеркнуть
+</div>
+</sc-if>
+<div style="position: relative; transform: translateX({{r.shift}}); display: flex; align-items: center; gap: 8px; min-height: 62px; padding: 0 14px 0 6px; background: {{c.surface}};">
+<button onClick="{{r.tap}}" aria-label="{{r.aria}}" style="width: 44px; height: 44px; flex: none; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+<dc-import name="M-Moon" phase="{{r.phase}}" state="{{r.state}}" size="28" theme="{{theme}}" hint-size="28px,28px"></dc-import>
+</button>
+<span style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+<span style="font-size: 16px; font-weight: 500; color: {{r.titleColor}}; text-decoration: {{r.deco}};">{{r.title}}</span>
+<span style="font-size: 13px; color: {{c.muted}};">{{r.meta}}</span>
+</span>
+<span aria-label="{{r.prioLabel}}" style="display: flex; gap: 5px; padding-right: 2px;">
+<sc-for list="{{r.prio}}" as="p" hint-placeholder-count="2">
+<span style="width: 9px; height: 9px; box-sizing: border-box; background: {{r.prioColor}}; border: 2px solid {{c.line}}; transform: rotate(45deg);"></span>
+</sc-for>
+</span>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<p style="margin: 0; font-size: 13px; color: {{c.muted}};">свайп влево — вычеркнуть · 5 секунд на «вернуть»</p>
+</div>
+
+<div role="status" style="position: absolute; left: 20px; right: 20px; bottom: 110px; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; background: {{c.toast}}; color: {{c.onToast}}; border: 2.5px solid {{c.line}}; border-radius: 16px; box-shadow: 4px 4px 0 {{c.shadow}};">
+<span style="flex: 1; font-size: 16px; font-weight: 600;">Вычеркнул.</span>
+<button style="height: 40px; padding: 0 14px; background: {{c.sun}}; color: {{c.onSun}}; border: 2px solid {{c.line}}; border-radius: 12px; font-size: 15px; font-weight: 700;">Вернуть</button>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px;">
+<dc-import name="M-Nav" active="tasks" theme="{{theme}}" hint-size="390px,96px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { area: 'all', done: { protein: true } };
+  }
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', red: '#B8322A', onRed: '#FFF8E8', tag: '#F7D9A8', divider: '#E9D9B6', toast: '#1E2233', onToast: '#FFF8E8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', red: '#FF8273', onRed: '#0B1020', tag: '#3A4A73', divider: '#3A4A73', toast: '#F6EBD3', onToast: '#0B1020' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const area = this.state.area;
+    const areaDefs = [['all', 'Все'], ['work', 'Работа · 3'], ['gym', 'Зал · 1'], ['me', 'Личное · 3']];
+    const areas = areaDefs.map(([k, label]) => {
+      const on = area === k;
+      return {
+        label, checked: on ? 'true' : 'false',
+        bg: on ? c.sun : c.surface, fg: on ? c.onSun : c.text,
+        weight: on ? 700 : 500, shadow: on ? '3px 3px 0 ' + c.shadow : 'none',
+        tap: () => this.setState({ area: k })
+      };
+    });
+    const names = ['', 'Низкая', 'Средняя', 'Высокая'];
+    const row = (id, title, meta, prio, a, opts) => ({ id, title, meta, prio, a, debt: !!(opts && opts.debt), swiped: !!(opts && opts.swiped) });
+    const defs = [
+      { key: 'debts', label: 'Долги', tilt: '-2deg', bg: c.red, fg: c.onRed, rows: [row('debt', 'Закрыть долг Сане', 'вчера · Личное', 3, 'me', { debt: true })] },
+      { key: 'today', label: 'Сегодня', tilt: '1.5deg', bg: c.sun, fg: c.onSun, rows: [
+        row('gym', 'Записаться в зал', '19:00 · Зал', 2, 'gym'),
+        row('report', 'Отправить отчёт', '18:00 · Работа', 1, 'work', { swiped: true }),
+        row('protein', 'Купить протеин', 'Зал', 0, 'gym')
+      ] },
+      { key: 'tomorrow', label: 'Завтра', tilt: '-1.5deg', bg: c.tag, fg: c.text, rows: [
+        row('call', 'Созвон с Димоном', '11:30 · Работа', 0, 'work'),
+        row('car', 'Отогнать тачку на ТО', 'Личное', 1, 'me')
+      ] }
+    ];
+    const groups = defs.map((g) => {
+      const list = g.rows.filter((r) => area === 'all' || r.a === area);
+      return {
+        ...g,
+        count: list.length,
+        rows: list.map((r, i) => {
+          const done = !!this.state.done[r.id];
+          return {
+            ...r,
+            phase: done ? 1 : 0,
+            state: r.debt && !done ? 'debt' : 'normal',
+            titleColor: done ? c.muted : c.text,
+            deco: done ? 'line-through' : 'none',
+            prio: Array.from({ length: r.prio }, (_, k) => k),
+            prioColor: r.prio === 3 ? c.red : c.sun,
+            prioLabel: r.prio ? 'Важность: ' + names[r.prio] : '',
+            divider: i === list.length - 1 ? 'none' : '2px dashed ' + c.divider,
+            shift: r.swiped ? '-118px' : '0px',
+            aria: (done ? 'Вернуть: ' : 'Выполнить: ') + r.title,
+            tap: () => this.setState({ done: { ...this.state.done, [r.id]: !done } })
+          };
+        })
+      };
+    }).filter((g) => g.count > 0);
+    return { c, theme, areas, groups };
+  }
+}
+</script>
+</body>
+</html>

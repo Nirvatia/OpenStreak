@@ -1,5 +1,5 @@
 /**
- * Палитра «Луны»: «Ночь» (dark, основная) и «Рассвет» (light).
+ * Палитра «Мульта»: «День» (light) и «Вечерний мульт» (dark).
  * Цвета берутся только из `palettes.json` — там же список пар для проверки контраста.
  */
 import palettes from './palettes.json';
@@ -13,30 +13,53 @@ export const THEME_MODES: readonly ThemeMode[] = ['dark', 'light', 'system'];
 export type Palette = {
   /** фон экрана */
   bg: string;
-  /** карточки, поля, шторка, таб-бар */
+  /** наклейка: карточки, поля, шторка, таб-бар */
   surface: string;
-  /** выбранный сегмент, пустая луна, дорожка выключенного переключателя */
-  raised: string;
-  /** разделители и рамки */
-  line: string;
-  /** основной текст и «лунный свет»: полная луна, главная кнопка (инверсия) */
+  /** основной текст */
   text: string;
-  /** тёмная грань гранёной иконки цвета text */
-  textShade: string;
-  /** второй текст, подписи */
+  /** подписи и второй текст */
   muted: string;
-  mutedShade: string;
-  /** единственный смысловой цвет: слив, долг, просрочено */
-  blood: string;
-  bloodShade: string;
-  /** текст и значки поверх `text` (инверсия) */
-  onText: string;
+  /** обводка наклеек */
+  line: string;
+  /** жёсткая тень наклеек */
+  shadow: string;
+  /** луна и главное действие */
+  sun: string;
+  onSun: string;
+  /** зачёт, «включено» */
+  teal: string;
+  onTeal: string;
+  /** только слив и долги */
+  red: string;
+  onRed: string;
+  /** плашки, пузырь цитаты, выбранная плитка */
+  tag: string;
+  /** плитки иконок привычек */
+  sky: string;
+  /** пунктир между строками в наклейке */
+  divider: string;
+  /** тёмная сторона луны, дорожки (прогресс, выключенный переключатель) */
+  track: string;
+  /** кольцо луны */
+  ring: string;
+  crater: string;
+  craterRed: string;
+  /** тост — инверсия к теме */
+  toast: string;
+  onToast: string;
   /** затемнение под шторкой (с прозрачностью из metrics) */
   scrim: string;
-  /** волк-силуэт на полной луне */
-  silhouette: string;
-  silhouetteShade: string;
-  silhouetteFeature: string;
+  knobOff: string;
+  knobOn: string;
+  /** рисунок волка и звёзды — декоративные, в проверку контраста не входят */
+  fur: string;
+  furShade: string;
+  muzzle: string;
+  ear: string;
+  eye: string;
+  tongue: string;
+  drop: string;
+  star: string;
 };
 
 const themes = palettes.themes as Record<Scheme, Palette>;

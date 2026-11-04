@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Мульт — лист стиля</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1960px; box-sizing: border-box; padding: 64px; background: #F3E9D2; color: #1E2233; font-family: Rubik, system-ui, sans-serif; display: flex; flex-direction: column; gap: 40px;">
+
+<header style="display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: center; gap: 22px;">
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 64px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;">OpenStreak</h1>
+<span style="transform: rotate(-4deg); display: inline-block; padding: 8px 16px; background: #F5B82E; border: 2.5px solid #1E2233; border-radius: 12px; box-shadow: 4px 4px 0 #1E2233; font-family: Unbounded, Rubik, sans-serif; font-size: 18px; font-weight: 700;">мульт · концепт</span>
+</div>
+<p style="margin: 0; max-width: 760px; font-size: 22px; line-height: 1.4;">Жизнь как игра — а дела настоящие. Снаружи весело, внутри серьёзно: тот же счёт, серии и луна дня, только нарисованные как вечерний мультик.</p>
+</header>
+
+<section aria-label="Правила стиля" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
+<sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+<div style="transform: rotate({{r.tilt}}); background: {{r.bg}}; color: {{r.fg}}; border: 2.5px solid #1E2233; border-radius: 18px; box-shadow: 5px 5px 0 #1E2233; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 17px; font-weight: 700; line-height: 1.25;">{{r.title}}</span>
+<span style="font-size: 15px; line-height: 1.4;">{{r.text}}</span>
+</div>
+</sc-for>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+<sc-for list="{{themes}}" as="th" hint-placeholder-count="2">
+<section aria-label="{{th.name}}" style="background: {{th.c.bg}}; color: {{th.c.text}}; border: 2.5px solid #1E2233; border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 26px;">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<h2 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800;">{{th.name}}</h2>
+<span style="font-size: 14px; color: {{th.c.muted}};">{{th.hint}}</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 10px;">
+<sc-for list="{{th.swatches}}" as="s" hint-placeholder-count="8">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 50%; background: {{s.hex}}; border: 2.5px solid {{th.c.line}};"></span>
+<span style="display: flex; flex-direction: column; min-width: 0;"><span style="font-size: 14px; font-weight: 600;">{{s.name}}</span><span style="font-size: 12px; color: {{th.c.muted}}; font-variant-numeric: tabular-nums;">{{s.hex}}</span></span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 20px; background: {{th.c.surface}}; border: 2.5px solid {{th.c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{th.c.shadow}};">
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;">День закрыт.</span>
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 22px; font-weight: 700;">Привычки</span>
+<span style="font-size: 17px; font-weight: 500;">Записаться в зал</span>
+<span style="font-size: 15px;">Блоки — наклейки: обводка и жёсткая тень.</span>
+<span style="font-size: 13px; color: {{th.c.muted}};">Unbounded — заголовки и числа · Rubik — всё остальное</span>
+</div>
+
+<div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+<button style="height: 54px; padding: 0 26px; background: {{th.c.sun}}; color: {{th.c.onSun}}; border: 2.5px solid {{th.c.line}}; border-radius: 16px; box-shadow: 4px 4px 0 {{th.c.shadow}}; font-family: Unbounded, Rubik, sans-serif; font-size: 17px; font-weight: 700;">Записать</button>
+<button style="height: 54px; padding: 0 22px; background: {{th.c.surface}}; color: {{th.c.text}}; border: 2.5px solid {{th.c.line}}; border-radius: 16px; box-shadow: 4px 4px 0 {{th.c.shadow}}; font-size: 16px; font-weight: 600;">Выходной</button>
+<button style="height: 54px; padding: 0 22px; background: {{th.c.surface}}; color: {{th.c.red}}; border: 2.5px solid {{th.c.red}}; border-radius: 16px; font-size: 16px; font-weight: 600;">Слил сегодня</button>
+</div>
+
+<div style="display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
+<span style="transform: rotate(-3deg); display: inline-block; padding: 6px 12px; background: {{th.c.sun}}; color: {{th.c.onSun}}; border: 2.5px solid {{th.c.line}}; border-radius: 10px; font-weight: 700; font-size: 15px;">Осталось · 4</span>
+<span style="transform: rotate(2deg); display: inline-block; padding: 6px 12px; background: {{th.c.teal}}; color: {{th.c.onTeal}}; border: 2.5px solid {{th.c.line}}; border-radius: 10px; font-weight: 700; font-size: 15px;">Сделано · 3</span>
+<span style="display: inline-block; padding: 3px 10px; background: {{th.c.red}}; color: {{th.c.onRed}}; border-radius: 999px; font-weight: 600; font-size: 13px;">долг</span>
+<span style="display: inline-block; padding: 3px 10px; border: 2px solid {{th.c.teal}}; color: {{th.c.teal}}; border-radius: 999px; font-weight: 600; font-size: 13px;">зачёт</span>
+<span style="display: inline-block; padding: 3px 10px; border: 2px solid {{th.c.red}}; color: {{th.c.red}}; border-radius: 999px; font-weight: 600; font-size: 13px;">слив</span>
+</div>
+
+<div role="radiogroup" aria-label="Фильтр" style="display: flex; gap: 6px; padding: 5px; background: {{th.c.surface}}; border: 2.5px solid {{th.c.line}}; border-radius: 999px; align-self: flex-start;">
+<button role="radio" aria-checked="true" style="height: 40px; padding: 0 18px; border: 2px solid {{th.c.line}}; border-radius: 999px; background: {{th.c.sun}}; color: {{th.c.onSun}}; font-weight: 600; font-size: 15px;">Все</button>
+<button role="radio" aria-checked="false" style="height: 40px; padding: 0 18px; border: none; border-radius: 999px; background: transparent; color: {{th.c.text}}; font-weight: 500; font-size: 15px;">Полезные</button>
+<button role="radio" aria-checked="false" style="height: 40px; padding: 0 18px; border: none; border-radius: 999px; background: transparent; color: {{th.c.text}}; font-weight: 500; font-size: 15px;">Вредные</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;">
+<sc-for list="{{moons}}" as="m" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<dc-import name="M-Moon" phase="{{m.phase}}" state="{{m.state}}" size="44" theme="{{th.key}}" hint-size="44px,44px"></dc-import>
+<span style="font-size: 12px; color: {{th.c.muted}}; text-align: center;">{{m.label}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="background: {{th.c.surface}}; border: 2.5px solid {{th.c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{th.c.shadow}}; padding: 4px 16px;">
+<div style="display: flex; align-items: center; gap: 12px; min-height: 60px; border-bottom: 2px dashed {{th.c.tag}};">
+<dc-import name="M-Moon" phase="0" state="debt" size="28" theme="{{th.key}}" hint-size="28px,28px"></dc-import>
+<span style="flex: 1; display: flex; flex-direction: column;"><span style="font-size: 17px; font-weight: 500;">Закрыть долг Сане</span><span style="font-size: 13px; color: {{th.c.muted}};">со вчера · Личное</span></span>
+<span style="padding: 3px 10px; background: {{th.c.red}}; color: {{th.c.onRed}}; border-radius: 999px; font-weight: 600; font-size: 13px;">долг</span>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; min-height: 60px;">
+<dc-import name="M-Moon" phase="0.6" state="normal" size="28" theme="{{th.key}}" hint-size="28px,28px"></dc-import>
+<span style="flex: 1; display: flex; flex-direction: column;"><span style="font-size: 17px; font-weight: 500;">Отжимания</span><span style="font-size: 13px; color: {{th.c.muted}};">ещё 40 · серия 14</span></span>
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums;">60/100</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{wolves}}" as="w" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+<dc-import name="M-Wolf" mood="{{w.mood}}" size="104" theme="{{th.key}}" hint-size="104px,104px"></dc-import>
+<span style="font-size: 14px; font-weight: 600;">{{w.label}}</span>
+</div>
+</sc-for>
+</div>
+
+<dc-import name="M-Nav" active="today" theme="{{th.key}}" hint-size="100%,96px"></dc-import>
+
+</section>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', teal: '#17705F', onTeal: '#FFF8E8', red: '#B8322A', onRed: '#FFF8E8', sky: '#9CCFDB', tag: '#F7D9A8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', teal: '#4CC2AE', onTeal: '#0B1020', red: '#FF8273', onRed: '#0B1020', sky: '#2E4370', tag: '#3A4A73' }
+    };
+    const sw = (c) => [
+      ['Фон', c.bg], ['Наклейка', c.surface], ['Текст', c.text], ['Подписи', c.muted],
+      ['Луна · главное', c.sun], ['Зачёт', c.teal], ['Слив и долги', c.red], ['Плашка', c.tag]
+    ].map(([name, hex]) => ({ name, hex }));
+    return {
+      rules: [
+        { title: 'Наклейки, а не карточки', text: 'Обводка 2,5 px и жёсткая тень без размытия. Скругления мягкие.', tilt: '-1.5deg', bg: '#FFF8E8', fg: '#1E2233' },
+        { title: 'Наклон — только украшениям', text: 'Плашки, бейджи и стикеры — под углом. Текст и строки списков ровные.', tilt: '1deg', bg: '#F7D9A8', fg: '#1E2233' },
+        { title: 'Цвет со смыслом', text: 'Жёлтый — луна и главное действие, бирюза — зачёт, красный — только слив и долги.', tilt: '-1deg', bg: '#F5B82E', fg: '#1E2233' },
+        { title: 'Волк — свой', text: 'Наш персонаж в духе мультфильмов 70-х. Без чужих героев и их примет.', tilt: '1.5deg', bg: '#9CCFDB', fg: '#1E2233' }
+      ],
+      themes: [
+        { key: 'day', name: 'День', hint: 'бумага и гуашь', c: PAL.day, swatches: sw(PAL.day) },
+        { key: 'night', name: 'Вечерний мульт', hint: 'сумерки, луна-фонарь', c: PAL.night, swatches: sw(PAL.night) }
+      ],
+      moons: [
+        { phase: 0, state: 'normal', label: 'не сделано' },
+        { phase: 0.35, state: 'normal', label: 'начато' },
+        { phase: 0.7, state: 'normal', label: 'почти' },
+        { phase: 1, state: 'normal', label: 'зачёт' },
+        { phase: 1, state: 'slip', label: 'слив' },
+        { phase: 0, state: 'rest', label: 'выходной' }
+      ],
+      wolves: [
+        { mood: 'smirk', label: 'в деле' },
+        { mood: 'proud', label: 'красава' },
+        { mood: 'meh', label: 'слил' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

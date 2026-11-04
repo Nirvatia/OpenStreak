@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Иконки — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1880px; box-sizing: border-box; padding: 48px 64px; background: #F3E9D2; color: #1E2233; font-family: Rubik, system-ui, sans-serif; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; align-items: baseline; gap: 18px;">
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 40px; font-weight: 800;">Иконки</h1>
+<span style="font-size: 16px; color: #5A5E6E;">контур 2,2 на сетке 24 · скруглённые концы · 20 интерфейсных и 40 для привычек и сфер</span>
+</div>
+<sc-for list="{{themes}}" as="th" hint-placeholder-count="2">
+<section aria-label="{{th.name}}" style="display: flex; flex-direction: column; gap: 18px; padding: 28px; background: {{th.c.bg}}; color: {{th.c.text}}; border: 2.5px solid #1E2233; border-radius: 28px;">
+<h2 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 24px; font-weight: 800;">{{th.name}}</h2>
+<div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 14px 10px;">
+<sc-for list="{{th.ui}}" as="i" hint-placeholder-count="20">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+<span style="width: 60px; height: 60px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{th.c.surface}}; border: 2.5px solid {{th.c.line}}; border-radius: 16px;">
+<dc-import name="M-Icon" icon="{{i.name}}" size="28" color="{{th.c.text}}" hint-size="28px,28px"></dc-import>
+</span>
+<span style="font-size: 11px; color: {{th.c.muted}};">{{i.name}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 14px 10px;">
+<sc-for list="{{th.habit}}" as="i" hint-placeholder-count="40">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+<span style="width: 60px; height: 60px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{i.bg}}; border: 2.5px solid {{th.c.line}}; border-radius: 16px; transform: rotate({{i.tilt}});">
+<dc-import name="M-Icon" icon="{{i.name}}" size="28" color="{{i.fg}}" hint-size="28px,28px"></dc-import>
+</span>
+<span style="font-size: 11px; color: {{th.c.muted}};">{{i.name}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', teal: '#17705F', onTeal: '#FFF8E8', sky: '#9CCFDB', tag: '#F7D9A8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', teal: '#4CC2AE', onTeal: '#0B1020', sky: '#8FC3D9', tag: '#3A4A73' }
+    };
+    const UI = ['today', 'tasks', 'habits', 'goals', 'pack', 'settings', 'plus', 'back', 'arrow', 'chevron', 'close', 'check', 'more', 'remind', 'place', 'calendar', 'history', 'delete', 'search', 'edit'];
+    const HABIT = ['dumbbell', 'activity', 'running', 'swimming', 'breathing', 'lotus', 'medplus', 'vitamins', 'shower', 'drop', 'water', 'apple', 'breakfast', 'healthyfood', 'fruits', 'vegetables', 'nosmoking', 'noalcohol', 'phoneoff', 'book', 'pencil', 'languages', 'bulb', 'target', 'compass', 'clock', 'wallet', 'moonstar', 'lounge', 'trip', 'music', 'video', 'cinema', 'cleaning', 'sprout', 'compliments', 'dog', 'cat', 'sparkles', 'shield'];
+    const tilts = ['-3deg', '2deg', '0deg', '-1.5deg', '3deg'];
+    const make = (key, name) => {
+      const c = PAL[key];
+      const tiles = [[c.sun, c.onSun], [c.sky, c.onSun], [c.teal, c.onTeal], [c.tag, c.text]];
+      return {
+        name, c,
+        ui: UI.map((n) => ({ name: n })),
+        habit: HABIT.map((n, i) => ({ name: n, bg: tiles[i % 4][0], fg: tiles[i % 4][1], tilt: tilts[i % 5] }))
+      };
+    };
+    return { themes: [make('day', 'День'), make('night', 'Вечерний мульт')] };
+  }
+}
+</script>
+</body>
+</html>

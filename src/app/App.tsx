@@ -6,7 +6,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NewSheet } from '../features/new/NewSheet';
 import { RootNavigator } from '../navigation/RootNavigator';
-import { SIZE } from '../theme/metrics';
 import { SheetsHost } from '../components/SheetsHost';
 import { useAppStore } from '../store/appStore';
 import { usePrefsStore } from '../store/prefsStore';
@@ -14,6 +13,7 @@ import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
 import { CatalogScreen } from '../ui/catalog/CatalogScreen';
+import { TAB_BAR_SPACE } from '../ui/TabBar';
 import { ToastHost } from '../ui/ToastHost';
 import { isCatalogRequested } from '../ui/catalog/isCatalog';
 import { bootstrap } from './bootstrap';
@@ -71,7 +71,7 @@ export const App: React.FC = () => {
           <SheetsHost />
           <NewSheet />
           <Toast />
-          <ToastHost bottom={SIZE.tabBar} />
+          <ToastHost bottom={TAB_BAR_SPACE} />
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </WebFrame>

@@ -1,11 +1,16 @@
 import {
-  useFonts as useOnest,
-  Onest_400Regular,
-  Onest_500Medium,
-  Onest_600SemiBold,
-  Onest_700Bold,
-  Onest_800ExtraBold,
-} from '@expo-google-fonts/onest';
+  useFonts as useRubik,
+  Rubik_400Regular,
+  Rubik_500Medium,
+  Rubik_600SemiBold,
+  Rubik_700Bold,
+} from '@expo-google-fonts/rubik';
+import {
+  useFonts as useUnbounded,
+  Unbounded_600SemiBold,
+  Unbounded_700Bold,
+  Unbounded_800ExtraBold,
+} from '@expo-google-fonts/unbounded';
 import {
   useFonts as useGolos,
   GolosText_400Regular,
@@ -21,12 +26,17 @@ import {
 } from '@expo-google-fonts/manrope';
 
 export function useAppFonts() {
-  const [oLoaded] = useOnest({
-    Onest_400Regular,
-    Onest_500Medium,
-    Onest_600SemiBold,
-    Onest_700Bold,
-    Onest_800ExtraBold,
+  // «Мульт»: Rubik — текст, Unbounded — заголовки и числа.
+  const [rLoaded] = useRubik({
+    Rubik_400Regular,
+    Rubik_500Medium,
+    Rubik_600SemiBold,
+    Rubik_700Bold,
+  });
+  const [uLoaded] = useUnbounded({
+    Unbounded_600SemiBold,
+    Unbounded_700Bold,
+    Unbounded_800ExtraBold,
   });
   // Golos Text и Manrope — только для старых экранов.
   const [gLoaded] = useGolos({
@@ -40,5 +50,5 @@ export function useAppFonts() {
     Manrope_700Bold,
     Manrope_800ExtraBold,
   });
-  return oLoaded && gLoaded && mLoaded;
+  return rLoaded && uLoaded && gLoaded && mLoaded;
 }

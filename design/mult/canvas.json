@@ -1,0 +1,248 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-04T11:50:00Z"
+  },
+  "title": "OpenStreak — Мульт концепт",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 1960,
+      "title": "Мульт — лист стиля"
+    },
+    "M-Today.dc.html": {
+      "x": 1440,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Сегодня — день",
+      "is_interactive": true
+    },
+    "M-Habits.dc.html": {
+      "x": 1910,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Привычки — день",
+      "is_interactive": true
+    },
+    "M-Closed-Day.dc.html": {
+      "x": 2380,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "День закрыт — день"
+    },
+    "M-Today-Night.dc.html": {
+      "x": 1440,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Сегодня — вечерний мульт"
+    },
+    "M-Habits-Night.dc.html": {
+      "x": 1910,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Привычки — вечерний мульт"
+    },
+    "M-Closed.dc.html": {
+      "x": 2380,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "День закрыт — вечерний мульт"
+    },
+    "M-Wolf.dc.html": {
+      "x": 0,
+      "y": 2080,
+      "w": 160,
+      "h": 160,
+      "title": "Волк"
+    },
+    "M-Moon.dc.html": {
+      "x": 240,
+      "y": 2080,
+      "w": 120,
+      "h": 120,
+      "title": "Луна"
+    },
+    "M-Nav.dc.html": {
+      "x": 440,
+      "y": 2080,
+      "w": 390,
+      "h": 96,
+      "title": "Таб-бар"
+    },
+    "M-Tasks.dc.html": {
+      "x": 2850,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Дела — день",
+      "is_interactive": true
+    },
+    "M-Tasks-Night.dc.html": {
+      "x": 2850,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Дела — вечерний мульт"
+    },
+    "M-Habit.dc.html": {
+      "x": 3320,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Карточка привычки — день",
+      "is_interactive": true
+    },
+    "M-Habit-Night.dc.html": {
+      "x": 3320,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Карточка привычки — вечерний мульт"
+    },
+    "M-Goals.dc.html": {
+      "x": 3790,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Цели — день"
+    },
+    "M-Goals-Night.dc.html": {
+      "x": 3790,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Цели — вечерний мульт"
+    },
+    "M-Pack.dc.html": {
+      "x": 4260,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Стая — день"
+    },
+    "M-Pack-Night.dc.html": {
+      "x": 4260,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Стая — вечерний мульт"
+    },
+    "M-New.dc.html": {
+      "x": 4730,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Новое (шторка) — день",
+      "is_interactive": true
+    },
+    "M-New-Night.dc.html": {
+      "x": 4730,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Новое (шторка) — вечерний мульт"
+    },
+    "M-Review.dc.html": {
+      "x": 5200,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Итог дня — день",
+      "is_interactive": true
+    },
+    "M-Review-Night.dc.html": {
+      "x": 5200,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Итог дня — вечерний мульт"
+    },
+    "M-Settings.dc.html": {
+      "x": 5670,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Настройки — день",
+      "is_interactive": true
+    },
+    "M-Settings-Night.dc.html": {
+      "x": 5670,
+      "y": 1264,
+      "w": 390,
+      "h": 844,
+      "title": "Настройки — вечерний мульт"
+    },
+    "M-Icon.dc.html": {
+      "x": 910,
+      "y": 2080,
+      "w": 96,
+      "h": 96,
+      "title": "Иконка"
+    },
+    "M-Icons.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 1280,
+      "h": 1880,
+      "title": "Иконки — обе темы"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "M-Today.dc.html",
+    "M-Habits.dc.html",
+    "M-Closed-Day.dc.html",
+    "M-Today-Night.dc.html",
+    "M-Habits-Night.dc.html",
+    "M-Closed.dc.html",
+    "M-Wolf.dc.html",
+    "M-Moon.dc.html",
+    "M-Nav.dc.html",
+    "M-Tasks.dc.html",
+    "M-Habit.dc.html",
+    "M-Goals.dc.html",
+    "M-Pack.dc.html",
+    "M-New.dc.html",
+    "M-Review.dc.html",
+    "M-Settings.dc.html",
+    "M-Tasks-Night.dc.html",
+    "M-Habit-Night.dc.html",
+    "M-Goals-Night.dc.html",
+    "M-Pack-Night.dc.html",
+    "M-New-Night.dc.html",
+    "M-Review-Night.dc.html",
+    "M-Settings-Night.dc.html",
+    "M-Icon.dc.html",
+    "M-Icons.dc.html"
+  ],
+  "notes": {
+    "rowDay": {
+      "x": 1440,
+      "y": -300,
+      "text": "День",
+      "kind": "title1",
+      "maxW": 4620
+    },
+    "rowNight": {
+      "x": 1440,
+      "y": 964,
+      "text": "Вечерний мульт",
+      "kind": "title1",
+      "maxW": 4620
+    }
+  },
+  "designSystems": []
+}

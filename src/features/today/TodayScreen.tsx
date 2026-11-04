@@ -1,6 +1,6 @@
 /**
- * «Сегодня» (design/luna/L-Today): дата и серия, большая луна дня со счётом, цитата волка,
- * строка «Запиши…», «Осталось» лунами и журнал «Сделано» со временем.
+ * «Сегодня» (design/mult/M-Today): дата плашкой, луна дня в наклейке со счётом и очками дня,
+ * волк с цитатой, строка «Запиши…», «Осталось» лунами и журнал «Сделано» со временем.
  */
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -9,19 +9,21 @@ import * as A from '../../core/actions';
 import { addDays, clockOf } from '../../core/dates';
 import { closedStreak, dayNumber, dayView, isClosed, type DayItem } from '../../core/day';
 import { dataOf, fullValue, habitStats, indexHabits } from '../../core/habits';
+import { dayPoints } from '../../core/points';
 import { quoteOfDay } from '../../core/quotes';
 import { settingsOf } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { quoteCount, type MessageKey } from '../../i18n';
 import { useT, type Translate } from '../../store/prefsStore';
 import { usePalette } from '../../store/themeStore';
-import { SIZE, SPACE } from '../../theme/metrics';
+import { RADIUS, SIZE, SPACE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { AddRow, IconButton } from '../../ui/Button';
 import { Moon } from '../../ui/Moon';
 import { LogRow, MoonRow } from '../../ui/MoonRow';
 import { PriorityMarks } from '../../ui/Priority';
 import { SectionTitle } from '../../ui/ScreenHeader';
+import { Card, Pill, Tag, WolfQuote } from '../../ui/Sticker';
 import { useToast } from '../../ui/toast';
 import { dayMonth, fullDate } from '../format';
 import { useNewSheet } from '../new/newSheetStore';
@@ -39,11 +41,12 @@ export function TodayScreen({ onOpenSettings }: Props) {
   const view = useMemo(() => {
     const idx = indexHabits(data);
     const day = dayView(data, today, today, idx);
+    const points = dayPoints(data, today, today, idx);
     const streakOf = (habitId: string) => {
       const h = data.habits[habitId];
       return h ? habitStats(h, dataOf(idx, habitId), today).streak : 0;
     };
-    return { day, streakOf };
+    return { day, points, streakOf };
   }, [data, today]);
 
   const settings = settingsOf(data);
@@ -64,77 +67,105 @@ export function TodayScreen({ onOpenSettings }: Props) {
   return (
     <ScrollView
       style={{ backgroundColor: p.bg }}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.sm }]}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.md }]}
     >
       <View style={styles.header}>
         <View style={styles.titles}>
-          <Text style={[TYPE.dateLine, { color: p.text }]}>{fullDate(t, today)}</Text>
+          <Tag label={fullDate(t, today)} font="date" tilt={TILT.slightLeft} shadow="sm" />
           <Text style={[TYPE.meta, { color: p.muted }]}>
             {streak > 0
               ? t('today.meta', { day: number, streak })
               : t('today.metaFirst', { day: number })}
           </Text>
         </View>
-        <View style={styles.gear}>
-          <IconButton
-            icon="settings"
-            tone="muted"
-            label={t('settings.title')}
-            onPress={onOpenSettings}
-          />
-        </View>
+        <IconButton icon="settings" label={t('settings.title')} onPress={onOpenSettings} />
       </View>
 
-      <View
-        style={styles.hero}
-        accessible
-        accessibilityLabel={t('today.progress', { done: day.done, total: day.total })}
-      >
-        <Moon phase={day.phase} size={SIZE.moonDay} />
-        <View style={styles.score}>
-          <Text style={[TYPE.numberXL, { color: p.text }]}>
-            {day.done}
-            <Text style={[TYPE.numberXLLight, { color: p.muted }]}>
-              {' / '}
-              {day.total}
+      <Card radius={RADIUS.xl} style={styles.hero}>
+        <View
+          style={styles.heroRow}
+          accessible
+          accessibilityLabel={t('today.progress', { done: day.done, total: day.total })}
+        >
+          <Moon phase={day.phase} size={SIZE.moonDay} />
+          <View style={styles.score}>
+            <Text style={[TYPE.numberXL, { color: p.text }]}>
+              {day.done}
+              <Text style={[TYPE.numberXLLight, { color: p.muted }]}>
+                {' / '}
+                {day.total}
+              </Text>
             </Text>
-          </Text>
-          <Text style={[TYPE.note, { color: p.muted }]}>{phaseText}</Text>
+            <Text style={[TYPE.note, { color: p.muted }]}>{phaseText}</Text>
+          </View>
         </View>
-      </View>
+        {settings.ranks && view.points > 0 && (
+          <View style={styles.points}>
+            <Tag
+              label={t('today.points', { count: view.points })}
+              tone="sun"
+              font="badge"
+              tilt={6}
+              header={false}
+            />
+          </View>
+        )}
+      </Card>
 
       {quote !== null && (
-        <View style={styles.quote}>
-          <Text style={[TYPE.quote, { color: p.text }]}>{t(`quote.${quote}` as MessageKey)}</Text>
-          <Text style={[TYPE.caption, { color: p.muted }]}>{t('wolf.signature')}</Text>
-        </View>
+        <WolfQuote
+          text={t(`quote.${quote}` as MessageKey)}
+          sign={t('wolf.signature')}
+          mood={day.total > 0 && rest === 0 ? 'proud' : 'smirk'}
+        />
       )}
 
       <AddRow label={t('common.addPrompt')} onPress={() => showNew('task')} />
 
       {day.left.length > 0 && (
-        <View>
-          <SectionTitle title={t('today.left')} count={day.left.length} />
-          {day.left.map((item) => (
-            <LeftRow key={`${item.kind}:${item.id}`} item={item} today={today} view={view} t={t} />
-          ))}
+        <View style={styles.section}>
+          <SectionTitle
+            title={t('today.left')}
+            count={day.left.length}
+            tone="sun"
+            tilt={TILT.left}
+          />
+          <Card padded={false}>
+            {day.left.map((item, i) => (
+              <LeftRow
+                key={`${item.kind}:${item.id}`}
+                item={item}
+                today={today}
+                view={view}
+                t={t}
+                last={i === day.left.length - 1}
+              />
+            ))}
+          </Card>
         </View>
       )}
 
       {day.log.length > 0 && (
-        <View>
-          <View style={styles.logTitle}>
-            <SectionTitle title={t('today.done')} count={day.done} />
+        <View style={styles.section}>
+          <SectionTitle
+            title={t('today.done')}
+            count={day.done}
+            tone="teal"
+            tilt={TILT.slightRight}
+          />
+          <View>
+            {day.log.map((item) => (
+              <LogRow
+                key={`${item.kind}:${item.id}`}
+                time={item.at !== null ? clockOf(item.at) : ''}
+                title={item.title}
+                mark={t(
+                  item.state === 'slip' ? 'mark.slip' : item.bad ? 'mark.clean' : 'mark.done'
+                )}
+                bad={item.state === 'slip'}
+              />
+            ))}
           </View>
-          {day.log.map((item) => (
-            <LogRow
-              key={`${item.kind}:${item.id}`}
-              time={item.at !== null ? clockOf(item.at) : ''}
-              title={item.title}
-              mark={t(item.state === 'slip' ? 'mark.slip' : item.bad ? 'mark.clean' : 'mark.done')}
-              bad={item.state === 'slip'}
-            />
-          ))}
         </View>
       )}
     </ScrollView>
@@ -146,9 +177,10 @@ type RowProps = {
   today: string;
   view: { streakOf: (habitId: string) => number };
   t: Translate;
+  last: boolean;
 };
 
-function LeftRow({ item, today, view, t }: RowProps) {
+function LeftRow({ item, today, view, t, last }: RowProps) {
   const p = usePalette();
   const data = useDataStore((s) => s.data);
   const toast = useToast((s) => s.show);
@@ -164,7 +196,7 @@ function LeftRow({ item, today, view, t }: RowProps) {
         ? t('row.remindAt', { time: task.remindAt })
         : undefined;
     const right = item.debt ? (
-      <Text style={[TYPE.meta, { color: p.blood }]}>{t('mark.debt')}</Text>
+      <Pill label={t('mark.debt')} tone="red" filled />
     ) : task.priority > 0 ? (
       <PriorityMarks level={task.priority} />
     ) : null;
@@ -175,6 +207,7 @@ function LeftRow({ item, today, view, t }: RowProps) {
         phase={0}
         debt={item.debt}
         right={right}
+        last={last}
         onToggle={() => {
           A.toggleTask(task.id);
           toast(t('toast.marked', { title: item.title }), {
@@ -209,7 +242,8 @@ function LeftRow({ item, today, view, t }: RowProps) {
       title={item.title}
       sub={sub}
       phase={item.fraction}
-      right={meta ? <Text style={[TYPE.meta, { color: p.muted }]}>{meta}</Text> : null}
+      last={last}
+      right={meta ? <Text style={[TYPE.badge, { color: p.text }]}>{meta}</Text> : null}
       onToggle={() => {
         A.setCheckValue(habit.id, today, fullValue(habit));
         toast(t('toast.marked', { title: item.title }), {
@@ -223,11 +257,11 @@ function LeftRow({ item, today, view, t }: RowProps) {
 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.lg },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  titles: { flex: 1 },
-  gear: { marginRight: -SIZE.touchInset },
-  hero: { flexDirection: 'row', alignItems: 'center', gap: SPACE.hero },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  titles: { flex: 1, alignItems: 'flex-start', gap: SPACE.sm },
+  hero: { marginTop: SPACE.xs },
+  heroRow: { flexDirection: 'row', alignItems: 'center', gap: SPACE.hero },
   score: { flex: 1, gap: SPACE.xs },
-  quote: { gap: 2 },
-  logTitle: { marginBottom: SPACE.xs },
+  points: { position: 'absolute', top: -16, right: 14 },
+  section: { gap: SPACE.md },
 });

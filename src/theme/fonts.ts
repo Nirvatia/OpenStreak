@@ -1,12 +1,17 @@
 /** Имена загруженных шрифтов (`hooks/useFonts.ts`). На Android жирность задаётся только файлом. */
 export const FONT = {
-  /** «Луна»: единственный шрифт интерфейса */
-  onest: {
-    regular: 'Onest_400Regular',
-    medium: 'Onest_500Medium',
-    semibold: 'Onest_600SemiBold',
-    bold: 'Onest_700Bold',
-    extrabold: 'Onest_800ExtraBold',
+  /** «Мульт»: текст */
+  rubik: {
+    regular: 'Rubik_400Regular',
+    medium: 'Rubik_500Medium',
+    semibold: 'Rubik_600SemiBold',
+    bold: 'Rubik_700Bold',
+  },
+  /** «Мульт»: заголовки и числа */
+  unbounded: {
+    semibold: 'Unbounded_600SemiBold',
+    bold: 'Unbounded_700Bold',
+    extrabold: 'Unbounded_800ExtraBold',
   },
   /** только старые экраны; уходят вместе с ними (этап 4) */
   golos: {

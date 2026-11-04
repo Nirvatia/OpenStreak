@@ -249,7 +249,7 @@ export function createQuickHabit(input: {
     name: input.name,
     kind: input.kind,
     icon: 'target',
-    // Цвет нужен только старым экранам; в «Луне» привычки без цвета.
+    // Цвет нужен только старым экранам; в «Мульте» цвет плитки берётся из иконки.
     color: '#2f7cf6',
     days: null,
     question: '',

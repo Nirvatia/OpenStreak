@@ -21,9 +21,9 @@ export const ru = {
   'mark.debt': { plain: 'просрочено', bro: 'долг' },
   'mark.closed': 'закрыт',
 
-  'wolf.active': 'В деле',
-  'wolf.angry': 'Злой',
-  'wolf.rest': 'Отдых',
+  'wolf.smirk': 'Волк в деле',
+  'wolf.proud': 'Волк доволен',
+  'wolf.meh': 'Волк слил, но не сдаётся',
 
   'common.undo': 'Отменить',
   'common.back': 'Назад',
@@ -31,8 +31,8 @@ export const ru = {
   'common.add': 'Добавить',
   'common.addPrompt': 'Запиши дело или привычку',
 
-  'theme.dark': 'Ночь',
-  'theme.light': 'Рассвет',
+  'theme.dark': 'Вечер',
+  'theme.light': 'День',
   'theme.system': 'Как в системе',
 
   'wolf.signature': '— волк',
@@ -100,6 +100,12 @@ export const ru = {
   'today.fullMoon': 'полнолуние',
   'today.closed': 'полнолуние. День закрыт.',
   'today.empty': { plain: 'на сегодня пусто', bro: 'пусто. запиши, что делаем' },
+  'today.points': {
+    one: '+{count} очко',
+    few: '+{count} очка',
+    many: '+{count} очков',
+    other: '+{count} очка',
+  },
   'today.left': 'Осталось',
   'today.done': 'Сделано',
   'today.progress': 'Сделано {done} из {total}',

@@ -1,18 +1,19 @@
 /**
- * Чип: сфера, фильтр, «Сегодня / Завтра». Выбранный — инверсия (лунным светом).
- * Пунктирный — действие «добавить» («+ Сфера», «Дата…»).
+ * Чип-пилюля: сфера, фильтр, «Сегодня / Завтра». Выбранный — жёлтый, с тенью.
+ * Пунктирный — действие («Дата…», «+ Сфера»).
  */
 import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/metrics';
+import { RADIUS, STROKE } from '../theme/metrics';
+import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 
 type Props = {
   label: string;
   selected?: boolean;
   onPress?: () => void;
-  /** sm — фильтры и сферы (34); md — выбор дня (40) */
+  /** sm — фильтры и сферы (38); md — выбор в шторке (40) */
   size?: 'sm' | 'md';
   dashed?: boolean;
   /** toggle — можно выбрать несколько; radio — один из группы */
@@ -35,24 +36,21 @@ export function Chip({
         dashed ? undefined : role === 'radio' ? { checked: selected } : { selected }
       }
       onPress={onPress}
-      style={({ pressed }) => ({
-        height: size === 'sm' ? 34 : 40,
-        paddingHorizontal: size === 'sm' ? 12 : 14,
-        borderWidth: LINE.hair,
-        borderStyle: dashed ? 'dashed' : 'solid',
-        borderColor: selected ? p.text : dashed ? p.muted : p.line,
-        backgroundColor: selected ? p.text : pressed ? p.surface : 'transparent',
-        justifyContent: 'center',
-      })}
+      style={({ pressed }) => [
+        {
+          height: size === 'sm' ? 38 : 40,
+          paddingHorizontal: 14,
+          justifyContent: 'center',
+          borderWidth: STROKE.thin,
+          borderStyle: dashed ? 'dashed' : 'solid',
+          borderColor: p.line,
+          borderRadius: RADIUS.pill,
+          backgroundColor: selected ? p.sun : dashed ? 'transparent' : pressed ? p.tag : p.surface,
+        },
+        selected && hardShadow(p, 'sm'),
+      ]}
     >
-      <Text
-        style={[
-          TYPE.control,
-          { fontSize: size === 'sm' ? 13 : 14, color: selected ? p.onText : p.text },
-        ]}
-      >
-        {label}
-      </Text>
+      <Text style={[TYPE.control, { color: selected ? p.onSun : p.text }]}>{label}</Text>
     </Pressable>
   );
 }

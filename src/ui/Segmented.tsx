@@ -1,7 +1,8 @@
-/** Сегменты на подложке: «Все / Полезные / Вредные», «Дело / Привычка / Цель». */
+/** Сегменты-пилюли на подложке: «Все / Полезные / Вредные», «Дело / Привычка / Цель». */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { usePalette } from '../store/themeStore';
+import { RADIUS, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 
 export type SegmentItem<T extends string> = { value: T; label: string };
@@ -28,7 +29,7 @@ export function Segmented<T extends string>({
     <View
       accessibilityRole="radiogroup"
       accessibilityLabel={label}
-      style={[styles.frame, { backgroundColor: p[on] }]}
+      style={[styles.frame, { backgroundColor: p[on], borderColor: p.line }]}
     >
       {items.map((it) => {
         const sel = it.value === value;
@@ -38,9 +39,21 @@ export function Segmented<T extends string>({
             accessibilityRole="radio"
             accessibilityState={{ checked: sel }}
             onPress={() => onChange(it.value)}
-            style={[styles.item, { backgroundColor: sel ? p.raised : 'transparent' }]}
+            style={[
+              styles.item,
+              sel
+                ? { backgroundColor: p.sun, borderColor: p.line }
+                : { borderColor: 'transparent' },
+            ]}
           >
-            <Text style={[TYPE.control, { color: sel ? p.text : p.muted }]}>{it.label}</Text>
+            <Text
+              style={[
+                TYPE.control,
+                sel ? { color: p.onSun } : { color: p.text, fontFamily: TYPE.item.fontFamily },
+              ]}
+            >
+              {it.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -49,6 +62,19 @@ export function Segmented<T extends string>({
 }
 
 const styles = StyleSheet.create({
-  frame: { flexDirection: 'row', padding: 3, gap: 3 },
-  item: { flex: 1, height: 38, alignItems: 'center', justifyContent: 'center' },
+  frame: {
+    flexDirection: 'row',
+    padding: 4,
+    gap: 4,
+    borderWidth: STROKE.outline,
+    borderRadius: RADIUS.pill,
+  },
+  item: {
+    flex: 1,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: STROKE.thin,
+    borderRadius: RADIUS.pill,
+  },
 });

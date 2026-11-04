@@ -420,7 +420,7 @@ describe('настройки и новые операции', () => {
     expect(settingsOf(back)).toMatchObject({ weekStart: 0, reviewAt: '22:00', locale: 'es' });
     expect(
       cleanSettings({ theme: 'neon', weekStart: 3, reviewAt: '25:00', quotes: 'да' }, NOW)
-    ).toMatchObject({ theme: 'dark', weekStart: 1, reviewAt: '', quotes: true });
+    ).toMatchObject({ theme: 'system', weekStart: 1, reviewAt: '', quotes: true });
   });
 
   test('выполнение дела запоминает момент; возврат — сбрасывает', () => {

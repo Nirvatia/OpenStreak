@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Настройки — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 44px 20px 28px; display: flex; flex-direction: column; gap: 14px;">
+
+<div style="display: flex; align-items: center; gap: 14px;">
+<a href="{{todayHref}}" aria-label="Назад" style="width: 44px; height: 44px; flex: none; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 50%; box-shadow: 3px 3px 0 {{c.shadow}};">
+<dc-import name="M-Icon" icon="back" size="20" color="{{c.text}}" hint-size="20px,20px"></dc-import>
+</a>
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em;">Настройки</h1>
+</div>
+
+<section aria-label="Тема" style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 4px 0 0; align-self: flex-start; transform: rotate(-2deg); padding: 4px 12px; background: {{c.sun}}; color: {{c.onSun}}; border: 2.5px solid {{c.line}}; border-radius: 10px; font-size: 14px; font-weight: 700;">Тема</h2>
+<div role="radiogroup" aria-label="Тема" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="3">
+<button role="radio" aria-checked="{{t.checked}}" onClick="{{t.tap}}" style="height: 96px; padding: 0; overflow: hidden; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 16px; box-shadow: {{t.shadow}}; transform: rotate({{t.tilt}}); display: flex; flex-direction: column; text-align: left;">
+<span aria-hidden="true" style="flex: 1; width: 100%; display: grid; grid-template-columns: {{t.cols}};">
+<sc-for list="{{t.halves}}" as="h" hint-placeholder-count="1">
+<span style="background: {{h.bg}}; display: flex; align-items: center; justify-content: center; gap: 6px;">
+<span style="width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; background: {{h.sun}}; border: 2px solid {{h.line}};"></span>
+<span style="width: 22px; height: 12px; box-sizing: border-box; border-radius: 4px; background: {{h.surface}}; border: 2px solid {{h.line}};"></span>
+</span>
+</sc-for>
+</span>
+<span style="padding: 6px 8px; border-top: 2.5px solid {{c.line}}; font-size: 13px; font-weight: {{t.weight}}; background: {{t.labelBg}}; color: {{t.labelFg}}; white-space: nowrap;">{{t.label}}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="3">
+<section aria-label="{{s.title}}" style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 4px 0 0; align-self: flex-start; transform: rotate({{s.tilt}}); padding: 4px 12px; background: {{c.tag}}; border: 2.5px solid {{c.line}}; border-radius: 10px; font-size: 14px; font-weight: 700;">{{s.title}}</h2>
+<div style="background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{c.shadow}}; padding: 0 14px;">
+<sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; border-bottom: {{r.divider}};">
+<span style="display: flex; flex-direction: column; min-width: 0;"><span style="font-size: 15px; font-weight: 500;">{{r.label}}</span><sc-if value="{{r.hint}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: {{c.muted}};">{{r.hint}}</span></sc-if></span>
+<sc-if value="{{r.toggle}}" hint-placeholder-val="{{false}}">
+<button role="switch" aria-checked="{{r.on}}" aria-label="{{r.label}}" onClick="{{r.tap}}" style="width: 52px; height: 32px; flex: none; border: none; border-radius: 16px; background: {{r.track}}; padding: 0 3px; display: flex; justify-content: {{r.justify}}; align-items: center;">
+<span style="width: 26px; height: 26px; border-radius: 50%; background: {{r.knob}};"></span>
+</button>
+</sc-if>
+<sc-if value="{{r.value}}" hint-placeholder-val="{{false}}">
+<span style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: {{c.muted}}; white-space: nowrap;">{{r.value}}
+<dc-import name="M-Icon" icon="chevron" size="16" color="{{c.muted}}" hint-size="16px,16px"></dc-import></span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: null, tone: true, quotes: true, ranks: true };
+  }
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', tag: '#F7D9A8', divider: '#E9D9B6', off: '#E6D8B8', knobOff: '#5A5E6E', teal: '#17705F', knobOn: '#FFF8E8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', tag: '#3A4A73', divider: '#3A4A73', off: '#3A4A73', knobOff: '#AEB6CC', teal: '#4CC2AE', knobOn: '#0B1020' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const mode = this.state.mode ?? theme;
+    const half = (p) => ({ bg: p.bg, sun: p.sun, surface: p.surface, line: p.line });
+    const themes = [['day', 'День', [PAL.day]], ['night', 'Вечер', [PAL.night]], ['system', 'Как в системе', [PAL.day, PAL.night]]].map(([k, label, ps], i) => {
+      const on = mode === k;
+      return {
+        label, checked: on ? 'true' : 'false',
+        cols: ps.length === 1 ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))',
+        halves: ps.map(half),
+        shadow: on ? '4px 4px 0 ' + c.shadow : 'none',
+        tilt: on ? (i % 2 ? '2deg' : '-2deg') : '0deg',
+        weight: on ? 700 : 500,
+        labelBg: on ? c.sun : c.surface,
+        labelFg: on ? c.onSun : c.text,
+        tap: () => this.setState({ mode: k })
+      };
+    });
+    const sw = (key, label, hint) => {
+      const on = this.state[key];
+      return {
+        label, hint: hint || '', toggle: true, value: '', on: on ? 'true' : 'false',
+        track: on ? c.teal : c.off, knob: on ? c.knobOn : c.knobOff,
+        justify: on ? 'flex-end' : 'flex-start',
+        tap: () => this.setState({ [key]: !on })
+      };
+    };
+    const val = (label, value, hint) => ({ label, value, hint: hint || '', toggle: false });
+    const withDividers = (rows) => rows.map((r, i) => ({ ...r, divider: i === rows.length - 1 ? 'none' : '2px dashed ' + c.divider }));
+    return {
+      c, theme, themes,
+      todayHref: theme === 'night' ? 'M-Today-Night.dc.html' : 'M-Today.dc.html',
+      sections: [
+        { title: 'Характер', tilt: '1.5deg', rows: withDividers([sw('tone', 'Пацанский тон', 'выкл — обычные формулировки'), sw('quotes', 'Цитаты волка', 'одна в день, без фанатизма'), sw('ranks', 'Звания и очки'), val('Язык', 'Русский')]) },
+        { title: 'Дни', tilt: '-1.5deg', rows: withDividers([val('Неделя с', 'понедельника'), val('Итог дня', '21:30'), val('Места', '2', 'у зала, у дома')]) },
+        { title: 'Данные', tilt: '1deg', rows: withDividers([val('Бэкап', 'экспорт'), val('Синхронизация', 'скоро', 'телефон + ПК')]) }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

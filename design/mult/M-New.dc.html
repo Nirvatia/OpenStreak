@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Новое — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+
+<div aria-hidden="true" style="position: absolute; inset: 0; padding: 46px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+<span style="align-self: flex-start; transform: rotate(-2deg); padding: 6px 12px; background: {{c.tag}}; border: 2.5px solid {{c.line}}; border-radius: 12px; font-family: Unbounded, Rubik, sans-serif; font-size: 15px; font-weight: 700;">Среда, 4 ноября</span>
+<span style="height: 132px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 24px;"></span>
+</div>
+<a href="{{backHref}}" aria-label="Закрыть" style="position: absolute; inset: 0; background: {{c.scrim}}; opacity: 0.55;"></a>
+
+<section aria-label="Новое" style="position: absolute; left: 0; right: 0; bottom: 0; height: 712px; box-sizing: border-box; padding: 10px 20px 30px; background: {{c.surface}}; border-top: 2.5px solid {{c.line}}; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; gap: 16px;">
+<span aria-hidden="true" style="align-self: center; width: 44px; height: 6px; background: {{c.grab}}; border-radius: 999px;"></span>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 24px; font-weight: 800;">Новое</h1>
+<a href="{{backHref}}" aria-label="Закрыть" style="width: 44px; height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.bg}}; border: 2.5px solid {{c.line}}; border-radius: 50%;">
+<dc-import name="M-Icon" icon="close" size="18" color="{{c.text}}" hint-size="18px,18px"></dc-import>
+</a>
+</div>
+
+<div role="radiogroup" aria-label="Что это" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; background: {{c.bg}}; border: 2.5px solid {{c.line}}; border-radius: 999px;">
+<sc-for list="{{kinds}}" as="k" hint-placeholder-count="3">
+<button role="radio" aria-checked="{{k.checked}}" onClick="{{k.tap}}" style="height: 40px; border: {{k.border}}; border-radius: 999px; background: {{k.bg}}; color: {{k.fg}}; font-size: 15px; font-weight: {{k.weight}};">{{k.label}}</button>
+</sc-for>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 13px; color: {{c.muted}};">{{fieldLabel}}</span>
+<input value="Записаться в зал" style="height: 56px; box-sizing: border-box; padding: 0 14px; background: {{c.bg}}; border: 2.5px solid {{c.line}}; border-radius: 16px; outline: none; font: inherit; font-size: 20px; font-weight: 600; color: {{c.text}};">
+</label>
+
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; color: {{c.muted}};">когда</span>
+<div role="radiogroup" aria-label="Когда" style="display: flex; gap: 8px; flex-wrap: wrap;">
+<button role="radio" aria-checked="true" style="height: 40px; padding: 0 14px; background: {{c.sun}}; color: {{c.onSun}}; border: 2px solid {{c.line}}; border-radius: 999px; box-shadow: 3px 3px 0 {{c.shadow}}; font-size: 14px; font-weight: 700;">Сегодня</button>
+<button role="radio" aria-checked="false" style="height: 40px; padding: 0 14px; background: {{c.surface}}; color: {{c.text}}; border: 2px solid {{c.line}}; border-radius: 999px; font-size: 14px; font-weight: 500;">Завтра</button>
+<button role="radio" aria-checked="false" style="height: 40px; padding: 0 14px; background: {{c.surface}}; color: {{c.text}}; border: 2px solid {{c.line}}; border-radius: 999px; font-size: 14px; font-weight: 500;">Без даты</button>
+<button style="height: 40px; padding: 0 14px; background: transparent; color: {{c.text}}; border: 2px dashed {{c.line}}; border-radius: 999px; font-size: 14px; font-weight: 500;">Дата…</button>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; color: {{c.muted}};">важность</span>
+<div role="radiogroup" aria-label="Важность" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+<sc-for list="{{prios}}" as="p" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{p.checked}}" aria-label="{{p.label}}" onClick="{{p.tap}}" style="height: 46px; background: {{p.bg}}; border: 2.5px solid {{c.line}}; border-radius: 14px; box-shadow: {{p.shadow}}; display: flex; align-items: center; justify-content: center; gap: 5px;">
+<sc-for list="{{p.dots}}" as="d" hint-placeholder-count="2">
+<span style="width: 10px; height: 10px; box-sizing: border-box; background: {{p.dot}}; border: 2px solid {{c.line}}; transform: rotate(45deg);"></span>
+</sc-for>
+<sc-if value="{{p.none}}" hint-placeholder-val="{{false}}"><span style="width: 16px; height: 3px; background: {{c.muted}}; border-radius: 2px;"></span></sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; color: {{c.muted}};">напомнить</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<button style="min-height: 56px; padding: 0 12px; background: transparent; color: {{c.text}}; border: 2px dashed {{c.line}}; border-radius: 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; text-align: left;">
+<dc-import name="M-Icon" icon="remind" size="20" color="{{c.text}}" hint-size="20px,20px"></dc-import>По времени</button>
+<button style="min-height: 56px; padding: 0 12px; background: {{c.tag}}; color: {{c.text}}; border: 2.5px solid {{c.line}}; border-radius: 16px; box-shadow: 3px 3px 0 {{c.shadow}}; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; text-align: left;">
+<dc-import name="M-Icon" icon="place" size="20" color="{{c.text}}" hint-size="20px,20px"></dc-import>
+<span style="display: flex; flex-direction: column; line-height: 1.2;"><span>У зала</span><span style="font-size: 12px; font-weight: 400; color: {{c.muted}};">при входе · 150 м</span></span></button>
+</div>
+</div>
+
+<a href="{{backHref}}" style="margin-top: auto; height: 58px; display: flex; align-items: center; justify-content: center; background: {{c.sun}}; color: {{c.onSun}}; border: 2.5px solid {{c.line}}; border-radius: 18px; box-shadow: 5px 5px 0 {{c.shadow}}; text-decoration: none; font-family: Unbounded, Rubik, sans-serif; font-size: 18px; font-weight: 700;">Записать</a>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { kind: 'task', prio: 2 };
+  }
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', red: '#B8322A', tag: '#F7D9A8', scrim: '#1E2233', grab: '#E6D8B8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', red: '#FF8273', tag: '#3A4A73', scrim: '#05070E', grab: '#3A4A73' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const kinds = [['task', 'Дело'], ['habit', 'Привычка'], ['goal', 'Цель']].map(([k, label]) => {
+      const on = this.state.kind === k;
+      return {
+        label, checked: on ? 'true' : 'false',
+        bg: on ? c.sun : 'transparent', fg: on ? c.onSun : c.text,
+        border: on ? '2px solid ' + c.line : '2px solid transparent',
+        weight: on ? 700 : 500,
+        tap: () => this.setState({ kind: k })
+      };
+    });
+    const names = ['Без важности', 'Низкая', 'Средняя', 'Высокая'];
+    const prios = [0, 1, 2, 3].map((n) => {
+      const on = this.state.prio === n;
+      return {
+        label: names[n], checked: on ? 'true' : 'false',
+        dots: Array.from({ length: n }, (_, i) => i), none: n === 0,
+        dot: n === 3 ? c.red : c.sun,
+        bg: on ? c.tag : c.surface,
+        shadow: on ? '3px 3px 0 ' + c.shadow : 'none',
+        tap: () => this.setState({ prio: n })
+      };
+    });
+    const labels = { task: 'что сделать', habit: 'что делать', goal: 'цель' };
+    return {
+      c, theme, kinds, prios,
+      fieldLabel: labels[this.state.kind],
+      backHref: theme === 'night' ? 'M-Today-Night.dc.html' : 'M-Today.dc.html'
+    };
+  }
+}
+</script>
+</body>
+</html>

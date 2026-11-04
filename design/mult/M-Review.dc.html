@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Итог дня — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+textarea::placeholder{color:inherit;opacity:1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 44px 20px 28px; display: flex; flex-direction: column; gap: 16px;">
+
+<a href="{{todayHref}}" aria-label="Назад" style="width: 44px; height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 50%; box-shadow: 3px 3px 0 {{c.shadow}};">
+<dc-import name="M-Icon" icon="back" size="20" color="{{c.text}}" hint-size="20px,20px"></dc-import>
+</a>
+
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 13px; color: {{c.muted}};">Среда, 4 ноября · 7 из 8</span>
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em;">Итог дня</h1>
+</div>
+
+<div style="display: flex; align-items: flex-end; gap: 6px;">
+<dc-import name="M-Wolf" mood="{{wolf}}" size="84" theme="{{theme}}" hint-size="84px,84px"></dc-import>
+<p aria-live="polite" style="flex: 1; margin: 0 0 12px; padding: 12px 14px; background: {{c.tag}}; border: 2.5px solid {{c.line}}; border-radius: 18px 18px 18px 4px; font-size: 16px; font-weight: 500; line-height: 1.35;">{{verdict}}</p>
+</div>
+
+<section aria-label="Как прошёл день" style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700;">Как прошёл день?</h2>
+<div role="radiogroup" aria-label="Оценка дня" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;">
+<sc-for list="{{moods}}" as="m" hint-placeholder-count="5">
+<button role="radio" aria-checked="{{m.checked}}" onClick="{{m.pick}}" style="height: 96px; padding: 8px 2px; box-sizing: border-box; background: {{m.bg}}; color: {{c.text}}; border: 2.5px solid {{c.line}}; border-radius: 16px; box-shadow: {{m.shadow}}; transform: rotate({{m.tilt}}); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: {{m.weight}};">
+<dc-import name="M-Moon" phase="{{m.phase}}" state="normal" size="36" theme="{{theme}}" hint-size="36px,36px"></dc-import>
+{{m.label}}
+</button>
+</sc-for>
+</div>
+</section>
+
+<label style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 13px; color: {{c.muted}};">пара слов о дне — по желанию</span>
+<textarea placeholder="Что зашло, что нет" style="height: 104px; box-sizing: border-box; padding: 12px 14px; resize: none; background: {{c.surface}}; color: {{c.text}}; border: 2.5px solid {{c.line}}; border-radius: 16px; outline: none; font: inherit; font-size: 15px;"></textarea>
+</label>
+</div>
+
+<div style="position: absolute; left: 20px; right: 20px; bottom: 36px;">
+<a href="{{closedHref}}" style="height: 58px; display: flex; align-items: center; justify-content: center; background: {{c.sun}}; color: {{c.onSun}}; border: 2.5px solid {{c.line}}; border-radius: 18px; box-shadow: 5px 5px 0 {{c.shadow}}; text-decoration: none; font-family: Unbounded, Rubik, sans-serif; font-size: 18px; font-weight: 700;">Закрыть день</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { picked: 3 };
+  }
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', tag: '#F7D9A8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', tag: '#3A4A73' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const labels = ['Слил', 'Так себе', 'Норм', 'Хорош', 'Красава'];
+    const verdicts = ['Бывает. Завтра отыграемся.', 'Не огонь, но день прожит.', 'Ровно. Так и держи.', 'Достойно. Стая видит.', 'Полнолуние. Красава.'];
+    const tilts = ['-2deg', '1.5deg', '-1deg', '2deg', '-1.5deg'];
+    const p = this.state.picked;
+    const night = theme === 'night';
+    return {
+      c, theme,
+      verdict: verdicts[p],
+      wolf: p === 0 ? 'meh' : p >= 3 ? 'proud' : 'smirk',
+      todayHref: night ? 'M-Today-Night.dc.html' : 'M-Today.dc.html',
+      closedHref: night ? 'M-Closed.dc.html' : 'M-Closed-Day.dc.html',
+      moods: labels.map((label, i) => {
+        const on = i === p;
+        return {
+          label, phase: i / 4,
+          checked: on ? 'true' : 'false',
+          bg: on ? c.tag : c.surface,
+          shadow: on ? '4px 4px 0 ' + c.shadow : 'none',
+          tilt: on ? tilts[i] : '0deg',
+          weight: on ? 700 : 500,
+          pick: () => this.setState({ picked: i })
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: {{px}}; height: {{px}}; display: flex; align-items: center; justify-content: center;">
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 100 100" role="img" aria-label="{{label}}">
+<sc-if value="{{rest}}" hint-placeholder-val="{{false}}">
+<circle cx="50" cy="50" r="44" fill="none" stroke="{{ring}}" stroke-width="{{sw}}" stroke-dasharray="12 10" stroke-linecap="round"></circle>
+</sc-if>
+<sc-if value="{{solid}}" hint-placeholder-val="{{true}}">
+<circle cx="50" cy="50" r="44" fill="{{dark}}"></circle>
+<sc-if value="{{full}}" hint-placeholder-val="{{false}}">
+<circle cx="50" cy="50" r="44" fill="{{lit}}"></circle>
+<circle cx="36" cy="38" r="8" fill="{{crater}}"></circle>
+<circle cx="62" cy="62" r="11" fill="{{crater}}"></circle>
+<circle cx="66" cy="32" r="5" fill="{{crater}}"></circle>
+</sc-if>
+<sc-if value="{{partial}}" hint-placeholder-val="{{false}}">
+<path d="{{d}}" fill="{{lit}}"></path>
+</sc-if>
+<circle cx="50" cy="50" r="44" fill="none" stroke="{{ring}}" stroke-width="{{sw}}"></circle>
+</sc-if>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"phase":{"editor":"range","default":0.6,"min":0,"max":1,"step":0.05},"state":{"editor":"enum","default":"normal","options":["normal","slip","rest","debt"]},"size":{"editor":"int","default":96},"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":120,"height":120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      day: { sun: '#F5B82E', crater: '#E3A11C', red: '#B8322A', craterRed: '#9A2921', dark: '#E6D8B8', ring: '#1E2233', muted: '#5A5E6E' },
+      night: { sun: '#FFC94A', crater: '#EBB032', red: '#FF8273', craterRed: '#E86A5C', dark: '#3A4A73', ring: '#AEB6CC', muted: '#AEB6CC' }
+    };
+    const c = PAL[this.props.theme === 'night' ? 'night' : 'day'];
+    const size = Number(this.props.size ?? 96);
+    const state = this.props.state ?? 'normal';
+    const slip = state === 'slip';
+    const rest = state === 'rest';
+    let p = Number(this.props.phase ?? 0.6);
+    if (slip) p = 1;
+    p = Math.max(0, Math.min(1, p));
+    const rx = (44 * Math.abs(1 - 2 * p)).toFixed(2);
+    const d = 'M50 6 A44 44 0 0 1 50 94 A' + rx + ' 44 0 0 ' + (p < 0.5 ? 0 : 1) + ' 50 6 Z';
+    const label = slip ? 'Слив' : rest ? 'Выходной' : p >= 1 ? 'Зачёт' : p > 0 ? 'Сделано на ' + Math.round(p * 100) + '%' : 'Не сделано';
+    return {
+      size, px: size + 'px', d, label,
+      rest, solid: !rest,
+      full: p >= 1, partial: p > 0 && p < 1,
+      lit: slip ? c.red : c.sun,
+      crater: slip ? c.craterRed : c.crater,
+      dark: c.dark,
+      ring: state === 'debt' || slip ? c.red : rest ? c.muted : c.ring,
+      sw: size < 36 ? 8 : 6
+    };
+  }
+}
+</script>
+</body>
+</html>

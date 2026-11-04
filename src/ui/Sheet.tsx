@@ -1,5 +1,5 @@
 /**
- * Шторка «Луны» поверх экрана: подложка surface, «язычок», заголовок и крестик.
+ * Шторка «Мульта» поверх экрана: наклейка со скруглённым верхом, «язычок», заголовок и круглый крестик.
  * Высота — по содержимому, не больше 82% экрана. Закрывается крестиком, тапом по затемнению,
  * системной «назад» и жестом вниз за верх шторки.
  *
@@ -34,7 +34,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useT } from '../store/prefsStore';
 import { usePalette, useThemeStore } from '../store/themeStore';
-import { SCRIM_OPACITY, SPACE } from '../theme/metrics';
+import { RADIUS, SCRIM_OPACITY, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { IconButton } from './Button';
 
@@ -128,30 +128,25 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
             accessibilityViewIsModal
             style={[
               {
-                maxHeight: Math.round(height * 0.82),
+                maxHeight: Math.round(height * 0.86),
                 backgroundColor: p.surface,
+                borderColor: p.line,
               },
+              styles.panel,
               panelStyle,
             ]}
           >
             <GestureDetector gesture={drag}>
               <View style={styles.top}>
-                <View style={[styles.grabber, { backgroundColor: p.raised }]} />
+                <View style={[styles.grabber, { backgroundColor: p.track }]} />
                 <View style={styles.head}>
                   <Text
                     accessibilityRole="header"
-                    style={[TYPE.heading, { flex: 1, fontSize: 24, lineHeight: 30, color: p.text }]}
+                    style={[TYPE.heading, styles.title, { color: p.text }]}
                   >
                     {title}
                   </Text>
-                  <View style={{ marginRight: -10 }}>
-                    <IconButton
-                      icon="close"
-                      tone="muted"
-                      label={t('common.close')}
-                      onPress={onClose}
-                    />
-                  </View>
+                  <IconButton icon="close" on="bg" label={t('common.close')} onPress={onClose} />
                 </View>
               </View>
             </GestureDetector>
@@ -184,9 +179,17 @@ const styles = StyleSheet.create({
     left: 0,
     justifyContent: 'flex-end',
   },
-  top: { paddingTop: 12, paddingHorizontal: SPACE.screenX, gap: 6 },
-  grabber: { alignSelf: 'center', width: 40, height: 4 },
+  panel: {
+    borderTopWidth: STROKE.outline,
+    borderLeftWidth: STROKE.outline,
+    borderRightWidth: STROKE.outline,
+    borderTopLeftRadius: RADIUS.sheet,
+    borderTopRightRadius: RADIUS.sheet,
+  },
+  top: { paddingTop: 10, paddingHorizontal: SPACE.screenX, gap: SPACE.sm },
+  grabber: { alignSelf: 'center', width: 44, height: 6, borderRadius: 3 },
+  title: { flex: 1 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  content: { paddingHorizontal: SPACE.screenX, paddingTop: 12, gap: 18 },
-  footer: { paddingHorizontal: SPACE.screenX, paddingTop: 12 },
+  content: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md, gap: SPACE.lg },
+  footer: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md },
 });

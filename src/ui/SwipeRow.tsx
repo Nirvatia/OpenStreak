@@ -87,12 +87,12 @@ export function SwipeRow({ children, label, icon = 'delete', onSwipe }: Props) {
       accessibilityActions={[{ name: 'swipe', label }]}
       onAccessibilityAction={(e) => e.nativeEvent.actionName === 'swipe' && onSwipe()}
     >
-      <View style={[StyleSheet.absoluteFill, styles.under, { backgroundColor: p.raised }]}>
+      <View style={[StyleSheet.absoluteFill, styles.under, { backgroundColor: p.tag }]}>
         <Icon name={icon} size={18} tone="text" />
-        <Text style={[TYPE.mark, { color: p.text }]}>{label}</Text>
+        <Text style={[TYPE.label, { color: p.text }]}>{label}</Text>
       </View>
       <GestureDetector gesture={pan}>
-        <Animated.View style={[{ backgroundColor: p.bg }, rowStyle]}>
+        <Animated.View style={[{ backgroundColor: p.surface }, rowStyle]}>
           {children(guard)}
         </Animated.View>
       </GestureDetector>

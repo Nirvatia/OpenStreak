@@ -1,10 +1,8 @@
 /** Каталог: шапки, таб-бар, шторка, тост. */
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
 import { SPACE } from '../../theme/metrics';
-import { TYPE } from '../../theme/type';
 import { Button, IconButton } from '../Button';
 import { Chip } from '../Chip';
 import { OptionTile } from '../OptionTile';
@@ -15,12 +13,12 @@ import { Sheet } from '../Sheet';
 import { TabBar } from '../TabBar';
 import { TextField } from '../TextField';
 import { showToast } from '../toast';
+import { WolfQuote } from '../Sticker';
 import { Section } from './Section';
 
 type Tab = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
 
 export function CatalogShell() {
-  const p = usePalette();
   const t = useT();
   const [tab, setTab] = useState<Tab>('today');
   const [sheet, setSheet] = useState(false);
@@ -35,24 +33,22 @@ export function CatalogShell() {
           <ScreenHeader
             kicker="3 договора · 1 закрыт"
             title="Цели"
-            right={<IconButton icon="plus" label="Новая цель" variant="solid" />}
+            right={<IconButton icon="plus" label="Новая цель" variant="sun" />}
           />
           <ScreenHeader
             kicker="12 в работе · 1 долг"
             title="Дела"
-            right={<IconButton icon="calendar" label="Календарь" tone="muted" />}
+            right={<IconButton icon="settings" label="Настройки" />}
           />
           <ScreenHeader title="Настройки" onBack={() => {}} />
         </View>
       </Section>
 
       <Section title="Цитата">
-        <View style={{ gap: 2 }}>
-          <Text style={[TYPE.quote, { color: p.text }]}>
-            Волк не ждёт понедельника. Волк и есть понедельник.
-          </Text>
-          <Text style={[TYPE.label, { color: p.muted }]}>{t('wolf.signature')}</Text>
-        </View>
+        <WolfQuote
+          text="Волк не ждёт понедельника. Волк и есть понедельник."
+          sign={t('wolf.signature')}
+        />
       </Section>
 
       <Section title="Таб-бар">

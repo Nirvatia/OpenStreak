@@ -16,7 +16,7 @@ export type MoonDay = {
   today?: boolean;
 };
 
-export function WeekMoons({ days, size = 22 }: { days: MoonDay[]; size?: number }) {
+export function WeekMoons({ days, size = 28 }: { days: MoonDay[]; size?: number }) {
   const p = usePalette();
   const t = useT();
   return (

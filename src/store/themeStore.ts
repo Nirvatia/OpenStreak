@@ -20,7 +20,7 @@ type ThemeStore = {
   system: Scheme | null;
   /** тема, которая реально показывается */
   scheme: Scheme;
-  /** палитра «Луны» для новых компонентов */
+  /** палитра «Мульта» для новых компонентов */
   palette: Palette;
 
   /** @deprecated старые экраны: то же, что `scheme` */
@@ -88,5 +88,5 @@ Appearance.addChangeListener(({ colorScheme }) => {
   useThemeStore.setState(derive(useThemeStore.getState().mode, system));
 });
 
-/** Палитра «Луны» текущей темы. */
+/** Палитра «Мульта» текущей темы. */
 export const usePalette = (): Palette => useThemeStore((s) => s.palette);

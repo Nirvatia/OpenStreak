@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Стая — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 46px 20px 120px; display: flex; flex-direction: column; gap: 16px;">
+
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 13px; color: {{c.muted}}; font-variant-numeric: tabular-nums;">с тобой 47 дней</span>
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em;">Стая</h1>
+</div>
+
+<section aria-label="Звание" style="display: flex; flex-direction: column; gap: 14px; padding: 16px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 24px; box-shadow: 5px 5px 0 {{c.shadow}};">
+<div style="display: flex; align-items: center; gap: 12px;">
+<dc-import name="M-Wolf" mood="smirk" size="84" theme="{{theme}}" hint-size="84px,84px"></dc-import>
+<span style="display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 13px; color: {{c.muted}};">Звание</span>
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 32px; font-weight: 800; line-height: 1.05;">Волк</span>
+<span style="font-size: 14px; font-variant-numeric: tabular-nums;"><b>1 240</b> очков · до Вожака 760</span>
+</span>
+</div>
+<div role="progressbar" aria-label="До Вожака" aria-valuemin="1000" aria-valuemax="2000" aria-valuenow="1240" style="height: 18px; box-sizing: border-box; background: {{c.track}}; border: 2.5px solid {{c.line}}; border-radius: 999px; overflow: hidden;">
+<div style="width: 24%; height: 100%; background: {{c.sun}}; border-right: 2.5px solid {{c.line}};"></div>
+</div>
+<ol aria-label="Звания" style="margin: 0; padding: 0; list-style: none; display: flex; gap: 6px; flex-wrap: wrap;">
+<sc-for list="{{ranks}}" as="r" hint-placeholder-count="5">
+<li style="transform: rotate({{r.tilt}}); padding: 4px 10px; background: {{r.bg}}; color: {{r.fg}}; border: 2px solid {{r.border}}; border-radius: 10px; font-size: 13px; font-weight: {{r.weight}};">{{r.name}}</li>
+</sc-for>
+</ol>
+</section>
+
+<section aria-label="Неделя" style="display: flex; flex-direction: column; gap: 12px; padding: 16px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 24px; box-shadow: 5px 5px 0 {{c.shadow}};">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700;">Неделя</h2>
+<span style="font-size: 13px; color: {{c.muted}};"><b style="font-family: Unbounded, Rubik, sans-serif; font-size: 18px; color: {{c.text}};">58</b> отметок</span>
+</div>
+<div style="height: 118px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; align-items: end;">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="7">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+<span style="font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;">{{b.v}}</span>
+<span style="width: 100%; height: {{b.h}}; box-sizing: border-box; background: {{b.bg}}; border: 2.5px solid {{c.line}}; border-radius: 8px 8px 4px 4px;"></span>
+<span style="font-size: 12px; color: {{b.labelColor}}; font-weight: {{b.weight}};">{{b.d}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<sc-for list="{{nums}}" as="n" hint-placeholder-count="4">
+<div style="transform: rotate({{n.tilt}}); display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: {{n.bg}}; color: {{n.fg}}; border: 2.5px solid {{c.line}}; border-radius: 18px; box-shadow: 4px 4px 0 {{c.shadow}};">
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 28px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums;">{{n.v}}</span>
+<span style="font-size: 13px; font-weight: 500;">{{n.l}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px;">
+<dc-import name="M-Nav" active="pack" theme="{{theme}}" hint-size="390px,96px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', teal: '#17705F', onTeal: '#FFF8E8', red: '#B8322A', onRed: '#FFF8E8', tag: '#F7D9A8', track: '#E6D8B8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', teal: '#4CC2AE', onTeal: '#0B1020', red: '#FF8273', onRed: '#0B1020', tag: '#3A4A73', track: '#1D2740' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const tilts = ['-3deg', '2deg', '-2deg', '3deg', '-1deg'];
+    const ranks = ['Щенок', 'Волчонок', 'Волк', 'Вожак', 'Альфа'].map((name, i) => {
+      const past = i < 2, cur = i === 2;
+      return {
+        name, tilt: tilts[i],
+        bg: cur ? c.sun : past ? c.tag : 'transparent',
+        fg: cur ? c.onSun : past ? c.text : c.muted,
+        border: cur || past ? c.line : c.muted,
+        weight: cur ? 700 : 500
+      };
+    });
+    const data = [['чт', 7], ['пт', 9], ['сб', 6], ['вс', 4], ['пн', 8], ['вт', 11], ['ср', 13]];
+    const bars = data.map(([d, v], i) => {
+      const today = i === data.length - 1;
+      return {
+        d, v: String(v),
+        h: Math.round((v / 13) * 72) + 'px',
+        bg: today ? c.sun : c.tag,
+        labelColor: today ? c.text : c.muted,
+        weight: today ? 700 : 400
+      };
+    });
+    return {
+      c, theme, ranks, bars,
+      nums: [
+        { v: '23', l: 'дела закрыто', bg: c.surface, fg: c.text, tilt: '-1deg' },
+        { v: '6', l: 'чистых дней подряд', bg: c.teal, fg: c.onTeal, tilt: '1.5deg' },
+        { v: '41', l: 'лучшая серия', bg: c.sun, fg: c.onSun, tilt: '1deg' },
+        { v: '1', l: 'слив за неделю', bg: c.red, fg: c.onRed, tilt: '-1.5deg' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

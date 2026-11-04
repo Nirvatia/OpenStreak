@@ -1,10 +1,14 @@
-/** Тонкая линия между строками. */
+/** Пунктир между строками в наклейке. */
 import React from 'react';
 import { View } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/metrics';
+import { STROKE } from '../theme/metrics';
 
-export function Divider({ color }: { color?: string }) {
+export function Divider() {
   const p = usePalette();
-  return <View style={{ height: LINE.hair, backgroundColor: color ?? p.line }} />;
+  return (
+    <View
+      style={{ borderBottomWidth: STROKE.thin, borderStyle: 'dashed', borderColor: p.divider }}
+    />
+  );
 }

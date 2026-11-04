@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Цели — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 46px 20px 120px; display: flex; flex-direction: column; gap: 16px;">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 13px; color: {{c.muted}}; font-variant-numeric: tabular-nums;">4 договора · 1 закрыт</span>
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em;">Цели</h1>
+</div>
+<a href="M-New.dc.html" aria-label="Новая цель" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.sun}}; border: 2.5px solid {{c.line}}; border-radius: 50%; box-shadow: 3px 3px 0 {{c.shadow}};">
+<dc-import name="M-Icon" icon="plus" size="20" color="{{c.onSun}}" hint-size="20px,20px"></dc-import>
+</a>
+</div>
+
+<article style="position: relative; display: flex; flex-direction: column; gap: 14px; margin-top: 6px; padding: 20px 18px 18px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 24px; box-shadow: 5px 5px 0 {{c.shadow}};">
+<span style="position: absolute; top: -15px; left: 16px; transform: rotate(-3deg); padding: 4px 10px; background: {{c.tag}}; border: 2.5px solid {{c.line}}; border-radius: 10px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;">Договор № 007 · Спорт</span>
+<h2 style="margin: 4px 0 0; font-family: Unbounded, Rubik, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.2;">Пробежать полумарафон</h2>
+<div style="display: flex; align-items: center; gap: 14px;">
+<span style="display: flex; align-items: baseline; gap: 6px; padding: 8px 14px; background: {{c.sun}}; color: {{c.onSun}}; border: 2.5px solid {{c.line}}; border-radius: 16px;">
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;">47</span>
+<span style="font-size: 14px; font-weight: 600;">дней осталось</span>
+</span>
+<span style="font-size: 13px; color: {{c.muted}};">срок —<br>20 декабря</span>
+</div>
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 13px; color: {{c.muted}};">зачёт, если</dt><dd style="margin: 0; font-size: 16px; font-weight: 500;">21,1 км без остановок</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 13px; color: {{c.muted}};">награда</dt><dd style="margin: 0; font-size: 16px; font-weight: 500;">Новые кроссы</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 13px; color: {{c.red}}; font-weight: 600;">если слил</dt><dd style="margin: 0; font-size: 16px; font-weight: 500;">5 000 ₽ в общак</dd></div>
+</dl>
+<span style="align-self: flex-end; transform: rotate(4deg); display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: {{c.teal}}; color: {{c.onTeal}}; border: 2.5px solid {{c.line}}; border-radius: 999px; font-size: 13px; font-weight: 700;">
+<dc-import name="M-Icon" icon="check" size="16" color="{{c.onTeal}}" hint-size="16px,16px"></dc-import>Слово дано · 01.11.26</span>
+</article>
+
+<section aria-label="Остальные" style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 4px 0 0; align-self: flex-start; transform: rotate(1.5deg); padding: 4px 12px; background: {{c.tag}}; border: 2.5px solid {{c.line}}; border-radius: 10px; font-size: 14px; font-weight: 700;">Остальные · 3</h2>
+<div style="background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{c.shadow}}; padding: 0 14px;">
+<sc-for list="{{others}}" as="o" hint-placeholder-count="3">
+<a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 64px; border-bottom: {{o.divider}}; text-decoration: none;">
+<span style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+<span style="font-size: 16px; font-weight: 500; color: {{o.titleColor}}; text-decoration: {{o.deco}};">{{o.title}}</span>
+<span style="font-size: 13px; color: {{o.subColor}};">{{o.sub}}</span>
+</span>
+<sc-if value="{{o.days}}" hint-placeholder-val="{{true}}">
+<span style="min-width: 44px; text-align: right; font-family: Unbounded, Rubik, sans-serif; font-size: 20px; font-weight: 800; color: {{o.daysColor}}; font-variant-numeric: tabular-nums;">{{o.days}}</span>
+</sc-if>
+<sc-if value="{{o.closed}}" hint-placeholder-val="{{false}}">
+<span style="padding: 2px 10px; border: 2px solid {{c.teal}}; color: {{c.teal}}; border-radius: 999px; font-size: 13px; font-weight: 600;">закрыт</span>
+</sc-if>
+</a>
+</sc-for>
+</div>
+</section>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px;">
+<dc-import name="M-Nav" active="goals" theme="{{theme}}" hint-size="390px,96px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', teal: '#17705F', onTeal: '#FFF8E8', red: '#B8322A', tag: '#F7D9A8', divider: '#E9D9B6' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', teal: '#4CC2AE', onTeal: '#0B1020', red: '#FF8273', tag: '#3A4A73', divider: '#3A4A73' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const list = [
+      { title: 'Сдать на права', sub: 'просрочено на 3 дня', days: '−3', overdue: true },
+      { title: 'Отложить на тачку', sub: 'Деньги · награда: обмыть', days: '112' },
+      { title: 'Бросить курить', sub: 'Здоровье · закрыт 12.10', days: '', closed: true }
+    ];
+    return {
+      c, theme,
+      others: list.map((o, i) => ({
+        ...o,
+        closed: !!o.closed,
+        titleColor: o.closed ? c.muted : c.text,
+        deco: o.closed ? 'line-through' : 'none',
+        subColor: o.overdue ? c.red : c.muted,
+        daysColor: o.overdue ? c.red : c.text,
+        divider: i === list.length - 1 ? 'none' : '2px dashed ' + c.divider
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

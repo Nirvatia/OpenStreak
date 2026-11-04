@@ -1,5 +1,5 @@
 /**
- * «Дела» (design/luna/L-Tasks): сколько в работе и долгов, поиск, сферы, группы
+ * «Дела» (design/mult/M-Tasks): сколько в работе и долгов, поиск, сферы, группы
  * «Долги / Сегодня / Завтра / Позже / Без даты». Луна — выполнить (выполненное остаётся
  * зачёркнутым до конца дня), тап по строке — правка, свайп влево — вычеркнуть с «Вернуть».
  */
@@ -14,9 +14,10 @@ import { openTasksByArea, taskCounts, taskGroups, type TaskGroupKey } from '../.
 import type { MessageKey } from '../../i18n';
 import { useT, type Translate } from '../../store/prefsStore';
 import { usePalette } from '../../store/themeStore';
-import { SPACE } from '../../theme/metrics';
+import { RADIUS, SPACE, STROKE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
-import { AddRow } from '../../ui/Button';
+import { AddRow, IconButton } from '../../ui/Button';
+import { Card, type Tone } from '../../ui/Sticker';
 import { Chip } from '../../ui/Chip';
 import { MoonRow } from '../../ui/MoonRow';
 import { PriorityMarks } from '../../ui/Priority';
@@ -26,6 +27,15 @@ import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { dayMonth } from '../format';
 import { useNewSheet } from '../new/newSheetStore';
+
+/** Цвет и наклон плашки группы: долги — красные, сегодня — жёлтая, дальше — бумажные. */
+const GROUP_TONE: Record<TaskGroupKey, [Tone, number]> = {
+  debts: ['red', TILT.slightLeft],
+  today: ['sun', TILT.slightRight],
+  tomorrow: ['tag', -1.5],
+  later: ['tag', 2],
+  someday: ['tag', -1],
+};
 
 const GROUP_LABEL: Record<TaskGroupKey, MessageKey> = {
   debts: 'tasks.overdue',
@@ -82,10 +92,21 @@ export function TasksScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: p.bg }}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.sm }]}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.md }]}
       keyboardShouldPersistTaps="handled"
     >
-      <ScreenHeader kicker={kicker} title={t('tab.tasks')} />
+      <ScreenHeader
+        kicker={kicker}
+        title={t('tab.tasks')}
+        right={
+          <IconButton
+            icon="plus"
+            variant="sun"
+            label={t('tasks.add')}
+            onPress={() => show('task', { areaId: area })}
+          />
+        }
+      />
 
       <TextField
         variant="search"
@@ -138,24 +159,32 @@ export function TasksScreen() {
             <SectionTitle
               title={t(GROUP_LABEL[g.key])}
               count={g.tasks.length}
-              color={g.key === 'debts' ? p.blood : undefined}
+              tone={GROUP_TONE[g.key][0]}
+              tilt={GROUP_TONE[g.key][1]}
             />
-            {g.tasks.map((task) => (
-              <SwipeRow key={task.id} label={t('tasks.swipe')} onSwipe={() => remove(task)}>
-                {(guard) => (
-                  <MoonRow
-                    title={task.title}
-                    sub={metaOf(task, today, areaName, t)}
-                    phase={task.doneOn ? 1 : 0}
-                    done={task.doneOn !== null}
-                    debt={g.key === 'debts'}
-                    onToggle={guard(() => A.toggleTask(task.id))}
-                    onPress={guard(() => editTask(task.id))}
-                    right={task.priority > 0 ? <PriorityMarks level={task.priority} /> : null}
-                  />
-                )}
-              </SwipeRow>
-            ))}
+            <Card padded={false}>
+              {/* Обрезка — во внутреннем блоке: подложка свайпа не вылезает за скругления,
+                  а тень наклейки остаётся снаружи. */}
+              <View style={styles.clip}>
+                {g.tasks.map((task, i) => (
+                  <SwipeRow key={task.id} label={t('tasks.swipe')} onSwipe={() => remove(task)}>
+                    {(guard) => (
+                      <MoonRow
+                        title={task.title}
+                        sub={metaOf(task, today, areaName, t)}
+                        phase={task.doneOn ? 1 : 0}
+                        done={task.doneOn !== null}
+                        debt={g.key === 'debts'}
+                        onToggle={guard(() => A.toggleTask(task.id))}
+                        onPress={guard(() => editTask(task.id))}
+                        right={task.priority > 0 ? <PriorityMarks level={task.priority} /> : null}
+                        last={i === g.tasks.length - 1}
+                      />
+                    )}
+                  </SwipeRow>
+                ))}
+              </View>
+            </Card>
           </View>
         ))
       )}
@@ -180,8 +209,9 @@ function metaOf(task: Task, today: string, areas: Map<string, string>, t: Transl
 }
 
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.md },
+  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
-  group: { marginTop: SPACE.xs },
+  group: { marginTop: SPACE.xs, gap: SPACE.md },
+  clip: { overflow: 'hidden', borderRadius: RADIUS.lg - STROKE.outline },
   empty: { gap: SPACE.md, paddingTop: SPACE.sm },
 });

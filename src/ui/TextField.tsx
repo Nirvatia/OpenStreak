@@ -1,11 +1,11 @@
 /**
- * Поля ввода. title — главное поле шторки (крупно, черта снизу); search — поиск на подложке;
- * note — многострочное на подложке. Метка над полем — всегда видимая.
+ * Поля ввода «Мульта» — наклейки с обводкой. title — главное поле шторки (крупно);
+ * search — поиск со значком; note — многострочное. Метка над полем — всегда видимая.
  */
 import React from 'react';
 import { Platform, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/metrics';
+import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon } from './icons';
 
@@ -15,7 +15,7 @@ type Props = Omit<TextInputProps, 'style'> & {
   variant?: 'title' | 'search' | 'note';
 };
 
-/** На вебе браузер рисует свою скруглённую рамку фокуса; у полей «Луны» фокус видно по черте. */
+/** На вебе браузер рисует свою рамку фокуса поверх нашей обводки — убираем её. */
 const NO_WEB_OUTLINE = Platform.OS === 'web' ? { outlineWidth: 0 } : null;
 
 export function TextField({ label, variant = 'title', ...input }: Props) {
@@ -34,12 +34,15 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
           flexDirection: 'row',
           alignItems: 'center',
           gap: 10,
-          minHeight: 44,
-          paddingHorizontal: 12,
+          height: 50,
+          paddingHorizontal: 14,
           backgroundColor: p.surface,
+          borderWidth: STROKE.outline,
+          borderColor: p.line,
+          borderRadius: RADIUS.md,
         }}
       >
-        <Icon name="search" size={18} tone="muted" />
+        <Icon name="search" size={20} tone="muted" />
         <TextInput
           {...common}
           style={[TYPE.body, { flex: 1, color: p.text, paddingVertical: 0 }, NO_WEB_OUTLINE]}
@@ -49,18 +52,21 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
   }
 
   return (
-    <View style={{ gap: 6 }}>
+    <View style={{ gap: SPACE.tight }}>
       <Text style={[TYPE.meta, { color: p.muted }]}>{label}</Text>
       {variant === 'title' ? (
         <TextInput
           {...common}
           style={[
-            TYPE.heading,
+            TYPE.input,
             {
+              height: 56,
+              paddingHorizontal: 14,
               color: p.text,
-              paddingVertical: 6,
-              borderBottomWidth: LINE.bold,
-              borderBottomColor: p.text,
+              backgroundColor: p.bg,
+              borderWidth: STROKE.outline,
+              borderColor: p.line,
+              borderRadius: RADIUS.md,
             },
             NO_WEB_OUTLINE,
           ]}
@@ -73,13 +79,14 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
           style={[
             TYPE.body,
             {
-              minHeight: 104,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
+              minHeight: 96,
+              paddingHorizontal: 14,
+              paddingVertical: SPACE.md,
               color: p.text,
-              backgroundColor: p.surface,
-              borderWidth: LINE.hair,
+              backgroundColor: p.bg,
+              borderWidth: STROKE.outline,
               borderColor: p.line,
+              borderRadius: RADIUS.md,
             },
             NO_WEB_OUTLINE,
           ]}

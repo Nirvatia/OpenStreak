@@ -20,9 +20,13 @@ so versions match `expo/bundledNativeModules.json`; never bump `expo` to another
 # Rules for this repo
 
 - **Contrast is mandatory.** Every text/background pair must pass WCAG 2.x (≥ 4.5 for normal text,
-  ≥ 3 for large text and for icons, moons and other non-text marks) in **both** themes (Night and Dawn). Colours live in
+  ≥ 3 for large text and for icons, moons and other non-text marks) in **both** themes (День and Вечерний мульт). Colours live in
   `src/theme/palettes.json`; add any new pair to `checks` there and run `npm run check:contrast`.
   No `opacity` on elements that carry text — use a solid colour token instead.
+- **Design is «Мульт»** (`design/mult`, rules in `ROADMAP.md` → «Принятые решения»): stickers with a
+  2.5 outline and a hard shadow (`theme/sticker.ts`), tilt only on decorations (tags, badges), colour
+  with meaning (sun — moon and main action, teal — done/on, red — only slips and debts). Screens use
+  only `src/ui` components, tokens from `src/theme` and string keys from `src/i18n`.
 - Before committing run `npm run check` (typecheck + lint + tests + contrast) and `npm run format:check`.
 - Known bugs are pinned by `test.failing` in `src/utils/__tests__`. When you fix one, turn it into a
   normal `test`.

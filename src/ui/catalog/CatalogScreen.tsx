@@ -1,5 +1,5 @@
 /**
- * Каталог компонентов «Луны» — для визуальной проверки в обеих темах.
+ * Каталог компонентов «Мульта» — для визуальной проверки в обеих темах.
  * Открывается только в разработке: `EXPO_PUBLIC_CATALOG=1 npx expo start` или `?catalog` на вебе.
  */
 import React from 'react';
@@ -10,7 +10,8 @@ import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Palette, type ThemeMode } from '../../theme/palette';
 import { SPACE } from '../../theme/metrics';
 import { TYPE, type TypeVariant } from '../../theme/type';
-import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, Wolf, type UiIconName } from '../icons';
+import { HABIT_ICONS, Icon, IconTile, UI_ICONS, Wolf, type UiIconName } from '../icons';
+import { Badge, Card, Pill, Tag } from '../Sticker';
 import { Moon } from '../Moon';
 import { moonLook, type DayState } from '../moon';
 import { Segmented } from '../Segmented';
@@ -19,7 +20,18 @@ import { CatalogRows } from './CatalogRows';
 import { CatalogShell } from './CatalogShell';
 import { Section } from './Section';
 
-const SWATCHES: (keyof Palette)[] = ['bg', 'surface', 'raised', 'line', 'text', 'muted', 'blood'];
+const SWATCHES: (keyof Palette)[] = [
+  'bg',
+  'surface',
+  'text',
+  'muted',
+  'sun',
+  'teal',
+  'red',
+  'tag',
+  'sky',
+  'track',
+];
 
 const SAMPLES: [TypeVariant, string][] = [
   ['display', 'День закрыт.'],
@@ -30,10 +42,11 @@ const SAMPLES: [TypeVariant, string][] = [
   ['button', 'Записать'],
   ['item', 'Записаться в зал'],
   ['quote', 'Волк не ждёт понедельника. Волк и есть понедельник.'],
-  ['body', 'Блоки отделяются фоном, а не рамками.'],
+  ['body', 'Наклейки: обводка и жёсткая тень.'],
   ['label', 'Осталось 4'],
   ['mark', 'зачёт'],
   ['meta', '18:00 · Работа'],
+  ['badge', '+30 очков'],
   ['tab', 'Сегодня'],
 ];
 
@@ -58,7 +71,7 @@ export function CatalogScreen() {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.lg }]}
     >
       <Text style={[TYPE.meta, { color: p.muted }]}>dev · каталог</Text>
-      <Text style={[TYPE.title, { color: p.text }]}>Луна</Text>
+      <Text style={[TYPE.title, { color: p.text }]}>Мульт</Text>
 
       <Section title="Тема">
         <Segmented<ThemeMode>
@@ -92,13 +105,35 @@ export function CatalogScreen() {
         </View>
       </Section>
 
-      <Section title="Текст · Onest">
+      <Section title="Текст · Unbounded и Rubik">
         {SAMPLES.map(([v, text]) => (
           <View key={v} style={{ gap: 2 }}>
             <Text style={[TYPE.meta, { color: p.muted }]}>{v}</Text>
             <Text style={[TYPE[v], { color: p.text }]}>{text}</Text>
           </View>
         ))}
+      </Section>
+
+      <Section title="Наклейки, плашки, бейджи">
+        <View style={styles.row}>
+          <Tag label="Среда, 4 ноября" font="date" tilt={-2} shadow="sm" />
+          <Tag label="Осталось" count={4} tone="sun" tilt={-3} />
+          <Tag label="Сделано" count={3} tone="teal" tilt={1.5} />
+          <Tag label="Долги" count={1} tone="red" tilt={-2} />
+          <Tag label="+30 очков" tone="sun" font="badge" tilt={6} />
+        </View>
+        <View style={styles.row}>
+          <Pill label="зачёт" />
+          <Pill label="слив" tone="red" />
+          <Pill label="долг" tone="red" filled />
+          <Badge value={14} label="дней" tilt={8} />
+          <Badge value={23} label="чистых" tone="teal" tilt={-5} />
+          <Badge value={0} label="с нуля" tone="tag" tilt={4} />
+        </View>
+        <Card>
+          <Text style={[TYPE.heading, { color: p.text }]}>Наклейка</Text>
+          <Text style={[TYPE.body, { color: p.muted }]}>Обводка 2,5 и жёсткая тень.</Text>
+        </Card>
       </Section>
 
       <Section title="Луна — отметка, прогресс, день">
@@ -117,10 +152,13 @@ export function CatalogScreen() {
         </View>
       </Section>
 
-      <Section title="Иконки · грани">
+      <Section title="Иконки · контур">
         <View style={styles.icons}>
           {(Object.keys(UI_ICONS) as UiIconName[]).map((name) => (
-            <View key={name} style={[styles.iconCell, { backgroundColor: p.surface }]}>
+            <View
+              key={name}
+              style={[styles.iconCell, { backgroundColor: p.surface, borderRadius: 14 }]}
+            >
               <Icon name={name} size={26} />
               <Text style={[TYPE.tiny, { color: p.muted }]}>{name}</Text>
             </View>
@@ -129,7 +167,7 @@ export function CatalogScreen() {
         <View style={styles.icons}>
           {Object.keys(HABIT_ICONS).map((name) => (
             <View key={name} style={[styles.iconCell, { backgroundColor: p.surface }]}>
-              <HabitGlyph icon={name} size={26} />
+              <IconTile icon={name} size={40} />
               <Text style={[TYPE.tiny, { color: p.muted }]}>{name}</Text>
             </View>
           ))}
@@ -138,20 +176,12 @@ export function CatalogScreen() {
 
       <Section title="Волк">
         <View style={styles.row}>
-          {(['active', 'angry', 'rest'] as const).map((m) => (
+          {(['smirk', 'proud', 'meh'] as const).map((m) => (
             <View key={m} style={styles.state}>
-              <Wolf mood={m} size={72} />
+              <Wolf mood={m} size={88} />
               <Text style={[TYPE.meta, { color: p.text }]}>{t(`wolf.${m}`)}</Text>
             </View>
           ))}
-          <View style={{ width: 110, height: 110, alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ position: 'absolute' }}>
-              <Moon phase={1} size={110} ring="text" />
-            </View>
-            <View style={{ marginTop: 26 }}>
-              <Wolf size={64} silhouette />
-            </View>
-          </View>
         </View>
       </Section>
 
@@ -166,9 +196,9 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: SPACE.screenX, paddingBottom: 120, gap: SPACE.xl },
   swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md },
   swatch: { width: 92, gap: 2 },
-  chip: { height: 40, borderWidth: 1 },
+  chip: { height: 40, borderWidth: 2.5, borderRadius: 20 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md, alignItems: 'center' },
   state: { alignItems: 'center', gap: 4, minWidth: 56 },
   icons: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  iconCell: { width: 66, height: 66, alignItems: 'center', justifyContent: 'center', gap: 5 },
+  iconCell: { width: 66, height: 70, alignItems: 'center', justifyContent: 'center', gap: 5 },
 });

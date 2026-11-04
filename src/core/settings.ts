@@ -3,9 +3,9 @@ import { SETTINGS_ID, type Settings, type Snapshot } from './model';
 
 export type SettingsFields = Omit<Settings, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 
-/** Как в макете настроек: «Ночь», пацанский тон, цитаты и звания включены. */
+/** Как в макете настроек: тема как в системе, пацанский тон, цитаты и звания включены. */
 export const DEFAULT_SETTINGS: SettingsFields = {
-  theme: 'dark',
+  theme: 'system',
   tone: 'bro',
   quotes: true,
   ranks: true,

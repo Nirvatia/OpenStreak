@@ -55,7 +55,7 @@ export function CatalogControls() {
           <View style={{ flexDirection: 'row', gap: SPACE.lg, alignItems: 'center' }}>
             <IconButton icon="settings" label="Настройки" tone="muted" />
             <IconButton icon="calendar" label="Календарь" tone="muted" />
-            <IconButton icon="plus" label="Новая привычка" variant="solid" />
+            <IconButton icon="plus" label="Новая привычка" variant="sun" />
           </View>
         </View>
       </Section>

@@ -49,7 +49,8 @@ export function Notches({ count, height = 26 }: { count: number; height?: number
           <Path
             d={d}
             stroke={p.text}
-            strokeWidth={Math.max(2, Math.round(height / 10))}
+            strokeWidth={Math.max(2.4, Math.round(height / 10))}
+            strokeLinecap="round"
             fill="none"
           />
         </Svg>

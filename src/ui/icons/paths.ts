@@ -1,38 +1,40 @@
 /**
- * Гранёные иконки «Луны» (design/luna/L-Kit). Каждая — один залитый силуэт на сетке 24:
- * левая половина рисуется основным цветом, правая — цветом тени, как у волка.
- * Отверстия (`holes: true`) — правило evenodd: сквозь них виден фон, цвет подложки не нужен.
+ * Иконки «Мульта» (design/mult, M-Icon): контур на сетке 24, скруглённые концы и углы.
+ * `d` рисуется линией, `dots` (если есть) — заливкой: глаза, точки, лапы.
  */
-export type IconSpec = { d: string; holes?: boolean };
+export type IconSpec = { d: string; dots?: string };
 
-const h = (d: string): IconSpec => ({ d, holes: true });
-const s = (d: string): IconSpec => ({ d });
+/** Окружность как путь (для `d` и `dots`). */
+const ring = (cx: number, cy: number, r: number) =>
+  `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
+const line = (d: string): IconSpec => ({ d });
 
 export const UI_ICONS = {
-  today: s('M15 2 L7 6 L4 13 L8 20 L16 22 L11 16 L10 9 Z'),
-  tasks: h('M4 2 H15 L20 7 V22 H4 Z M7 13 L9 11 L11 13 L16 8 L18 10 L11 17 Z'),
-  habits: s('M5 3 H8 L6 21 H3 Z M11 3 H14 L12 21 H9 Z M17 3 H20 L18 21 H15 Z'),
-  goals: s('M4 2 H6 V22 H4 Z M6 3 L19 7 L6 11 Z'),
-  pack: s('M3 22 V14 L5 12 L7 14 V22 Z M10 22 V8 L12 6 L14 8 V22 Z M17 22 V11 L19 9 L21 11 V22 Z'),
-  settings: h('M12 2 L21 7 V17 L12 22 L3 17 V7 Z M12 9 L15 12 L12 15 L9 12 Z'),
-  plus: s('M10 3 H14 V10 H21 V14 H14 V21 H10 V14 H3 V10 H10 Z'),
-  back: s('M2 12 L10 4 V10 H22 V14 H10 V20 Z'),
-  arrow: s('M2 10 H14 V4 L22 12 L14 20 V14 H2 Z'),
-  chevron: s('M8 4 L16 12 L8 20 L6 18 L12 12 L6 6 Z'),
-  close: s('M4 6 L6 4 L12 10 L18 4 L20 6 L14 12 L20 18 L18 20 L12 14 L6 20 L4 18 L10 12 Z'),
-  check: s('M3 12 L5.5 9.5 L10 14 L18.5 5.5 L21 8 L10 19 Z'),
-  more: s(
-    'M4.5 9 L7.5 12 L4.5 15 L1.5 12 Z M12 9 L15 12 L12 15 L9 12 Z M19.5 9 L22.5 12 L19.5 15 L16.5 12 Z'
+  today: line('M15 3a9 9 0 1 0 6 13.5A7.5 7.5 0 0 1 15 3z'),
+  tasks: line('M5 4h14v16H5z M8.5 12l2.5 2.5 5-5'),
+  habits: line(
+    'M12 3c1 4 5.5 5.5 5.5 10.5a5.5 5.5 0 0 1-11 0c0-3 2-4.5 2.5-6.5 1.2 1 2 2.5 2 4 1.2-2.2 1.5-5 1-8z'
   ),
-  remind: s('M12 2 L18 8 V16 L21 19 H3 L6 16 V8 Z M10 20 H14 L12 23 Z'),
-  place: h('M12 23 L4 10 L8 3 H16 L20 10 Z M12 7 L14.5 9.5 L12 12 L9.5 9.5 Z'),
-  calendar: h('M3 5 H7 V2 H9 V5 H15 V2 H17 V5 H21 V22 H3 Z M5 9 H19 V10.5 H5 Z'),
-  history: h('M8 2 H16 L22 8 V16 L16 22 H8 L2 16 V8 Z M11 6 H13 V11 L17 14 L16 16 L11 13 Z'),
-  delete: s('M3 4 H9 V2 H15 V4 H21 V7 H3 Z M5 8 H19 L17 22 H7 Z'),
-  search: h(
-    'M10 2 L18 10 L10 18 L2 10 Z M10 6 L14 10 L10 14 L6 10 Z M15 17 L17 15 L22 20 L20 22 Z'
-  ),
-  edit: s('M3 22 L4 17 L8 21 Z M5 16 L16 5 L20 9 L9 20 Z M17 4 L19 2 L23 6 L21 8 Z'),
+  goals: line('M6 21V4 M6 4h12l-2.5 4 2.5 4H6'),
+  pack: {
+    d: 'M8 17c0-3 2-5 4-5s4 2 4 5c0 2-2 3-4 3s-4-1-4-3z',
+    dots: ring(6.5, 10, 1.8) + ring(10, 6.5, 1.8) + ring(14, 6.5, 1.8) + ring(17.5, 10, 1.8),
+  },
+  settings: line(`M4 7h9M17 7h3M4 17h3M11 17h9 ${ring(15, 7, 2.2)} ${ring(9, 17, 2.2)}`),
+  plus: line('M12 5v14M5 12h14'),
+  back: line('M19 12H5M11 6l-6 6 6 6'),
+  arrow: line('M5 12h14M13 6l6 6-6 6'),
+  chevron: line('M9 6l6 6-6 6'),
+  close: line('M6 6l12 12M18 6L6 18'),
+  check: line('M5 12.5l4.5 4.5L19 7'),
+  more: { d: '', dots: ring(6, 12, 1.8) + ring(12, 12, 1.8) + ring(18, 12, 1.8) },
+  remind: line('M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z M10 20.5a2 2 0 0 0 4 0'),
+  place: line(`M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z ${ring(12, 10, 2.5)}`),
+  calendar: line('M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5'),
+  history: line('M4 12a8 8 0 1 0 2.5-5.8 M4 4v4h4 M12 8v4l3 2'),
+  delete: line('M4 7h16 M9 7V4h6v3 M6 7l1 13h10l1-13 M10 11v6 M14 11v6'),
+  search: line(`${ring(10.5, 10.5, 6.5)} M15.5 15.5L20 20`),
+  edit: line('M4 20l1-4L16 5l3 3L8 19z M14 7l3 3'),
 } satisfies Record<string, IconSpec>;
 
 /**
@@ -41,94 +43,73 @@ export const UI_ICONS = {
  */
 export const HABIT_ICONS = {
   // Тело и спорт
-  dumbbell: s('M2 9 H5 V6 H8 V11 H16 V6 H19 V9 H22 V15 H19 V18 H16 V13 H8 V18 H5 V15 H2 Z'),
-  activity: s('M2 11 H7 L9 5 L13 15 L15 9 L17 11 H22 V13 H16 L15 11.5 L13 19 L9 9 L8 13 H2 Z'),
-  running: s(
-    'M14 2 H18 V6 H14 Z M7 10 L13 7.5 L16.5 12 L20.5 12.5 L20.2 14.5 L15.5 14 L13.5 11.5 L11.5 15 L15 18 L13.8 22.5 L11.8 22 L12.6 18.8 L9.5 16.2 L6.4 21.6 L4.6 20.6 L9.5 12 L7.8 12.6 Z'
+  dumbbell: line('M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12'),
+  activity: line('M3 12h4l2-6 4 12 2-6h6'),
+  running: line(
+    `M12 8l-2.5 4.5 3.5 2.5-1 5.5 M12 8l3.5 3 3 .5 M9.5 12.5L6 13.5 M13 15l-4.5 4 ${ring(15.8, 4.5, 1.8)}`
   ),
-  swimming: s(
-    'M15 3 H19 V7 H15 Z M4 12 L10 7 H14 L12 11 H9 L6 14 Z M2 16 L6 13 L10 16 L14 13 L18 16 L22 13 V15.5 L18 18.5 L14 15.5 L10 18.5 L6 15.5 L2 18.5 Z M2 20.5 L6 17.5 L10 20.5 L14 17.5 L18 20.5 L22 17.5 V20 L18 23 L14 20 L10 23 L6 20 L2 23 Z'
+  swimming: line(
+    `${ring(17.8, 6.5, 1.8)} M5 11l5-3 3 3 M3 16c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0 M3 20c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0`
   ),
-  breathing: s(
-    'M2 6 H14 L16 7 L14 8 H2 Z M2 11 H19 L21 12 L19 13 H2 Z M2 16 H11 L13 17 L11 18 H2 Z'
+  breathing: line('M3 9h11a3 3 0 1 0-3-3 M3 13h15a3 3 0 1 1-3 3 M3 17h7'),
+  lotus: line(
+    'M12 20c-4 0-8-2-9-6 3 0 6 1 9 4 3-3 6-4 9-4-1 4-5 6-9 6z M12 18c-2-2-3-5-3-8 1 1 2 2 3 4 1-2 2-3 3-4 0 3-1 6-3 8z'
   ),
-  lotus: s(
-    'M12 3 L16 10 L12 17 L8 10 Z M7 11 L2 9 L4 17 L11 18 Z M17 11 L22 9 L20 17 L13 18 Z M3 20 H21 V22 H3 Z'
+  // Здоровье
+  medplus: line('M9 4h6v5h5v6h-5v5H9v-5H4V9h5z'),
+  vitamins: line('M4.5 13.5l9-9a4.2 4.2 0 0 1 6 6l-9 9a4.2 4.2 0 0 1-6-6z M9 9l6 6'),
+  shower: line(
+    'M4 20V8a4 4 0 0 1 8 0 M8 8h8 M10 12v1 M13 12v1 M16 12v1 M11 16v1 M14 16v1 M17 16v1'
   ),
-  medplus: s('M9 3 H15 V9 H21 V15 H15 V21 H9 V15 H3 V9 H9 Z'),
-  vitamins: h('M3 14 L12 5 L19 12 L10 21 Z M8.2 10.2 L9 9.4 L15.6 16 L14.8 16.8 Z'),
-  shower: s(
-    'M4 21 V6 L7 3 H12 L15 6 V8 H19 V10 H10 V8 H13 V6.8 L11.2 5 H7.8 L6 6.8 V21 Z M11 12 H13 V14 H11 Z M15 12 H17 V14 H15 Z M19 12 H21 V14 H19 Z M13 16 H15 V18 H13 Z M17 16 H19 V18 H17 Z'
-  ),
+  drop: line('M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z'),
   // Еда и вода
-  drop: s('M12 2 L18 13 L15 20 H9 L6 13 Z'),
-  water: h('M5 3 H19 L17 21 H7 Z M6.6 8 H17.4 L17.2 9.5 H6.8 Z'),
-  apple: s(
-    'M12 7 L17 6 L21 10 V15 L17 21 H7 L3 15 V10 L7 6 Z M11 2 H13 V6.5 H11 Z M13.5 4 L18 2 L17 5 Z'
+  water: line('M6 4h12l-1.5 16h-9z M7 9h10'),
+  apple: line(
+    'M12 7c-2-1.5-7-1-7 5 0 5 3 9 5 9 1 0 1.5-.5 2-.5s1 .5 2 .5c2 0 5-4 5-9 0-6-5-6.5-7-5z M12 7c0-2 1-4 3-4'
   ),
-  breakfast: s(
-    'M4 8 H16 V18 L14 20 H6 L4 18 Z M16 10 H20 V15 H16 V13 H18 V12 H16 Z M7 2 H9 V6 H7 Z M11 2 H13 V6 H11 Z'
+  breakfast: line(
+    'M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z M16 10h2a2.5 2.5 0 0 1 0 5h-2 M8 3v3 M12 3v3'
   ),
-  healthyfood: s(
-    'M2 11 H22 L19 19 H5 Z M7 10 L8 5 L10 6 L9 10 Z M11 10 V3 H13 V10 Z M15 10 L14 6 L16 5 L17 10 Z'
+  healthyfood: line('M3 11h18a9 9 0 0 1-18 0z M8 11c0-3 2-5 4-5 M13 11c0-2 1.5-4 4-4'),
+  fruits: line(
+    `${ring(10, 16.5, 3)} ${ring(16, 17.5, 3)} M10 13.5c0-4 2-7 6-9 M16 14.5c-.5-4-.5-7 0-10`
   ),
-  fruits: s(
-    'M12 4 L15 9 L18 15 L16 20 H8 L6 15 L9 9 Z M11.5 1 H13 V4 H11.5 Z M13.5 2 L18 1 L16.5 4 Z'
-  ),
-  vegetables: s(
-    'M3 21 L8 10 L14 16 Z M11 12 L13 4 L14.5 4.5 L12.5 12.5 Z M12 13 L20 11 L20.3 12.5 L12.7 14 Z M11.7 12.3 L19 5 L20 6 L12.7 13.3 Z'
+  vegetables: line(
+    'M14.5 9.5c-2-2-4.5-1.5-6 .5L4 20l10-4.5c2-1.5 2.5-4 .5-6z M15 9l3-3 M15 9l1-4 M15 9l4-1'
   ),
   // Отказ от вредного
-  nosmoking: s(
-    'M2 14 H16 V18 H2 Z M17 14 H19 V18 H17 Z M20 14 H22 V18 H20 Z M17 4 L20 7 L18 12 L16 10 Z'
-  ),
-  noalcohol: h(
-    'M10 2 H14 V7 L17 10 V22 H7 V10 L10 7 Z M9.5 13 L11 11.5 L12 13 L13 11.5 L14.5 13 L13 14.5 L14.5 16 L13 17.5 L12 16 L11 17.5 L9.5 16 L11 14.5 Z'
-  ),
-  phoneoff: h(
-    'M7 2 H17 V22 H7 Z M9.5 6 L11 4.5 L12 6 L13 4.5 L14.5 6 L13 7.5 L14.5 9 L13 10.5 L12 9 L11 10.5 L9.5 9 L11 7.5 Z'
-  ),
+  nosmoking: line('M3 13h12v3.5H3z M18 13v3.5 M4 4l16 16'),
+  noalcohol: line('M10 3h4v4l2 3v11H8V10l2-3z M4 4l16 16'),
+  phoneoff: line('M7 3h10v18H7z M11 18h2 M4 4l16 16'),
   // Ум и дело
-  book: s('M3 4 L11 6 V21 L3 19 Z M21 4 L13 6 V21 L21 19 Z'),
-  pencil: s('M3 22 L4 17 L8 21 Z M5 16 L16 5 L20 9 L9 20 Z M17 4 L19 2 L23 6 L21 8 Z'),
-  languages: h(
-    'M3 3 H21 V21 H3 Z M5 5 H10.5 L8 11 H5 Z M13.5 5 H19 V11 H16 Z M5 13 H8 L10.5 19 H5 Z M16 13 H19 V19 H13.5 Z'
+  book: line('M4 5c3-1 6-1 8 1v13c-2-2-5-2-8-1z M20 5c-3-1-6-1-8 1v13c2-2 5-2 8-1z'),
+  pencil: line('M15 4l5 5L9 20H4v-5z M13 6l5 5'),
+  languages: line('M3 5h10 M8 3v2 M5 5c1 4 4 7 7 8 M11 5c-1 4-4 7-7 8 M13 21l4-9 4 9 M14.5 18h5'),
+  bulb: line('M9 18h6 M10 21h4 M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z'),
+  target: { d: `${ring(12, 12, 9)} ${ring(12, 12, 5)}`, dots: ring(12, 12, 1.5) },
+  compass: line(`${ring(12, 12, 9)} M15.5 8.5l-2 5-5 2 2-5z`),
+  clock: line(`${ring(12, 12, 9)} M12 7v5l3 2`),
+  wallet: line('M4 7h15v13H4z M4 7l11-4v4 M15 13h4v3h-4z'),
+  // Отдых
+  moonstar: line('M14 4a8 8 0 1 0 6 12.5A6.5 6.5 0 0 1 14 4z M19 3v4 M17 5h4'),
+  lounge: line('M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3 M2 12h20v5H2z M4 17v2 M20 17v2'),
+  trip: line('M21 4L3 11l7 2 2 7z M10 13l11-9'),
+  music: line(`M8 17V5l11-2v12 ${ring(5.5, 17, 2.5)} ${ring(16.5, 15, 2.5)}`),
+  video: line('M3 6h13v12H3z M16 10l5-3v10l-5-3'),
+  cinema: line('M3 9h18v11H3z M3 9l2-5h16l-2 5 M9 4l-2 5 M15 4l-2 5'),
+  // Дом и близкие
+  cleaning: line('M14 3l-3 9 M6 12h10l2 9H4z M9 16v5 M13 16v5'),
+  sprout: line('M12 21v-9 M12 12c0-4-3-6-7-6 0 4 3 6 7 6z M12 10c0-3 2-6 7-6 0 4-3 6-7 6z'),
+  compliments: line('M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z'),
+  dog: line(
+    'M6 8l-2 6 3 1 M18 8l2 6-3 1 M6 8c2-3 10-3 12 0 1 3 1 7-1 10-2 2-8 2-10 0-2-3-2-7-1-10z M10 12h.01 M14 12h.01 M11 16h2l-1 1z'
   ),
-  bulb: s('M9 16 L5 11 V7 L9 3 H15 L19 7 V11 L15 16 Z M9 18 H15 V20 H9 Z M10 21 H14 V23 H10 Z'),
-  target: h('M3 3 H21 V21 H3 Z M6 6 H18 V18 H6 Z M9 9 H15 V15 H9 Z'),
-  compass: h('M3 3 H21 V21 H3 Z M15 9 L13 13 L9 15 L11 11 Z'),
-  clock: h('M8 2 H16 L22 8 V16 L16 22 H8 L2 16 V8 Z M11 6 H13 V11 L17 14 L16 16 L11 13 Z'),
-  wallet: s('M3 7 H19 V11 H14 V15 H19 V20 H3 Z M3 6 L15 2 V6 Z M15 12 H21 V14 H15 Z'),
-  // Отдых и быт
-  moonstar: s(
-    'M14 3 L8 6 L6 12 L8 18 L14 21 L10 15 V9 Z M19 3 L20 6 L23 7 L20 8 L19 11 L18 8 L15 7 L18 6 Z'
-  ),
-  lounge: s(
-    'M2 10 H6 V14 H18 V10 H22 V19 H2 Z M5 9 V6 H19 V9 H17 V12 H7 V9 Z M4 20 H6 V22 H4 Z M18 20 H20 V22 H18 Z'
-  ),
-  trip: s(
-    'M11 22 L12 11 H13 V22 Z M12 11 L4 9 L7 4 Z M13 11 L21 9 L18 4 Z M12.5 10 L10 3 H15 Z M3 22 H21 V23 H3 Z'
-  ),
-  music: s('M8 17 V4 L20 2 V15 H18 V5.5 L10 7 V17 Z M3 16 H10 V21 H3 Z M13 14 H20 V19 H13 Z'),
-  video: s('M2 6 H16 V18 H2 Z M16 10 L22 6 V18 L16 14 Z'),
-  cinema: h('M3 6 H21 V10 L19 12 L21 14 V18 H3 V14 L5 12 L3 10 Z M8.5 7 H9.5 V17 H8.5 Z'),
-  cleaning: h(
-    'M14.5 2 L16.5 3 L12.8 11 H10.6 Z M6 11 H16 L19 21 H3 Z M7.6 14 L6.8 20 H7.8 L8.6 14 Z M11.5 14 V20 H12.5 V14 Z M15.4 14 L16.2 20 H17.2 L16.4 14 Z'
-  ),
-  sprout: s('M11 21 V12 L5 11 L3 5 L9 6 L12 11 L15 8 L21 7 L19 13 L13 14 V21 Z'),
-  // Люди и звери
-  compliments: h('M3 4 H21 V16 H11 L6 20 V16 H3 Z M12 13 L8 9 L10 7 L12 9 L14 7 L16 9 Z'),
-  dog: h(
-    'M5 3 L9 7 H15 L19 3 L21 11 L17 13 V18 L12 21 L7 18 V13 L3 11 Z M9.5 10.5 H11 V12 H9.5 Z M13 10.5 H14.5 V12 H13 Z M11 15.5 H13 L12 17 Z'
-  ),
-  cat: h(
-    'M4 3 L9 8 H15 L20 3 V14 L12 21 L4 14 Z M8.5 11.5 H10.5 V13 H8.5 Z M13.5 11.5 H15.5 V13 H13.5 Z M11 16 H13 L12 17.5 Z'
-  ),
+  cat: line('M5 4l3 4h8l3-4v9c0 4-3 7-7 7s-7-3-7-7z M10 12h.01 M14 12h.01 M11 15h2l-1 1z'),
   // Прочее
-  sparkles: s(
-    'M10 3 L12 9 L18 11 L12 13 L10 19 L8 13 L2 11 L8 9 Z M19 2 L20 4 L22 5 L20 6 L19 8 L18 6 L16 5 L18 4 Z'
+  sparkles: line(
+    'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z'
   ),
-  shield: h('M12 2 L20 5 V12 L12 22 L4 12 V5 Z M7 11 L9 9 L11 11 L15 7 L17 9 L11 15 Z'),
+  shield: line('M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4'),
 } satisfies Record<string, IconSpec>;
 
 export type UiIconName = keyof typeof UI_ICONS;

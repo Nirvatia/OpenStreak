@@ -1,14 +1,15 @@
 /**
- * Строка дела или привычки: луна-отметка слева (пустая / неполная / полная), название,
- * подпись, справа — пометка. Выполненное — приглушено и зачёркнуто.
+ * Строка дела или привычки внутри наклейки-списка: луна-отметка слева, название, подпись,
+ * справа — пометка. Выполненное — приглушено и зачёркнуто. Между строками — пунктир.
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
-import { LINE, SIZE } from '../theme/metrics';
+import { SIZE, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Moon } from './Moon';
+import { Pill } from './Sticker';
 
 type Props = {
   title: string;
@@ -25,8 +26,10 @@ type Props = {
   toggleLabel?: string;
   /** нажатие на строку (открыть) */
   onPress?: () => void;
-  /** справа: время, «долг», важность */
+  /** справа: «долг», важность, «60/100» */
   right?: React.ReactNode;
+  /** последняя строка в наклейке — без пунктира снизу */
+  last?: boolean;
 };
 
 export function MoonRow(props: Props) {
@@ -34,15 +37,33 @@ export function MoonRow(props: Props) {
   const t = useT();
   const { title, done = false } = props;
   return (
-    <View style={[styles.row, { borderBottomColor: p.line }]}>
+    <View
+      style={[
+        styles.row,
+        { backgroundColor: p.surface },
+        !props.last && {
+          borderBottomWidth: STROKE.thin,
+          borderBottomColor: p.divider,
+          borderStyle: 'dashed',
+        },
+      ]}
+    >
       <Pressable
         accessibilityRole="checkbox"
         accessibilityState={{ checked: done }}
         accessibilityLabel={props.toggleLabel ?? t(done ? 'a11y.uncheck' : 'a11y.check', { title })}
         onPress={props.onToggle}
-        style={({ pressed }) => [styles.moon, pressed && { backgroundColor: p.surface }]}
+        style={styles.moon}
       >
-        <Moon phase={props.phase} size={24} ring={props.debt && !done ? 'blood' : 'muted'} />
+        {({ pressed }) => (
+          <View style={pressed && styles.pressed}>
+            <Moon
+              phase={props.phase}
+              size={SIZE.moonRow}
+              ring={props.debt && !done ? 'red' : 'ring'}
+            />
+          </View>
+        )}
       </Pressable>
       <Pressable
         style={styles.body}
@@ -74,7 +95,7 @@ type LogProps = {
   bad?: boolean;
 };
 
-/** Строка журнала «Сделано»: время, что сделано, пометка. */
+/** Строка журнала «Сделано»: время, что сделано (зачёркнуто), пометка-пилюля. */
 export function LogRow({ time, title, mark, bad }: LogProps) {
   const p = usePalette();
   return (
@@ -83,7 +104,7 @@ export function LogRow({ time, title, mark, bad }: LogProps) {
       <Text style={[TYPE.body, styles.logTitle, { color: p.muted }]} numberOfLines={1}>
         {title}
       </Text>
-      {!!mark && <Text style={[TYPE.mark, { color: bad ? p.blood : p.text }]}>{mark}</Text>}
+      {!!mark && <Pill label={mark} tone={bad ? 'red' : 'teal'} />}
     </View>
   );
 }
@@ -92,19 +113,20 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACE.sm,
     minHeight: SIZE.row,
-    borderBottomWidth: LINE.hair,
+    paddingLeft: SPACE.tight,
+    paddingRight: 14,
   },
   moon: {
     width: SIZE.touch,
     height: SIZE.touch,
-    marginLeft: -10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  body: { flex: 1, minWidth: 0 },
-  log: { flexDirection: 'row', alignItems: 'baseline', gap: 8, minHeight: 30 },
-  time: { width: 46 },
+  pressed: { transform: [{ scale: 0.88 }] },
+  body: { flex: 1, minWidth: 0, paddingVertical: SPACE.sm },
+  log: { flexDirection: 'row', alignItems: 'center', gap: SPACE.sm, minHeight: 36 },
+  time: { width: 48 },
   logTitle: { flex: 1, textDecorationLine: 'line-through' },
 });

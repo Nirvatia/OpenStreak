@@ -37,8 +37,8 @@ describe('litPath', () => {
 });
 
 describe('moonLook', () => {
-  test('slip is a full blood moon, rest is a dashed new moon', () => {
-    expect(moonLook('slip')).toEqual({ phase: 1, tone: 'blood', ring: 'blood', dashed: false });
+  test('slip is a full red moon, rest is a dashed new moon', () => {
+    expect(moonLook('slip')).toEqual({ phase: 1, tone: 'red', ring: 'red', dashed: false });
     expect(moonLook('rest')).toMatchObject({ phase: 0, dashed: true });
     expect(moonLook('partial', 0.6).phase).toBeCloseTo(0.6);
   });

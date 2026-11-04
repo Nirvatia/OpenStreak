@@ -1,11 +1,13 @@
-import React, { useId } from 'react';
+import React from 'react';
 import { View } from 'react-native';
-import Svg, { ClipPath, Defs, Path, Rect } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { usePalette } from '../../store/themeStore';
+import { RADIUS, STROKE } from '../../theme/metrics';
+import type { Palette } from '../../theme/palette';
 import { HABIT_ICONS, UI_ICONS, type IconSpec, type UiIconName } from './paths';
 
-/** Тон иконки: основной цвет и его тень для правой грани. */
-export type IconTone = 'text' | 'muted' | 'blood' | 'onText';
+/** Цвет иконки: на фоне экрана или поверх цветной подложки (`on*`). */
+export type IconTone = 'text' | 'muted' | 'red' | 'teal' | 'onSun' | 'onTeal' | 'onToast';
 
 type Props = {
   /** размер в точках; сетка иконки — 24 */
@@ -15,34 +17,24 @@ type Props = {
   label?: string;
 };
 
-function useTone(tone: IconTone): [string, string] {
-  const p = usePalette();
-  switch (tone) {
-    case 'muted':
-      return [p.muted, p.mutedShade];
-    case 'blood':
-      return [p.blood, p.bloodShade];
-    case 'onText':
-      return [p.onText, p.onText];
-    default:
-      return [p.text, p.textShade];
-  }
-}
-
 function Glyph({ spec, size = 24, tone = 'text', label }: Props & { spec: IconSpec }) {
-  const [main, shade] = useTone(tone);
-  const clip = `facet-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const rule = spec.holes ? 'evenodd' : 'nonzero';
+  const p = usePalette();
+  const color = p[tone];
+  // Мелкие иконки рисуем чуть толще, чтобы линия не терялась.
+  const width = size <= 20 ? 2.4 : 2.2;
   const svg = (
     <Svg width={size} height={size} viewBox="0 0 24 24">
-      <Defs>
-        <ClipPath id={clip}>
-          <Rect x={0} y={0} width={12} height={24} />
-        </ClipPath>
-      </Defs>
-      {/* Правая грань — тенью, левая — основным цветом поверх, по той же форме. */}
-      <Path d={spec.d} fill={shade} fillRule={rule} />
-      <Path d={spec.d} fill={main} fillRule={rule} clipPath={`url(#${clip})`} />
+      {!!spec.d && (
+        <Path
+          d={spec.d}
+          fill="none"
+          stroke={color}
+          strokeWidth={width}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+      {!!spec.dots && <Path d={spec.dots} fill={color} />}
     </Svg>
   );
   if (!label) return svg;
@@ -58,8 +50,58 @@ export function Icon({ name, ...rest }: Props & { name: UiIconName }) {
   return <Glyph spec={UI_ICONS[name]} {...rest} />;
 }
 
+function habitSpec(icon: string): IconSpec {
+  return (HABIT_ICONS as Record<string, IconSpec>)[icon] ?? UI_ICONS.habits;
+}
+
 /** Иконка привычки или сферы по ключу из `Habit.icon`; незнакомый ключ — общая «привычки». */
 export function HabitGlyph({ icon, ...rest }: Props & { icon: string }) {
-  const spec = (HABIT_ICONS as Record<string, IconSpec>)[icon] ?? UI_ICONS.habits;
-  return <Glyph spec={spec} {...rest} />;
+  return <Glyph spec={habitSpec(icon)} {...rest} />;
+}
+
+type Tile = { bg: keyof Palette; tone: IconTone };
+const TILES: Tile[] = [
+  { bg: 'sun', tone: 'onSun' },
+  { bg: 'sky', tone: 'onSun' },
+  { bg: 'teal', tone: 'onTeal' },
+  { bg: 'tag', tone: 'text' },
+];
+
+/** Цвет плитки по ключу иконки — стабильный, без хранения в данных. */
+export function tileFor(icon: string): Tile {
+  let h = 0;
+  for (let i = 0; i < icon.length; i++) h = (h * 31 + icon.charCodeAt(i)) >>> 0;
+  return TILES[h % TILES.length];
+}
+
+/** Иконка привычки на цветной плитке-наклейке (список привычек, карточка). */
+export function IconTile({
+  icon,
+  size = 46,
+  tilt = 0,
+}: {
+  icon: string;
+  size?: number;
+  /** наклон в градусах — для карточки привычки */
+  tilt?: number;
+}) {
+  const p = usePalette();
+  const tile = tileFor(icon);
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: p[tile.bg],
+        borderWidth: STROKE.outline,
+        borderColor: p.line,
+        borderRadius: RADIUS.sm,
+        transform: tilt ? [{ rotate: `${tilt}deg` }] : undefined,
+      }}
+    >
+      <HabitGlyph icon={icon} size={Math.round(size * 0.55)} tone={tile.tone} />
+    </View>
+  );
 }

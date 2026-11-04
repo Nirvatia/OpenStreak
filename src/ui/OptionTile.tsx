@@ -1,8 +1,9 @@
 /** Плитка выбора с иконкой: «По времени», «У зала · при входе 150 м». Не выбрана — пунктир. */
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/metrics';
+import { RADIUS, SPACE, STROKE } from '../theme/metrics';
+import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
 
@@ -21,24 +22,34 @@ export function OptionTile({ icon, label, hint, selected = false, onPress }: Pro
       accessibilityRole="togglebutton"
       accessibilityState={{ selected }}
       onPress={onPress}
-      style={({ pressed }) => ({
-        flex: 1,
-        minHeight: 54,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-        paddingHorizontal: 12,
-        borderWidth: LINE.hair,
-        borderStyle: selected ? 'solid' : 'dashed',
-        borderColor: selected ? p.text : p.muted,
-        backgroundColor: selected ? p.raised : pressed ? p.surface : 'transparent',
-      })}
+      style={({ pressed }) => [
+        styles.tile,
+        {
+          borderWidth: selected ? STROKE.outline : STROKE.thin,
+          borderStyle: selected ? 'solid' : 'dashed',
+          borderColor: p.line,
+          backgroundColor: selected ? p.tag : pressed ? p.tag : 'transparent',
+        },
+        selected && hardShadow(p, 'sm'),
+      ]}
     >
-      <Icon name={icon} size={20} tone={selected ? 'text' : 'muted'} />
+      <Icon name={icon} size={20} tone="text" />
       <View style={{ flex: 1 }}>
-        <Text style={[TYPE.item, { fontSize: 14, color: p.text }]}>{label}</Text>
-        {!!hint && <Text style={[TYPE.meta, { color: p.muted }]}>{hint}</Text>}
+        <Text style={[TYPE.control, { color: p.text }]}>{label}</Text>
+        {!!hint && <Text style={[TYPE.caption, { color: p.muted }]}>{hint}</Text>}
       </View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  tile: {
+    flex: 1,
+    minHeight: 56,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: SPACE.md,
+    borderRadius: RADIUS.md,
+  },
+});

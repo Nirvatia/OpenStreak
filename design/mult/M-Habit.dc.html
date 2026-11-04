@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Привычка — мульт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Rubik, system-ui, sans-serif;">
+<div style="padding: 44px 20px 28px; display: flex; flex-direction: column; gap: 14px;">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<a href="{{backHref}}" aria-label="Назад" style="width: 44px; height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 50%; box-shadow: 3px 3px 0 {{c.shadow}};">
+<dc-import name="M-Icon" icon="back" size="20" color="{{c.text}}" hint-size="20px,20px"></dc-import>
+</a>
+<a href="#" style="height: 40px; padding: 0 14px; display: flex; align-items: center; gap: 6px; background: {{c.surface}}; border: 2px solid {{c.line}}; border-radius: 999px; text-decoration: none; font-size: 14px; font-weight: 600;">
+<dc-import name="M-Icon" icon="edit" size="16" color="{{c.text}}" hint-size="16px,16px"></dc-import>Изменить</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px;">
+<span aria-hidden="true" style="width: 52px; height: 52px; flex: none; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: {{c.sun}}; border: 2.5px solid {{c.line}}; border-radius: 16px; transform: rotate(-4deg);">
+<dc-import name="M-Icon" icon="dumbbell" size="28" color="{{c.onSun}}" hint-size="28px,28px"></dc-import>
+</span>
+<span style="display: flex; flex-direction: column;">
+<h1 style="margin: 0; font-family: Unbounded, Rubik, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em;">Отжимания</h1>
+<span style="font-size: 13px; color: {{c.muted}};">100 в день · напомню в 7:30 и у зала</span>
+</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 16px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 24px; box-shadow: 5px 5px 0 {{c.shadow}};">
+<div style="display: flex; align-items: center; gap: 16px;" aria-label="Сегодня {{value}} из 100">
+<dc-import name="M-Moon" phase="{{phase}}" state="normal" size="92" theme="{{theme}}" hint-size="92px,92px"></dc-import>
+<span style="display: flex; flex-direction: column; gap: 2px;">
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 40px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;">{{value}}<span style="font-weight: 600; color: {{c.muted}};"> / 100</span></span>
+<span style="font-size: 14px; color: {{c.muted}};">{{leftText}}</span>
+</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{adds}}" as="a" hint-placeholder-count="3">
+<button onClick="{{a.tap}}" style="height: 48px; background: {{a.bg}}; color: {{a.fg}}; border: 2.5px solid {{c.line}}; border-radius: 14px; box-shadow: 3px 3px 0 {{c.shadow}}; font-family: Unbounded, Rubik, sans-serif; font-size: 16px; font-weight: 700;">{{a.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 20px;">
+<span style="display: flex; flex-direction: column; flex: none;">
+<span style="font-size: 13px; color: {{c.muted}};">Серия</span>
+<span style="font-family: Unbounded, Rubik, sans-serif; font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums;">{{streak}}</span>
+<span style="font-size: 12px; color: {{c.muted}};">лучшая 41</span>
+</span>
+<svg width="{{tallyW}}" height="36" viewBox="0 0 {{tallyW}} 36" role="img" aria-label="{{streak}} зарубок" fill="none" stroke="{{c.text}}" stroke-width="2.6" stroke-linecap="round"><path d="{{tally}}"></path></svg>
+</div>
+
+<section aria-label="Последние 4 недели" style="display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 12px; background: {{c.surface}}; border: 2.5px solid {{c.line}}; border-radius: 20px; box-shadow: 5px 5px 0 {{c.shadow}};">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700;">Последние 4 недели</h2>
+<span style="font-size: 13px; color: {{c.muted}}; font-variant-numeric: tabular-nums;"><b style="font-family: Unbounded, Rubik, sans-serif; color: {{c.text}};">212</b> всего</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px 2px; justify-items: center;">
+<sc-for list="{{weekdays}}" as="w" hint-placeholder-count="7">
+<span style="font-size: 11px; color: {{c.muted}};">{{w}}</span>
+</sc-for>
+<sc-for list="{{month}}" as="m" hint-placeholder-count="28">
+<dc-import name="M-Moon" phase="{{m.phase}}" state="{{m.state}}" size="26" theme="{{theme}}" hint-size="26px,26px"></dc-import>
+</sc-for>
+</div>
+<span style="font-size: 12px; color: {{c.muted}}; line-height: 1.4;">полная — норма, неполная — недобор, красная — слив, пунктир — выходной</span>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<button style="height: 50px; background: {{c.surface}}; color: {{c.text}}; border: 2.5px solid {{c.line}}; border-radius: 16px; box-shadow: 3px 3px 0 {{c.shadow}}; font-size: 15px; font-weight: 600;">Выходной</button>
+<button style="height: 50px; background: {{c.surface}}; color: {{c.red}}; border: 2.5px solid {{c.red}}; border-radius: 16px; font-size: 15px; font-weight: 600;">Слил сегодня</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { value: 60 };
+  }
+  renderVals() {
+    const PAL = {
+      day: { bg: '#F3E9D2', surface: '#FFF8E8', text: '#1E2233', line: '#1E2233', shadow: '#1E2233', muted: '#5A5E6E', sun: '#F5B82E', onSun: '#1E2233', red: '#B8322A', tag: '#F7D9A8' },
+      night: { bg: '#1D2740', surface: '#2A3758', text: '#F6EBD3', line: '#0B1020', shadow: '#0B1020', muted: '#AEB6CC', sun: '#FFC94A', onSun: '#0B1020', red: '#FF8273', tag: '#3A4A73' }
+    };
+    const theme = this.props.theme === 'night' ? 'night' : 'day';
+    const c = PAL[theme];
+    const v = this.state.value;
+    const full = v >= 100;
+    const streak = full ? 15 : 14;
+    // Зарубки: по пять — четыре палочки и черта наискосок; чуть неровные, как от руки.
+    let tally = '';
+    const groups = Math.ceil(streak / 5);
+    for (let g = 0; g < groups; g++) {
+      const n = Math.min(5, streak - g * 5);
+      const x0 = 4 + g * 34;
+      for (let i = 0; i < Math.min(4, n); i++) {
+        const x = x0 + i * 6;
+        const wob = (i + g) % 2 ? 1 : -1;
+        tally += 'M' + x + ' ' + (5 + wob) + 'L' + (x + wob * 0.6) + ' ' + (31 - wob) + ' ';
+      }
+      if (n === 5) tally += 'M' + (x0 - 3) + ' 26L' + (x0 + 22) + ' 9 ';
+    }
+    // Последние 4 недели с понедельника; t — сегодня, o — ещё впереди.
+    const codes = 'pddddrr' + 'dddddrr' + 'dxdddrr' + 'pddtooo';
+    const month = codes.split('').map((k) => {
+      if (k === 'd') return { phase: 1, state: 'normal' };
+      if (k === 'p') return { phase: 0.7, state: 'normal' };
+      if (k === 'x') return { phase: 1, state: 'slip' };
+      if (k === 'r') return { phase: 0, state: 'rest' };
+      if (k === 't') return { phase: v / 100, state: 'normal' };
+      return { phase: 0, state: 'normal' };
+    });
+    const add = (n) => () => this.setState({ value: Math.min(100, this.state.value + n) });
+    return {
+      c, theme,
+      backHref: theme === 'night' ? 'M-Habits-Night.dc.html' : 'M-Habits.dc.html',
+      value: v, phase: v / 100,
+      leftText: full ? 'норма. красава' : 'ещё ' + (100 - v) + ' до нормы',
+      streak, tally, tallyW: Math.max(40, groups * 34 + 4),
+      weekdays: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
+      month,
+      adds: [
+        { label: '+10', tap: add(10), bg: c.surface, fg: c.text },
+        { label: '+20', tap: add(20), bg: c.surface, fg: c.text },
+        full ? { label: 'Сброс', tap: () => this.setState({ value: 60 }), bg: c.tag, fg: c.text } : { label: '+40', tap: add(40), bg: c.sun, fg: c.onSun }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

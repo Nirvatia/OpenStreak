@@ -1,13 +1,16 @@
 /**
- * Шапка экрана: мелкая подпись над заголовком («3 договора · 1 закрыт» / «Цели»),
- * справа — действие. С `onBack` сверху — стрелка «назад».
+ * Шапка экрана: мелкая подпись над заголовком («7 в работе · 1 долг» / «Дела»), справа —
+ * действие. С `onBack` — круглая кнопка «назад» слева от заголовка.
+ * `SectionTitle` — заголовок раздела плашкой под углом: «Осталось · 4».
  */
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
+import { SPACE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { IconButton } from './Button';
+import { Tag, type Tone } from './Sticker';
 
 type Props = {
   title: string;
@@ -20,43 +23,33 @@ export function ScreenHeader({ title, kicker, right, onBack }: Props) {
   const p = usePalette();
   const t = useT();
   return (
-    <View style={styles.wrap}>
-      {onBack && (
-        <View style={styles.back}>
-          <IconButton icon="back" label={t('common.back')} onPress={onBack} />
-        </View>
-      )}
-      <View style={styles.row}>
-        <View style={styles.titles}>
-          {!!kicker && <Text style={[TYPE.meta, { color: p.muted }]}>{kicker}</Text>}
-          <Text accessibilityRole="header" style={[TYPE.title, { color: p.text }]}>
-            {title}
-          </Text>
-        </View>
-        {right}
+    <View style={styles.row}>
+      {onBack && <IconButton icon="back" label={t('common.back')} onPress={onBack} />}
+      <View style={styles.titles}>
+        {!!kicker && <Text style={[TYPE.meta, { color: p.muted }]}>{kicker}</Text>}
+        <Text accessibilityRole="header" style={[TYPE.title, { color: p.text }]}>
+          {title}
+        </Text>
       </View>
+      {right}
     </View>
   );
 }
 
-type SectionTitleProps = { title: string; count?: string | number; color?: string };
+type SectionTitleProps = {
+  title: string;
+  count?: string | number;
+  tone?: Tone;
+  /** наклон в градусах */
+  tilt?: number;
+};
 
-/** Подпись раздела списка: «Осталось ……… 4», «Долги ……… 1» (красным). */
-export function SectionTitle({ title, count, color }: SectionTitleProps) {
-  const p = usePalette();
-  const c = color ?? p.muted;
-  return (
-    <View style={styles.section} accessibilityRole="header">
-      <Text style={[TYPE.label, { color: c }]}>{title}</Text>
-      {count !== undefined && <Text style={[TYPE.label, { color: c }]}>{count}</Text>}
-    </View>
-  );
+/** Заголовок раздела — плашка: «Осталось · 4» (жёлтая), «Сделано · 3» (бирюза), «Долги · 1». */
+export function SectionTitle({ title, count, tone = 'tag', tilt = -2 }: SectionTitleProps) {
+  return <Tag label={title} count={count} tone={tone} tilt={tilt} />;
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: 4 },
-  back: { marginLeft: -10, alignSelf: 'flex-start' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8 },
-  titles: { flex: 1, gap: 2 },
-  section: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 },
+  row: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.md },
+  titles: { flex: 1, gap: SPACE.xs },
 });

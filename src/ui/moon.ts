@@ -1,5 +1,5 @@
 /**
- * Луна — главный элемент «Луны»: отметка дела, прогресс дня, оценка дня, клетка недели.
+ * Луна — главный элемент «Мульта»: отметка дела, прогресс дня, оценка дня, клетка недели.
  * Здесь только расчёты; рисует `Moon.tsx`.
  */
 
@@ -47,8 +47,10 @@ export type DayState = 'done' | 'partial' | 'today' | 'slip' | 'rest' | 'clean' 
 
 export type MoonLook = {
   phase: number;
-  tone: 'text' | 'blood';
-  ring: 'muted' | 'text' | 'blood';
+  /** освещённая часть: жёлтая луна или красная (слив) */
+  tone: 'sun' | 'red';
+  /** кольцо: обычное, красное (слив, долг) или приглушённое (выходной) */
+  ring: 'ring' | 'red' | 'muted';
   dashed: boolean;
 };
 
@@ -56,16 +58,15 @@ export function moonLook(state: DayState, partial = 0.5): MoonLook {
   switch (state) {
     case 'done':
     case 'clean':
-      return { phase: 1, tone: 'text', ring: 'muted', dashed: false };
+      return { phase: 1, tone: 'sun', ring: 'ring', dashed: false };
     case 'partial':
-      return { phase: clampPhase(partial), tone: 'text', ring: 'text', dashed: false };
     case 'today':
-      return { phase: clampPhase(partial), tone: 'text', ring: 'text', dashed: false };
+      return { phase: clampPhase(partial), tone: 'sun', ring: 'ring', dashed: false };
     case 'slip':
-      return { phase: 1, tone: 'blood', ring: 'blood', dashed: false };
+      return { phase: 1, tone: 'red', ring: 'red', dashed: false };
     case 'rest':
-      return { phase: 0, tone: 'text', ring: 'muted', dashed: true };
+      return { phase: 0, tone: 'sun', ring: 'muted', dashed: true };
     case 'empty':
-      return { phase: 0, tone: 'text', ring: 'muted', dashed: false };
+      return { phase: 0, tone: 'sun', ring: 'ring', dashed: false };
   }
 }

@@ -1,13 +1,14 @@
-/** Важность ромбиками: 0 — нет, 1–2 — лунным светом, 3 — красным. */
+/** Важность ромбиками с обводкой: 0 — нет, 1–2 — жёлтые, 3 — красные. */
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/metrics';
+import { RADIUS, STROKE } from '../theme/metrics';
+import { hardShadow } from '../theme/sticker';
 
 export type PriorityLevel = 0 | 1 | 2 | 3;
 
-export function PriorityMarks({ level, size = 7 }: { level: PriorityLevel; size?: number }) {
+export function PriorityMarks({ level, size = 10 }: { level: PriorityLevel; size?: number }) {
   const p = usePalette();
   const t = useT();
   if (!level) return null;
@@ -15,7 +16,7 @@ export function PriorityMarks({ level, size = 7 }: { level: PriorityLevel; size?
     <View
       accessible
       accessibilityLabel={t('a11y.priority', { count: level })}
-      style={{ flexDirection: 'row', gap: size * 0.45 }}
+      style={{ flexDirection: 'row', gap: size * 0.5, paddingHorizontal: 2 }}
     >
       {Array.from({ length: level }, (_, i) => (
         <View
@@ -23,7 +24,9 @@ export function PriorityMarks({ level, size = 7 }: { level: PriorityLevel; size?
           style={{
             width: size,
             height: size,
-            backgroundColor: level === 3 ? p.blood : p.text,
+            backgroundColor: level === 3 ? p.red : p.sun,
+            borderWidth: STROKE.thin,
+            borderColor: p.line,
             transform: [{ rotate: '45deg' }],
           }}
         />
@@ -56,16 +59,17 @@ export function PriorityPicker({ value, onChange, labels, label }: PickerProps) 
             style={[
               styles.cell,
               {
-                borderWidth: sel ? LINE.bold : LINE.hair,
-                borderColor: sel ? p.text : p.line,
-                backgroundColor: sel ? p.raised : 'transparent',
+                borderWidth: STROKE.outline,
+                borderColor: p.line,
+                backgroundColor: sel ? p.tag : p.surface,
               },
+              sel && hardShadow(p, 'sm'),
             ]}
           >
             {n === 0 ? (
-              <View style={{ width: 14, height: 2, backgroundColor: p.muted }} />
+              <View style={{ width: 16, height: 3, borderRadius: 2, backgroundColor: p.muted }} />
             ) : (
-              <PriorityMarks level={n} size={8} />
+              <PriorityMarks level={n} />
             )}
           </Pressable>
         );
@@ -75,6 +79,12 @@ export function PriorityPicker({ value, onChange, labels, label }: PickerProps) 
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: 6 },
-  cell: { flex: 1, height: 44, alignItems: 'center', justifyContent: 'center' },
+  row: { flexDirection: 'row', gap: 8 },
+  cell: {
+    flex: 1,
+    height: 46,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: RADIUS.sm,
+  },
 });
