@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Сегодня</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div style="padding: 50px 20px 100px; display: flex; flex-direction: column; gap: 16px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; flex-direction: column;">
+        <span style="font-size: 15px; font-weight: 600;">Вторник, 3 ноября</span>
+        <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">день 47 · серия 14</span>
+      </div>
+      <a href="{{settingsHref}}" aria-label="Настройки" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: -10px;">
+        <dc-import name="L-Icon" icon="settings" size="22" tone="muted" theme="{{theme}}" hint-size="22px,22px"></dc-import>
+      </a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <dc-import name="L-Moon" phase="{{dayPhase}}" size="104" tone="text" theme="{{theme}}" hint-size="104px,104px"></dc-import>
+      <div style="display: flex; flex-direction: column; gap: 4px;" aria-label="{{progressLabel}}">
+        <span style="font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: -0.02em;">{{doneN}}<span style="color: {{c.muted}}; font-weight: 500;"> / {{total}}</span></span>
+        <span style="font-size: 14px; color: {{c.muted}};">{{phaseText}}</span>
+      </div>
+    </div>
+
+    <sc-if value="{{quotes}}" hint-placeholder-val="{{true}}">
+      <p style="margin: 0; display: flex; flex-direction: column; gap: 2px; font-size: 16px; font-weight: 500; line-height: 1.35;">
+        <span>Волк не ждёт понедельника. Волк и есть понедельник.</span>
+        <span style="font-size: 13px; font-weight: 400; color: {{c.muted}};">— волк</span>
+      </p>
+    </sc-if>
+
+    <a href="{{sheetHref}}" style="display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 14px; background: {{c.surface}}; text-decoration: none; color: {{c.muted}}; font-size: 15px;">
+      <dc-import name="L-Icon" icon="plus" size="18" tone="amber" on="surface" theme="{{theme}}" hint-size="18px,18px"></dc-import>
+      Запиши дело или привычку
+    </a>
+
+    <section aria-label="Осталось" style="display: flex; flex-direction: column;">
+      <h2 style="margin: 0 0 2px; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 13px; color: {{c.muted}};"><span>Осталось</span><span>{{leftN}}</span></h2>
+      <sc-for list="{{left}}" as="r" hint-placeholder-count="4">
+        <div style="display: flex; align-items: center; gap: 8px; min-height: 52px; border-bottom: 1px solid {{c.line}};">
+          <button onClick="{{r.tap}}" aria-label="{{r.aria}}" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <dc-import name="L-Moon" phase="{{r.phase}}" size="24" tone="text" ring-tone="{{r.ring}}" theme="{{theme}}" hint-size="24px,24px"></dc-import>
+          </button>
+          <span style="flex: 1; display: flex; flex-direction: column;">
+            <span style="font-size: 16px; font-weight: 500;">{{r.title}}</span>
+            <sc-if value="{{r.sub}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: {{c.muted}};">{{r.sub}}</span></sc-if>
+          </span>
+          <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{r.metaColor}};">{{r.meta}}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section aria-label="Сделано" style="display: flex; flex-direction: column;">
+      <h2 style="margin: 0 0 6px; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 13px; color: {{c.muted}};"><span>Сделано</span><span>{{doneN}}</span></h2>
+      <sc-for list="{{log}}" as="l" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; align-items: baseline; gap: 8px; min-height: 30px;">
+          <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">{{l.time}}</span>
+          <span style="font-size: 15px; color: {{c.muted}}; text-decoration: line-through;">{{l.title}}</span>
+          <span style=" font-weight: 600; font-size: 13px; color: {{l.color}};">{{l.mark}}</span>
+        </div>
+      </sc-for>
+    </section>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 80px;">
+    <dc-import name="L-Nav" active="today" theme="{{theme}}" hint-size="390px,80px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"quotes":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      left: [
+        { id: 'push', title: 'Отжимания', sub: 'ещё 40 · серия 14', meta: '60/100', phase: 0.6, habit: true },
+        { id: 'read', title: 'Читать 20 минут', sub: '', meta: '9 дн', phase: 0, habit: true },
+        { id: 'debt', title: 'Закрыть долг Сане', sub: 'со вчера', meta: 'долг', phase: 0, debt: true },
+        { id: 'gym', title: 'Записаться в зал', sub: 'напомню у зала', meta: '!!', phase: 0 }
+      ],
+      log: [
+        { time: '13:20', title: 'Вода 2 литра', mark: 'зачёт', slip: false },
+        { time: '08:00', title: 'Не курить', mark: 'держусь', slip: false },
+        { time: '07:05', title: 'Подъём в 6:00', mark: 'слив', slip: true },
+        { time: '06:40', title: 'Купить протеин', mark: 'зачёт', slip: false }
+      ]
+    };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const pre = theme === 'dawn' ? 'R-' : 'L-';
+    const total = 9;
+    const doneN = this.state.log.filter((l) => !l.slip).length;
+    const left = this.state.left.map((r) => ({
+      ...r,
+      ring: r.debt ? 'blood' : 'muted',
+      metaColor: r.debt ? c.blood : r.meta === '!!' ? c.amber : c.muted,
+      aria: 'Отметить: ' + r.title,
+      tap: () => this.setState({
+        left: this.state.left.filter((x) => x.id !== r.id),
+        log: [{ time: 'сейчас', title: r.title, mark: 'зачёт', slip: false }, ...this.state.log]
+      })
+    }));
+    const p = doneN / total;
+    const rest = total - doneN;
+    return {
+      c, theme,
+      quotes: this.props.quotes ?? true,
+      left,
+      leftN: left.length,
+      log: this.state.log.slice(0, 4).map((l) => ({ ...l, color: l.slip ? c.blood : c.amber })),
+      doneN, total,
+      dayPhase: p,
+      progressLabel: 'Сделано ' + doneN + ' из ' + total,
+      phaseText: rest > 0 ? 'до полнолуния — ' + rest : 'полнолуние. День закрыт.',
+      settingsHref: pre + 'Settings.dc.html',
+      sheetHref: pre + 'NewSheet.dc.html'
+    };
+  }
+}
+</script>
+</body>
+</html>

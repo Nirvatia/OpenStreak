@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — стиль</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 900px; height: 1640px; box-sizing: border-box; padding: 48px; background: #0E1220; color: #ECE6D6; font-family: Onest, system-ui, sans-serif; display: flex; flex-direction: column; gap: 40px;">
+
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid #262D44; padding-bottom: 18px;">
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <dc-import name="L-Moon" phase="0.62" size="64" tone="text" theme="night" hint-size="64px,64px"></dc-import>
+      <h1 style="margin: 0;  font-weight: 700; font-size: 64px; line-height: 1;">Луна</h1>
+    </div>
+    <p style="margin: 0; max-width: 360px; font-size: 14px; line-height: 1.5; color: #9AA0B4; text-align: right;">Серьёзный трекер с тонкой иронией. Прогресс — фаза луны, иконки — гранями, как волк. Без лишних деталей, пафос — по чуть-чуть.</p>
+  </header>
+
+  <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+    <sc-for list="{{palettes}}" as="p" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: {{p.bg}}; color: {{p.text}}; border: 1px solid #262D44;">
+        <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: {{p.muted}};">{{p.name}}</h2>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;">
+          <sc-for list="{{p.sw}}" as="s" hint-placeholder-count="8">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="height: 44px; background: {{s.hex}}; border: 1px solid {{p.line}};"></span>
+              <span style="font-size: 12px; font-weight: 600;">{{s.name}}</span>
+              <span style="font-variant-numeric: tabular-nums; font-size: 10px; color: {{p.muted}};">{{s.hex}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{p.muted}};">{{p.contrast}}</span>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-weight: 500; font-size: 13px; color: #9AA0B4;">Один шрифт — Onest</h2>
+      <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em;">Привычки</span>
+      <span style="font-size: 16px; font-weight: 500;">Записаться в зал</span>
+      <span style="font-size: 13px; color: #9AA0B4;">заголовки, текст, кнопки</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-weight: 500; font-size: 13px; color: #9AA0B4;">Цифры — табличные</h2>
+      <span style="font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 500;">13:20 · 60/100</span>
+      <span style="font-size: 13px; color: #9AA0B4;">Осталось 4</span>
+      <span style="font-size: 13px; color: #9AA0B4;">подписи — обычным регистром, без капса и моноширинного</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-weight: 500; font-size: 13px; color: #9AA0B4;">Громко — только жирностью</h2>
+      <span style="font-weight: 800; font-size: 34px; line-height: 1; letter-spacing: -0.02em;">День закрыт.</span>
+      <span style="font-size: 13px; color: #9AA0B4;">пафос держится на словах, а не на «особом» шрифте</span>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 12px;">
+    <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #9AA0B4;">Иконки · грани, как у волка · сетка 24 · два тона + вырез</h2>
+    <sc-for list="{{iconRows}}" as="row" hint-placeholder-count="2">
+      <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; padding: 12px; background: {{row.bg}};">
+        <sc-for list="{{row.icons}}" as="i" hint-placeholder-count="20">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px 0;">
+            <dc-import name="L-Icon" icon="{{i.icon}}" size="28" tone="{{i.tone}}" theme="{{row.theme}}" hint-size="28px,28px"></dc-import>
+            <span style="font-variant-numeric: tabular-nums; font-size: 9px; color: {{row.muted}};">{{i.icon}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px;">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #9AA0B4;">Луна — прогресс и отметка</h2>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <sc-for list="{{phases}}" as="ph" hint-placeholder-count="9">
+          <dc-import name="L-Moon" phase="{{ph}}" size="34" tone="text" theme="night" hint-size="34px,34px"></dc-import>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;">
+        <sc-for list="{{states}}" as="s" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;">
+            <dc-import name="L-Moon" phase="{{s.phase}}" size="34" tone="{{s.tone}}" ring-tone="{{s.ring}}" dashed="{{s.dashed}}" theme="night" hint-size="34px,34px"></dc-import>
+            <span style="font-size: 12px; font-weight: 600;">{{s.name}}</span>
+            <span style="font-size: 12px; color: #9AA0B4;">{{s.when}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; line-height: 1.5; color: #9AA0B4;">Луна заменяет и чекбокс, и проценты, и счётчики: пустая — не сделано, неполная — числовая привычка в процессе, полная — зачёт. День целиком — большая луна на «Сегодня».</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #9AA0B4;">Зарубки — только в карточке привычки</h2>
+      <sc-for list="{{notches}}" as="n" hint-placeholder-count="4">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #262D44; padding-bottom: 8px;">
+          <dc-import name="L-Notches" count="{{n.count}}" height="26" tone="{{n.tone}}" theme="night" hint-size="180px,26px"></dc-import>
+          <span style="font-size: 12px; color: #9AA0B4;">{{n.label}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px;">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #9AA0B4;">Волк · грани</h2>
+      <div style="display: flex; gap: 22px; align-items: flex-end;">
+        <sc-for list="{{wolves}}" as="w" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dc-import name="L-Wolf" mood="{{w.mood}}" size="80" theme="night" hint-size="80px,80px"></dc-import>
+            <span style="font-size: 12px; font-weight: 600;">{{w.name}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <h2 style="margin: 12px 0 0; font-weight: 500; font-size: 13px; color: #9AA0B4;">Форма и акцент</h2>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span style="width: 140px; height: 64px; background: #161B2C;"></span>
+        <span style="width: 120px; height: 48px; background: #ECE6D6; color: #0E1220; display: flex; align-items: center; justify-content: center; font-weight: 700;">Записать</span>
+      </div>
+      <span style="font-size: 13px; line-height: 1.5; color: #9AA0B4;">Простые прямоугольники, скругление только у луны. Блоки отделяются фоном, а не рамками. Отдельного акцентного цвета нет: главное — лунным светом (инверсия), цвет только со смыслом — красный для слива и долгов.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #9AA0B4;">Цитаты волка · одна в день, выключаются</h2>
+      <sc-for list="{{quotes}}" as="q" hint-placeholder-count="6">
+        <p style="margin: 0; font-weight: 500; font-size: 16px; line-height: 1.35; border-bottom: 1px solid #262D44; padding-bottom: 8px;">{{q}}</p>
+      </sc-for>
+      <span style="font-size: 13px; line-height: 1.5; color: #9AA0B4;">Где: «Сегодня» (одна строка), «День закрыт», вердикт в итоге дня. Нигде больше. В обычном тоне цитат нет.</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":900,"height":1640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const icons = ['today', 'tasks', 'habits', 'goals', 'pack', 'settings', 'plus', 'back', 'chevron', 'close', 'remind', 'place', 'calendar', 'delete', 'search', 'dumbbell', 'book', 'drop', 'nosmoking', 'rise'];
+    const toneOf = () => 'text';
+    return {
+      palettes: [
+        { name: 'НОЧЬ — ОСНОВНАЯ', bg: '#0E1220', text: '#ECE6D6', muted: '#9AA0B4', line: '#262D44',
+          contrast: 'текст 15.0 · второй 7.2 · кровь 5.8 на фоне',
+          sw: [['фон', '#0E1220'], ['карточка', '#161B2C'], ['приподнято', '#262D44'], ['луна · текст', '#ECE6D6'], ['второй текст', '#9AA0B4'], ['кнопка · инверсия', '#ECE6D6'], ['кровь · слив', '#F0605F'], ['тень грани', '#A79F8C']].map(([name, hex]) => ({ name, hex })) },
+        { name: 'РАССВЕТ — СВЕТЛАЯ', bg: '#F3EEE4', text: '#1A1F2E', muted: '#5E6375', line: '#DAD2C2',
+          contrast: 'текст 14.2 · второй 5.2 · кровь 5.7 на фоне',
+          sw: [['фон', '#F3EEE4'], ['карточка', '#FBF8F2'], ['приподнято', '#E7E0D2'], ['текст', '#1A1F2E'], ['второй текст', '#5E6375'], ['кнопка · инверсия', '#1A1F2E'], ['кровь · слив', '#B4232A'], ['тень грани', '#4A5168']].map(([name, hex]) => ({ name, hex })) }
+      ],
+      iconRows: [
+        { theme: 'night', bg: '#0E1220', muted: '#9AA0B4', icons: icons.map((icon, i) => ({ icon, tone: toneOf(icon, i) })) },
+        { theme: 'dawn', bg: '#F3EEE4', muted: '#5E6375', icons: icons.map((icon, i) => ({ icon, tone: toneOf(icon, i) })) }
+      ],
+      phases: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
+      states: [
+        { name: 'не сделано', when: 'пусто', phase: 0, tone: 'text', ring: 'muted', dashed: false },
+        { name: 'в процессе', when: '60/100', phase: 0.6, tone: 'text', ring: 'amber', dashed: false },
+        { name: 'зачёт', when: 'полная', phase: 1, tone: 'text', ring: 'muted', dashed: false },
+        { name: 'слив', when: 'кровавая', phase: 1, tone: 'blood', ring: 'blood', dashed: false },
+        { name: 'выходной', when: 'пунктир', phase: 0, tone: 'text', ring: 'muted', dashed: true }
+      ],
+      notches: [
+        { count: 3, tone: 'text', label: 'начало' },
+        { count: 14, tone: 'text', label: '14 дней подряд' },
+        { count: 23, tone: 'text', label: 'вредная · чистые дни' },
+        { count: 47, tone: 'text', label: 'больше 30 — пятёрка и число' }
+      ],
+      wolves: [
+        { mood: 'active', name: 'В деле' },
+        { mood: 'angry', name: 'Злой' },
+        { mood: 'rest', name: 'Отдых' }
+      ],
+      quotes: [
+        'Волк не ждёт понедельника. Волк и есть понедельник.',
+        'Сделал — молчи. Не сделал — тоже молчи, но завтра сделай.',
+        'Слабые ставят будильник. Сильные просто встают. Ты — ставь будильник.',
+        'Лучше один раз отжаться, чем сто раз об этом подумать.',
+        'Серия не горит, пока горишь ты.',
+        'Волк слил — волк встал.'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

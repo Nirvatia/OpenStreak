@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Настройки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div style="padding: 46px 20px 30px; display: flex; flex-direction: column; gap: 16px;">
+    <a href="{{todayHref}}" aria-label="Назад" style="width: 44px; height: 44px; display: flex; align-items: center; margin-left: -4px;">
+      <dc-import name="L-Icon" icon="back" size="20" tone="text" theme="{{theme}}" hint-size="20px,20px"></dc-import>
+    </a>
+    <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em;">Настройки</h1>
+
+    <section style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 13px; color: {{c.muted}};">Тема</h2>
+      <div role="radiogroup" aria-label="Тема" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
+        <sc-for list="{{themes}}" as="t" hint-placeholder-count="3">
+          <button role="radio" aria-checked="{{t.checked}}" onClick="{{t.tap}}" style="height: 92px; border: {{t.border}}; padding: 0; background: {{c.surface}}; display: flex; flex-direction: column; overflow: hidden; text-align: left;">
+            <span aria-hidden="true" style="flex: 1; display: grid; grid-template-columns: {{t.cols}}; width: 100%;">
+              <sc-for list="{{t.halves}}" as="h" hint-placeholder-count="1">
+                <span style="background: {{h.bg}}; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 0 10px;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: {{h.text}};"></span><span style="height: 4px; flex: 1; max-width: 46px; background: {{h.text}};"></span></span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid {{h.muted}}; box-sizing: border-box;"></span><span style="height: 4px; flex: 1; max-width: 32px; background: {{h.muted}};"></span></span>
+                </span>
+              </sc-for>
+            </span>
+            <span style="padding: 6px 10px; font-size: 13px; font-weight: 600; color: {{c.text}};">{{t.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-for list="{{sections}}" as="s" hint-placeholder-count="3">
+      <section style="display: flex; flex-direction: column;">
+        <h2 style="margin: 4px 0 2px; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 13px; color: {{c.muted}};">{{s.title}}</h2>
+        <sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; border-bottom: 1px solid {{c.line}};">
+            <span style="display: flex; flex-direction: column;"><span style="font-size: 15px; font-weight: 500;">{{r.label}}</span><sc-if value="{{r.hint}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: {{c.muted}};">{{r.hint}}</span></sc-if></span>
+            <sc-if value="{{r.toggle}}" hint-placeholder-val="{{false}}">
+              <button role="switch" aria-checked="{{r.on}}" aria-label="{{r.label}}" onClick="{{r.tap}}" style="width: 50px; height: 30px; border: none; border-radius: 15px; background: {{r.track}}; padding: 0 3px; display: flex; justify-content: {{r.justify}}; align-items: center;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background: {{r.knob}};"></span>
+              </button>
+            </sc-if>
+            <sc-if value="{{r.value}}" hint-placeholder-val="{{false}}">
+              <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: {{c.muted}};">{{r.value}}
+                <dc-import name="L-Icon" icon="chevron" size="14" tone="muted" theme="{{theme}}" hint-size="14px,14px"></dc-import></span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: null, tone: true, quotes: true, ranks: true };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const mode = this.state.mode ?? theme;
+    const themes = [
+      ['night', 'Ночь', PAL.night],
+      ['dawn', 'Рассвет', PAL.dawn],
+      ['system', 'Как в системе', null]
+    ].map(([k, label, p]) => ({
+      label,
+      checked: mode === k ? 'true' : 'false',
+      border: mode === k ? '2px solid ' + c.text : '1px solid ' + c.line,
+      cols: p ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))',
+      halves: (p ? [p] : [PAL.night, PAL.dawn]).map((x) => ({ bg: x.bg, text: x.text, muted: x.muted })),
+      tap: () => this.setState({ mode: k })
+    }));
+    const t = (key, label, hint) => {
+      const on = this.state[key];
+      return {
+        label, hint: hint || '', toggle: true, value: '', on: on ? 'true' : 'false',
+        track: on ? c.text : c.raised, knob: on ? c.bg : c.muted, justify: on ? 'flex-end' : 'flex-start',
+        tap: () => this.setState({ [key]: !on })
+      };
+    };
+    const v = (label, value, hint) => ({ label, value, hint: hint || '', toggle: false });
+    return {
+      c, theme, themes,
+      todayHref: (theme === 'dawn' ? 'R-' : 'L-') + 'Today.dc.html',
+      sections: [
+        { title: 'Характер', rows: [
+          t('tone', 'Пацанский тон', 'выкл — обычные формулировки'),
+          t('quotes', 'Цитаты волка', 'одна в день, без фанатизма'),
+          t('ranks', 'Звания и очки'),
+          v('Язык', 'Русский')
+        ] },
+        { title: 'Дни', rows: [
+          v('Неделя с', 'понедельника'),
+          v('Итог дня', '21:30'),
+          v('Места', '2', 'у зала, у дома')
+        ] },
+        { title: 'Данные', rows: [
+          v('Бэкап', 'экспорт'),
+          v('Синхронизация', 'скоро', 'телефон + ПК')
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

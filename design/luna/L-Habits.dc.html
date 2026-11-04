@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Привычки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div style="padding: 50px 20px 100px; display: flex; flex-direction: column; gap: 14px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">5 в деле · 1 вредная</span>
+        <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em;">Привычки</h1>
+      </div>
+      <a href="#" aria-label="Новая привычка" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: {{c.amber}};">
+        <dc-import name="L-Icon" icon="plus" size="18" tone="onAmber" on="amber" theme="{{theme}}" hint-size="18px,18px"></dc-import>
+      </a>
+    </div>
+
+    <div role="radiogroup" aria-label="Фильтр" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: {{c.surface}}; padding: 3px; gap: 3px;">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+        <button role="radio" aria-checked="{{f.checked}}" onClick="{{f.tap}}" style="height: 36px; border: none; background: {{f.bg}}; color: {{f.fg}}; font-size: 13px; font-weight: 600;">{{f.label}}</button>
+      </sc-for>
+    </div>
+
+    <sc-for list="{{habits}}" as="h" hint-placeholder-count="4">
+      <a href="{{h.href}}" style="display: flex; flex-direction: column; gap: 12px; padding: 14px; background: {{c.surface}}; text-decoration: none;">
+        <span style="display: flex; align-items: center; gap: 12px;">
+          <dc-import name="L-Icon" icon="{{h.icon}}" size="26" tone="{{h.tone}}" on="surface" theme="{{theme}}" hint-size="26px,26px"></dc-import>
+          <span style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+            <span style="font-size: 16px; font-weight: 600;">{{h.name}}</span>
+            <span style="font-size: 12px; color: {{c.muted}};">{{h.meta}}</span>
+          </span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+            <span style="font-size: 24px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums;">{{h.streak}}</span>
+            <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">{{h.streakLabel}}</span>
+          </span>
+        </span>
+        <span style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px;">
+          <sc-for list="{{h.week}}" as="d" hint-placeholder-count="7">
+            <span style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <dc-import name="L-Moon" phase="{{d.phase}}" size="22" tone="{{d.tone}}" ring-tone="{{d.ring}}" dashed="{{d.dashed}}" theme="{{theme}}" hint-size="22px,22px"></dc-import>
+              <span style="font-variant-numeric: tabular-nums; font-size: 10px; color: {{d.labelColor}};">{{d.label}}</span>
+            </span>
+          </sc-for>
+        </span>
+        <sc-if value="{{h.note}}" hint-placeholder-val="{{false}}">
+          <span style=" font-weight: 500; font-size: 14px; color: {{c.muted}};">{{h.note}}</span>
+        </sc-if>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 80px;">
+    <dc-import name="L-Nav" active="habits" theme="{{theme}}" hint-size="390px,80px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all' };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const pre = theme === 'dawn' ? 'R-' : 'L-';
+    const labels = ['ср', 'чт', 'пт', 'сб', 'вс', 'пн', 'вт'];
+    // d — сделано (полная луна), p — частично, t — сегодня, x — слив (кровавая), r — выходной (новолуние пунктиром), c — чисто
+    const cell = (k, i, part) => {
+      const base = { label: labels[i], labelColor: i === 6 ? c.text : c.muted, dashed: false };
+      if (k === 'd' || k === 'c') return { ...base, phase: 1, tone: 'text', ring: 'muted' };
+      if (k === 'p') return { ...base, phase: part, tone: 'text', ring: 'amber' };
+      if (k === 't') return { ...base, phase: 0, tone: 'text', ring: 'amber' };
+      if (k === 'x') return { ...base, phase: 1, tone: 'blood', ring: 'blood' };
+      return { ...base, phase: 0, tone: 'text', ring: 'muted', dashed: true };
+    };
+    const week = (codes, part) => codes.split('').map((k, i) => cell(k, i, part));
+    const all = [
+      { kind: 'good', name: 'Отжимания', icon: 'dumbbell', tone: 'amber', meta: '100 в день · сегодня 60', streak: 14, streakLabel: 'дней', notchTone: 'text', week: week('ddddddp', 0.6), note: '' },
+      { kind: 'good', name: 'Читать 20 минут', icon: 'book', tone: 'amber', meta: 'каждый день · выходные — отдых', streak: 9, streakLabel: 'дней', notchTone: 'text', week: week('ddrrddt'), note: '' },
+      { kind: 'bad', name: 'Не курить', icon: 'nosmoking', tone: 'text', meta: 'вредная · с 12 октября', streak: 23, streakLabel: 'чистых', notchTone: 'amber', week: week('ccccccc'), note: '' },
+      { kind: 'good', name: 'Подъём в 6:00', icon: 'rise', tone: 'amber', meta: 'пн–пт', streak: 0, streakLabel: 'с нуля', notchTone: 'text', week: week('ddrrdxt'), note: 'Слил вчера. Встал — и дальше.' }
+    ];
+    const f = this.state.filter;
+    const filters = [['all', 'Все'], ['good', 'Полезные'], ['bad', 'Вредные']].map(([k, label]) => ({
+      label, checked: f === k ? 'true' : 'false',
+      bg: f === k ? c.raised : 'transparent', fg: f === k ? c.text : c.muted,
+      tap: () => this.setState({ filter: k })
+    }));
+    return {
+      c, theme, filters,
+      habits: all.filter((h) => f === 'all' || h.kind === f).map((h) => ({ ...h, href: pre + 'Habit.dc.html' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

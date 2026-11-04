@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна · зарубки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<span style="display: inline-flex; align-items: center; gap: 8px; font-family: Onest, system-ui, sans-serif; color: {{color}};">
+  <svg width="{{width}}" height="{{height}}" viewBox="0 0 {{width}} {{height}}" aria-hidden="true" style="display: block; flex: none;">
+    <path d="{{d}}" stroke="{{color}}" stroke-width="{{stroke}}" stroke-linecap="butt" fill="none"></path>
+  </svg>
+  <sc-if value="{{more}}" hint-placeholder-val="{{false}}">
+    <span style="font-weight: 600; font-size: {{numSize}}px; line-height: 1;">{{count}}</span>
+  </sc-if>
+</span>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"count":{"editor":"int","default":14},"height":{"editor":"int","default":24},"tone":{"editor":"enum","default":"text","options":["text","amber","muted","blood"]},"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":120,"height":24}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      night: { text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const c = PAL[this.props.theme === 'dawn' ? 'dawn' : 'night'];
+    const count = Math.max(0, Math.floor(Number(this.props.count ?? 14)));
+    const h = this.props.height ?? 24;
+    const step = Math.round(h * 0.26);
+    const groupW = step * 4 + Math.round(h * 0.45);
+    // Больше 30 — одна перечёркнутая пятёрка и число.
+    const more = count > 30;
+    const n = more ? 5 : count;
+    let d = '';
+    for (let i = 0; i < n; i++) {
+      const g = Math.floor(i / 5), k = i % 5, x0 = g * groupW + 2;
+      if (k < 4) {
+        const x = x0 + k * step + (k % 2 ? 1 : 0);
+        d += 'M' + (x + 1.5) + ' 1 L' + (x - 0.5) + ' ' + (h - 1) + ' ';
+      } else {
+        d += 'M' + (x0 - 2) + ' ' + Math.round(h * 0.78) + ' L' + (x0 + step * 3 + 3) + ' ' + Math.round(h * 0.22) + ' ';
+      }
+    }
+    const groups = Math.ceil(n / 5) || 1;
+    return {
+      d: d || 'M0 0',
+      width: Math.max(4, groups * groupW),
+      height: h,
+      stroke: Math.max(2, Math.round(h / 10)),
+      color: c[this.props.tone ?? 'text'] ?? c.text,
+      more,
+      count: String(count),
+      numSize: Math.round(h * 0.9)
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Новое (шторка)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div aria-hidden="true" style="position: absolute; inset: 0; padding: 50px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px;">
+    <span style="font-size: 15px; font-weight: 600;">Вторник, 3 ноября</span>
+    <span style="font-size: 44px; font-weight: 700;">3 / 9</span>
+  </div>
+  <a href="{{backHref}}" aria-label="Закрыть" style="position: absolute; inset: 0; background: {{c.scrim}};"></a>
+
+  <section aria-label="Новое" style="position: absolute; left: 0; right: 0; bottom: 0; height: 690px; box-sizing: border-box; padding: 10px 20px 30px; background: {{c.surface}}; display: flex; flex-direction: column; gap: 18px;">
+    <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; background: {{c.raised}};"></span>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700;">Новое</h1>
+      <a href="{{backHref}}" aria-label="Закрыть" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: -10px;">
+        <dc-import name="L-Icon" icon="close" size="18" tone="muted" on="surface" theme="{{theme}}" hint-size="18px,18px"></dc-import>
+      </a>
+    </div>
+
+    <div role="radiogroup" aria-label="Что это" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: {{c.bg}}; padding: 3px; gap: 3px;">
+      <sc-for list="{{kinds}}" as="k" hint-placeholder-count="3">
+        <button role="radio" aria-checked="{{k.checked}}" onClick="{{k.tap}}" style="height: 38px; border: none; background: {{k.bg}}; color: {{k.fg}}; font-size: 14px; font-weight: 600;">{{k.label}}</button>
+      </sc-for>
+    </div>
+
+    <label style="display: flex; flex-direction: column; gap: 6px;">
+      <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">что сделать</span>
+      <input value="Записаться в зал" style="border: none; border-bottom: 2px solid {{c.amber}}; background: transparent; outline: none; font: inherit; font-size: 22px; font-weight: 600; padding: 6px 0; color: {{c.text}};">
+    </label>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">когда</span>
+      <div role="radiogroup" aria-label="Когда" style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button role="radio" aria-checked="true" style="height: 40px; padding: 0 14px; border: 1px solid {{c.text}}; background: {{c.text}}; color: {{c.surface}}; font-size: 14px; font-weight: 600;">Сегодня</button>
+        <button role="radio" aria-checked="false" style="height: 40px; padding: 0 14px; border: 1px solid {{c.line}}; background: transparent; color: {{c.text}}; font-size: 14px; font-weight: 500;">Завтра</button>
+        <button role="radio" aria-checked="false" style="height: 40px; padding: 0 14px; border: 1px solid {{c.line}}; background: transparent; color: {{c.text}}; font-size: 14px; font-weight: 500;">Без даты</button>
+        <button style="height: 40px; padding: 0 14px; border: 1px dashed {{c.muted}}; background: transparent; color: {{c.text}}; font-size: 14px; font-weight: 500;">Дата…</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">важность</span>
+      <div role="radiogroup" aria-label="Важность" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">
+        <sc-for list="{{prios}}" as="p" hint-placeholder-count="4">
+          <button role="radio" aria-checked="{{p.checked}}" aria-label="{{p.label}}" onClick="{{p.tap}}" style="height: 44px; border: 1px solid {{p.border}}; background: {{p.bg}}; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <sc-for list="{{p.dots}}" as="d" hint-placeholder-count="2">
+              <span style="width: 8px; height: 8px; background: {{p.dot}}; transform: rotate(45deg);"></span>
+            </sc-for>
+            <sc-if value="{{p.none}}" hint-placeholder-val="{{false}}"><span style="width: 14px; height: 2px; background: {{c.muted}};"></span></sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">напомнить</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px;">
+        <button style="min-height: 54px; border: 1px dashed {{c.muted}}; background: transparent; color: {{c.text}}; display: flex; align-items: center; gap: 10px; padding: 0 12px; font-size: 14px; font-weight: 500; text-align: left;">
+          <dc-import name="L-Icon" icon="remind" size="20" tone="muted" on="surface" theme="{{theme}}" hint-size="20px,20px"></dc-import>По времени</button>
+        <button style="min-height: 54px; border: 1px solid {{c.amber}}; background: {{c.raised}}; color: {{c.text}}; display: flex; align-items: center; gap: 10px; padding: 0 12px; font-size: 14px; font-weight: 500; text-align: left;">
+          <dc-import name="L-Icon" icon="place" size="20" tone="amber" on="raised" theme="{{theme}}" hint-size="20px,20px"></dc-import>
+          <span style="display: flex; flex-direction: column; line-height: 1.2;"><span>У зала</span><span style="font-size: 12px; color: {{c.muted}};">при входе · 150 м</span></span></button>
+      </div>
+    </div>
+
+    <a href="{{backHref}}" style="margin-top: auto; height: 56px; background: {{c.amber}}; color: {{c.onAmber}}; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 17px; font-weight: 700;">Записать</a>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { kind: 'task', prio: 2 };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F', onAmber: '#0E1220', scrim: 'rgba(5,7,14,0.72)' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A', onAmber: '#FBF8F2', scrim: 'rgba(26,31,46,0.55)' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const kinds = [['task', 'Дело'], ['habit', 'Привычка'], ['goal', 'Цель']].map(([k, label]) => ({
+      label, checked: this.state.kind === k ? 'true' : 'false',
+      bg: this.state.kind === k ? c.raised : 'transparent',
+      fg: this.state.kind === k ? c.text : c.muted,
+      tap: () => this.setState({ kind: k })
+    }));
+    const names = ['Без важности', 'Низкая', 'Средняя', 'Высокая'];
+    const prios = [0, 1, 2, 3].map((n) => {
+      const on = this.state.prio === n;
+      return {
+        label: names[n], checked: on ? 'true' : 'false',
+        dots: Array.from({ length: n }, (_, i) => i), none: n === 0,
+        dot: n === 3 ? c.blood : c.amber,
+        border: on ? c.amber : c.line,
+        bg: on ? c.raised : 'transparent',
+        tap: () => this.setState({ prio: n })
+      };
+    });
+    return { c, theme, kinds, prios, backHref: (theme === 'dawn' ? 'R-' : 'L-') + 'Today.dc.html' };
+  }
+}
+</script>
+</body>
+</html>

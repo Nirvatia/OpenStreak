@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна · волк</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 100 100" role="img" aria-label="{{label}}" style="display: block; flex: none;">
+  <polygon points="16,8 38,28 18,36" fill="{{a}}"></polygon>
+  <polygon points="84,8 62,28 82,36" fill="{{b}}"></polygon>
+  <polygon points="18,36 38,27 50,25 50,96 40,90 27,74 12,68 18,62 8,54" fill="{{a}}"></polygon>
+  <polygon points="82,36 62,27 50,25 50,96 60,90 73,74 88,68 82,62 92,54" fill="{{b}}"></polygon>
+  <polygon points="50,36 50,76 42,72 44,52" fill="{{b}}"></polygon>
+  <polygon points="50,36 50,76 58,72 56,52" fill="{{a}}"></polygon>
+  <polygon points="42,74 58,74 50,86" fill="{{cut}}"></polygon>
+  <polygon points="{{eyeL}}" fill="{{eye}}"></polygon>
+  <polygon points="{{eyeR}}" fill="{{eye}}"></polygon>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mood":{"editor":"enum","default":"active","options":["active","angry","rest"]},"size":{"editor":"int","default":64},"on":{"editor":"enum","default":"bg","options":["bg","surface"]},"inverse":{"editor":"boolean","default":false},"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":64,"height":64}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', bgShade: '#1B2133', feature: '#3A4260', surface: '#161B2C', text: '#ECE6D6', shade: '#A79F8C', muted: '#9AA0B4', mutedShade: '#6E7488', blood: '#F0605F', bloodShade: '#B8474A' },
+      dawn: { bg: '#F3EEE4', bgShade: '#DAD2C2', feature: '#1A1F2E', surface: '#FBF8F2', text: '#1A1F2E', shade: '#4A5168', muted: '#5E6375', mutedShade: '#8A8FA0', blood: '#B4232A', bloodShade: '#D9555B' }
+    };
+    const night = this.props.theme !== 'dawn';
+    const c = PAL[night ? 'night' : 'dawn'];
+    const mood = this.props.mood ?? 'active';
+    // Глаза задают настроение: в деле — прищур, злой — сведены к носу, отдых — закрыты.
+    const EYES = {
+      active: ['26,47 42,52 33,56', '74,47 58,52 67,56'],
+      angry: ['25,44 43,53 32,55', '75,44 57,53 68,55'],
+      rest: ['27,51 42,51 42,54 27,54', '73,51 58,51 58,54 73,54']
+    };
+    const tones = {
+      active: [c.text, c.shade],
+      angry: [c.blood, c.bloodShade],
+      rest: [c.muted, c.mutedShade]
+    };
+    const labels = { active: 'Волк: в деле', angry: 'Волк: злой', rest: 'Волк: отдыхает' };
+    // inverse — силуэт цвета фона поверх светлого (на полной луне); черты не прорезаны насквозь.
+    const [a, b] = this.props.inverse ? [c.bg, c.bgShade] : (tones[mood] ?? tones.active);
+    const cut = this.props.inverse ? c.feature : (c[this.props.on ?? 'bg'] ?? c.bg);
+    const [eyeL, eyeR] = EYES[mood] ?? EYES.active;
+    // В ночной теме у волка красные глаза (кроме злого — он и так красный).
+    const eye = night && mood !== 'angry' ? c.blood : cut;
+    return { size: this.props.size ?? 64, a, b, cut, eye, eyeL, eyeR, label: labels[mood] ?? labels.active };
+  }
+}
+</script>
+</body>
+</html>

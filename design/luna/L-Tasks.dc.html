@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Дела</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div style="padding: 50px 20px 100px; display: flex; flex-direction: column; gap: 14px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">12 в работе · 1 долг</span>
+        <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em;">Дела</h1>
+      </div>
+      <a href="#" aria-label="Календарь" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: -10px;">
+        <dc-import name="L-Icon" icon="calendar" size="22" tone="muted" theme="{{theme}}" hint-size="22px,22px"></dc-import>
+      </a>
+    </div>
+
+    <label style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; background: {{c.surface}};">
+      <dc-import name="L-Icon" icon="search" size="18" tone="muted" on="surface" theme="{{theme}}" hint-size="18px,18px"></dc-import>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Поиск</span>
+      <input placeholder="Найти дело" style="flex: 1; border: none; outline: none; background: transparent; font: inherit; font-size: 15px; color: {{c.text}};">
+    </label>
+
+    <div role="group" aria-label="Сферы" style="display: flex; gap: 6px; flex-wrap: wrap;">
+      <sc-for list="{{areas}}" as="a" hint-placeholder-count="4">
+        <button onClick="{{a.tap}}" aria-pressed="{{a.pressed}}" style="height: 34px; padding: 0 12px; border: 1px solid {{a.border}}; background: {{a.bg}}; color: {{a.fg}}; font-size: 13px; font-weight: 500;">{{a.label}}</button>
+      </sc-for>
+    </div>
+
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+      <section style="display: flex; flex-direction: column;">
+        <h2 style="margin: 4px 0 0; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 13px; color: {{g.color}};"><span>{{g.label}}</span><span>{{g.count}}</span></h2>
+        <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 8px; min-height: 56px; border-bottom: 1px solid {{c.line}};">
+            <button onClick="{{r.tap}}" aria-label="{{r.aria}}" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+              <dc-import name="L-Moon" phase="{{r.phase}}" size="24" tone="text" ring-tone="{{r.ring}}" theme="{{theme}}" hint-size="24px,24px"></dc-import>
+            </button>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0;">
+              <span style="font-size: 16px; font-weight: 500; color: {{r.titleColor}}; text-decoration: {{r.deco}};">{{r.title}}</span>
+              <span style="font-size: 12px; color: {{c.muted}};">{{r.meta}}</span>
+            </span>
+            <span style="display: flex; gap: 3px;" aria-label="{{r.prioLabel}}">
+              <sc-for list="{{r.prio}}" as="p" hint-placeholder-count="2">
+                <span style="width: 7px; height: 7px; background: {{c.amber}}; transform: rotate(45deg);"></span>
+              </sc-for>
+            </span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+
+    <p style="margin: 0; font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">свайп влево — вычеркнуть · 5 секунд на «вернуть»</p>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 80px;">
+    <dc-import name="L-Nav" active="tasks" theme="{{theme}}" hint-size="390px,80px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { area: 'all', done: { protein: true } };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const areaDefs = [['all', 'Все'], ['work', 'Работа · 5'], ['gym', 'Зал · 2'], ['me', 'Личное · 4']];
+    const areas = areaDefs.map(([k, label]) => {
+      const on = this.state.area === k;
+      return {
+        label, pressed: on ? 'true' : 'false',
+        bg: on ? c.text : 'transparent', fg: on ? c.bg : c.text, border: on ? c.text : c.line,
+        tap: () => this.setState({ area: k })
+      };
+    });
+    const row = (id, title, meta, prio, debt) => {
+      const done = !!this.state.done[id];
+      return {
+        title, meta,
+        phase: done ? 1 : 0,
+        ring: debt && !done ? 'blood' : 'muted',
+        titleColor: done ? c.muted : c.text,
+        deco: done ? 'line-through' : 'none',
+        prio: Array.from({ length: prio }, (_, i) => i),
+        prioLabel: prio ? 'Важность ' + prio + ' из 3' : '',
+        aria: (done ? 'Вернуть: ' : 'Выполнить: ') + title,
+        tap: () => this.setState({ done: { ...this.state.done, [id]: !done } })
+      };
+    };
+    return {
+      c, theme, areas,
+      groups: [
+        { label: 'Долги', count: '1', color: c.blood, rows: [row('debt', 'Закрыть долг Сане', 'вчера · Личное', 3, true)] },
+        { label: 'Сегодня', count: '3', color: c.muted, rows: [
+          row('gym', 'Записаться в зал', 'напомню у зала · Зал', 2),
+          row('report', 'Отправить отчёт', '18:00 · Работа', 1),
+          row('protein', 'Купить протеин', 'Зал', 0)
+        ] },
+        { label: 'Завтра', count: '2', color: c.muted, rows: [
+          row('call', 'Созвон с Димоном', '11:30 · Работа', 0),
+          row('car', 'Отогнать тачку на ТО', 'Личное', 1)
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

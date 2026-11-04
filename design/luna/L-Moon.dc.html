@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна · фаза</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 100 100" aria-hidden="true" style="display: block; flex: none;">
+  <circle cx="50" cy="50" r="46" fill="{{dark}}" stroke="{{ring}}" stroke-width="{{ringWidth}}" stroke-dasharray="{{dash}}"></circle>
+  <path d="{{lit}}" fill="{{litColor}}"></path>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"phase":{"editor":"range","default":0.6,"min":0,"max":1,"step":0.05},"size":{"editor":"int","default":48},"tone":{"editor":"enum","default":"text","options":["text","amber","blood"]},"ringTone":{"editor":"enum","default":"muted","options":["muted","amber","blood","text"]},"dashed":{"editor":"boolean","default":false},"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":48,"height":48}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {
+      night: { raised: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { raised: '#E7E0D2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const c = PAL[this.props.theme === 'dawn' ? 'dawn' : 'night'];
+    const p = Math.max(0, Math.min(1, Number(this.props.phase ?? 0.6)));
+    const size = this.props.size ?? 48;
+    const r = 46;
+    let lit = 'M0 0 Z';
+    if (p >= 0.999) lit = 'M50 4 A46 46 0 1 1 50 96 A46 46 0 1 1 50 4 Z';
+    else if (p > 0.001) {
+      // Освещена правая часть: полуокружность справа + линия терминатора (эллипс).
+      const rx = (r * Math.abs(1 - 2 * p)).toFixed(2);
+      const sweep = p < 0.5 ? 0 : 1;
+      lit = 'M50 4 A46 46 0 0 1 50 96 A' + rx + ' 46 0 0 ' + sweep + ' 50 4 Z';
+    }
+    return {
+      size,
+      lit,
+      dark: c.raised,
+      litColor: c[this.props.tone ?? 'text'] ?? c.text,
+      ring: c[this.props.ringTone ?? 'muted'] ?? c.muted,
+      ringWidth: size <= 28 ? 7 : size <= 60 ? 4 : 2.5,
+      dash: this.props.dashed ? '10 8' : 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>

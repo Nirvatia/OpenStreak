@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Луна — Привычка</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{c.bg}}; color: {{c.text}}; font-family: Onest, system-ui, sans-serif;">
+  <div style="padding: 46px 20px 28px; display: flex; flex-direction: column; gap: 18px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <a href="{{backHref}}" aria-label="Назад" style="width: 44px; height: 44px; display: flex; align-items: center; margin-left: -4px;">
+        <dc-import name="L-Icon" icon="back" size="20" tone="text" theme="{{theme}}" hint-size="20px,20px"></dc-import>
+      </a>
+      <a href="#" style="font-size: 14px; font-weight: 500; color: {{c.muted}}; text-decoration: none; min-height: 44px; display: flex; align-items: center;">Изменить</a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <dc-import name="L-Icon" icon="dumbbell" size="36" tone="amber" theme="{{theme}}" hint-size="36px,36px"></dc-import>
+      <div style="display: flex; flex-direction: column;">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Отжимания</h1>
+        <span style="font-size: 13px; color: {{c.muted}};">100 в день · напомню в 7:30 и у зала</span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 18px; padding: 16px; background: {{c.surface}};">
+      <dc-import name="L-Moon" phase="{{phase}}" size="88" tone="text" ring-tone="amber" theme="{{theme}}" hint-size="88px,88px"></dc-import>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-size: 34px; font-weight: 700; line-height: 1;">{{value}}<span style="color: {{c.muted}}; font-weight: 500; font-size: 20px;"> / 100</span></span>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
+          <sc-for list="{{adds}}" as="a" hint-placeholder-count="3">
+            <button onClick="{{a.tap}}" style="height: 44px; border: 1px solid {{c.line}}; background: {{c.raised}}; color: {{c.text}}; font-size: 15px; font-weight: 600;">{{a.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};">Серия</span>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <dc-import name="L-Notches" count="{{streak}}" height="30" tone="text" theme="{{theme}}" hint-size="140px,30px"></dc-import>
+        <span style="font-size: 15px; color: {{c.muted}};">{{streak}} дней · лучшая 41</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; font-size: 12px; color: {{c.muted}};"><span>Последние 4 недели</span><span>212 Всего</span></span>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 8px; justify-items: center;">
+        <sc-for list="{{month}}" as="d" hint-placeholder-count="28">
+          <dc-import name="L-Moon" phase="{{d.phase}}" size="26" tone="{{d.tone}}" ring-tone="{{d.ring}}" dashed="{{d.dashed}}" theme="{{theme}}" hint-size="26px,26px"></dc-import>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; color: {{c.muted}};">полная — норма, неполная — недобор, красная — слив, пунктир — выходной</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 4px;">
+      <button style="height: 48px; border: 1px solid {{c.line}}; background: transparent; color: {{c.text}}; font-size: 15px; font-weight: 500;">Выходной</button>
+      <button style="height: 48px; border: 1px solid {{c.blood}}; background: transparent; color: {{c.blood}}; font-size: 15px; font-weight: 500;">Слил сегодня</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dawn"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { value: 60 };
+  }
+  renderVals() {
+    const PAL = {
+      night: { bg: '#0E1220', surface: '#161B2C', raised: '#262D44', line: '#262D44', text: '#ECE6D6', muted: '#9AA0B4', amber: '#ECE6D6', blood: '#F0605F' },
+      dawn: { bg: '#F3EEE4', surface: '#FBF8F2', raised: '#E7E0D2', line: '#DAD2C2', text: '#1A1F2E', muted: '#5E6375', amber: '#1A1F2E', blood: '#B4232A' }
+    };
+    const theme = this.props.theme === 'dawn' ? 'dawn' : 'night';
+    const c = PAL[theme];
+    const v = this.state.value;
+    // Последние 4 недели, по 7 дней в ряд; t — сегодня.
+    const codes = 'pd' + 'ddddrr' + 'dddddrr' + 'dxdddrr' + 'pddtoo';
+    const month = codes.split('').map((k, i) => {
+      if (k === 'd') return { phase: 1, tone: 'text', ring: 'muted', dashed: false };
+      if (k === 'p') return { phase: 0.7, tone: 'text', ring: 'muted', dashed: false };
+      if (k === 'x') return { phase: 1, tone: 'blood', ring: 'blood', dashed: false };
+      if (k === 'r') return { phase: 0, tone: 'text', ring: 'muted', dashed: true };
+      if (k === 't') return { phase: v / 100, tone: 'text', ring: 'amber', dashed: false };
+      return { phase: 0, tone: 'text', ring: 'muted', dashed: false };
+    });
+    const add = (n) => () => this.setState({ value: Math.min(100, this.state.value + n) });
+    return {
+      c, theme,
+      backHref: (theme === 'dawn' ? 'R-' : 'L-') + 'Habits.dc.html',
+      value: v,
+      phase: v / 100,
+      streak: v >= 100 ? 15 : 14,
+      adds: [{ label: '+10', tap: add(10) }, { label: '+20', tap: add(20) }, { label: v >= 100 ? 'Сброс' : '+40', tap: v >= 100 ? () => this.setState({ value: 60 }) : add(40) }],
+      month
+    };
+  }
+}
+</script>
+</body>
+</html>
