@@ -1,9 +1,11 @@
 /**
- * Показ тоста: плашка лунного цвета (инверсия) у нижнего края, над таб-баром.
- * Появляется сдвигом снизу (без прозрачности — в нём текст). Объявляется для чтения с экрана.
+ * Показ тоста: плашка лунного цвета (инверсия) у нижнего края, над таб-баром и над
+ * системной полосой навигации (нижний отступ безопасной зоны). `bottom` — высота таб-бара
+ * без системного отступа, если он есть на экране. Появляется сдвигом снизу (без прозрачности — в нём текст). Объявляется для чтения с экрана.
  */
 import React, { useEffect } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -22,12 +24,15 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
   const current = useToast((s) => s.current);
   const visible = useToast((s) => s.visible);
   const act = useToast((s) => s.act);
-  const y = useSharedValue(HIDDEN_Y);
+  const insets = useSafeAreaInsets();
+  const offset = insets.bottom + bottom + SPACE.lg;
+  const hiddenY = HIDDEN_Y + offset;
+  const y = useSharedValue(hiddenY);
 
   useEffect(() => {
-    y.set(visible ? withSpring(0, { damping: 18 }) : withTiming(HIDDEN_Y, { duration: 180 }));
+    y.set(visible ? withSpring(0, { damping: 18 }) : withTiming(hiddenY, { duration: 180 }));
     if (visible && current) AccessibilityInfo.announceForAccessibility(current.text);
-  }, [visible, current, y]);
+  }, [visible, current, y, hiddenY]);
 
   const slide = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() }] }));
 
@@ -35,7 +40,7 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
   return (
     <View
       pointerEvents="box-none"
-      style={[StyleSheet.absoluteFill, styles.layer, { paddingBottom: bottom + SPACE.lg }]}
+      style={[StyleSheet.absoluteFill, styles.layer, { paddingBottom: offset }]}
     >
       <Animated.View
         pointerEvents={visible ? 'auto' : 'none'}
