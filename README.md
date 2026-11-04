@@ -13,10 +13,24 @@ npm start          # Expo dev server
 npm run android    # или ios / web
 ```
 
+### Веб-режим для разработки
+
+```bash
+npm run web        # откроет http://localhost:8081
+```
+
+Интерфейс можно проверять в браузере на ПК: на широком окне приложение показывается в колонке
+шириной с телефон (`src/app/WebFrame.tsx`), данные хранятся в `localStorage` браузера.
+Уведомления, вибрация, выбор даты и экспорт файлов на вебе не работают или работают упрощённо —
+их проверяйте на телефоне.
+
+### Нативная сборка
+
 Напоминания и (в будущем) геозоны требуют dev-сборки — в Expo Go они работают не полностью:
 
 ```bash
-npx eas build --profile development --platform android
+npx expo run:android                                     # локально (нужен Android Studio)
+npx eas build --profile development --platform android   # или в облаке EAS
 ```
 
 ## Проверки

@@ -10,6 +10,7 @@ import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
 import { bootstrap } from './bootstrap';
+import { WebFrame } from './WebFrame';
 
 export const App: React.FC = () => {
   const fontsLoaded = useAppFonts();
@@ -38,14 +39,16 @@ export const App: React.FC = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <RootTabs />
-        </NavigationContainer>
-        <SheetsHost />
-        <Toast />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <WebFrame>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <RootTabs />
+          </NavigationContainer>
+          <SheetsHost />
+          <Toast />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </WebFrame>
   );
 };
