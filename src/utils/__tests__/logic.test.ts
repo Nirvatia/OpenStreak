@@ -207,18 +207,24 @@ describe('статистика', () => {
     expect(activityPerDay(TODAY, tasks, habits)).toBe(2);
   });
 
-  // ИЗВЕСТНЫЙ БАГ (чиним на этапе 1): срыв вредной привычки засчитывается как «активность».
-  test.failing('срыв вредной привычки не считается активностью', () => {
+  test('срыв вредной привычки не считается активностью', () => {
     const habits = [habit({ type: 'bad', dates: [TODAY] })];
     expect(activityPerDay(TODAY, [], habits)).toBe(0);
   });
 });
 
 describe('календарь', () => {
-  // ИЗВЕСТНЫЙ БАГ (чиним на этапе 1): из 31 января «вперёд» уводит в март.
-  test.failing('перелистывание месяца с 31-го числа', () => {
+  test('перелистывание месяца с 31-го числа', () => {
     useCalendarStore.setState({ calView: 'month', calCursor: '2027-01-31' });
     useCalendarStore.getState().navigateNext();
-    expect(useCalendarStore.getState().calCursor.slice(0, 7)).toBe('2027-02');
+    expect(useCalendarStore.getState().calCursor).toBe('2027-02-28');
+    useCalendarStore.getState().navigatePrev();
+    expect(useCalendarStore.getState().calCursor).toBe('2027-01-28');
+  });
+
+  test('перелистывание года с 29 февраля', () => {
+    useCalendarStore.setState({ calView: 'year', calCursor: '2028-02-29' });
+    useCalendarStore.getState().navigateNext();
+    expect(useCalendarStore.getState().calCursor).toBe('2029-02-28');
   });
 });

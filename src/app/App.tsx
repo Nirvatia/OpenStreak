@@ -8,32 +8,21 @@ import { SheetsHost } from '../components/SheetsHost';
 import { useAppStore } from '../store/appStore';
 import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
-import { checkReminders } from '../utils/reminders';
 import { useAppFonts } from '../hooks/useFonts';
+import { bootstrap } from './bootstrap';
 
 export const App: React.FC = () => {
   const fontsLoaded = useAppFonts();
-  const loadState = useAppStore((s) => s.load);
+  const hydrated = useAppStore((s) => s.hydrated);
   const loadTheme = useThemeStore((s) => s.loadTheme);
-  const state = useAppStore((s) => s.state);
-  const setState = useAppStore((s) => s.setState);
   const { currentTheme } = useThemeStore();
 
   useEffect(() => {
-    loadState();
-    loadTheme();
-  }, []);
+    void bootstrap();
+    void loadTheme();
+  }, [loadTheme]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkReminders(state.tasks, state.habits, state.fired, (key) => {
-        setState((prev) => ({ ...prev, fired: { ...prev.fired, [key]: 1 } }));
-      });
-    }, 20000);
-    return () => clearInterval(interval);
-  }, [state.tasks, state.habits, state.fired, setState]);
-
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !hydrated) {
     return (
       <View
         style={{

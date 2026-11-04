@@ -55,6 +55,17 @@ export function addDays(s: string, n: number): string {
   return dstr(d);
 }
 
+/** Сдвиг на n месяцев; число месяца ограничивается длиной нового месяца (31 янв + 1 → 28/29 фев). */
+export function addMonths(s: string, n: number): string {
+  const d = new Date(s + 'T00:00');
+  const day = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + n);
+  const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(Math.min(day, last));
+  return dstr(d);
+}
+
 export function human(s: string): string {
   const d = new Date(s + 'T00:00');
   return d.getDate() + ' ' + MON[d.getMonth()];

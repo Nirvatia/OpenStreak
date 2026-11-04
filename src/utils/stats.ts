@@ -10,11 +10,9 @@ export function last7(): string[] {
   return result;
 }
 
+/** Активность за день: выполненные полезные привычки + закрытые задачи. Срывы вредных не считаются. */
 export function activityPerDay(dateStr: string, tasks: Task[], habits: Habit[]): number {
-  const habitsCount = habits.reduce(
-    (sum, habit) => sum + (habit.dates.includes(dateStr) ? 1 : 0),
-    0
-  );
+  const habitsCount = habits.filter((h) => h.type !== 'bad' && h.dates.includes(dateStr)).length;
   const tasksCount = tasks.filter((task) => task.doneAt === dateStr).length;
   return habitsCount + tasksCount;
 }

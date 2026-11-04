@@ -22,7 +22,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["@react-native-community/datetimepicker", "expo-sharing", "expo-font"],
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      "expo-sharing",
+      "expo-font",
+      "expo-sqlite",
+      "expo-notifications"
+    ],
     "extra": {
       "eas": {
         "projectId": "603dd5c6-4b40-434a-83e5-7f0a8ad5fea4"

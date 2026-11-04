@@ -11,7 +11,7 @@ import { ICON_SIZES } from '../../theme/iconSizes';
 export const ProfileSection: React.FC = () => {
   const { currentTheme, setTheme } = useThemeStore();
   const state = useAppStore((s) => s.state);
-  const setState = useAppStore((s) => s.setState);
+  const replaceAll = useAppStore((s) => s.replaceAll);
   const showToast = useToastStore((s) => s.show);
   const [exportVisible, setExportVisible] = useState(false);
   const [importSure, setImportSure] = useState(false);
@@ -39,7 +39,7 @@ export const ProfileSection: React.FC = () => {
       const result = await importData();
       if (!result) return;
 
-      setState(() => result.state);
+      await replaceAll(result.snapshot);
 
       if (result.theme) {
         await setTheme(result.theme);

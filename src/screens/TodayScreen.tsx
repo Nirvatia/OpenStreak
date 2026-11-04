@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeStore } from '../store/themeStore';
 import { useAppStore } from '../store/appStore';
 import { useUiStore } from '../store/uiStore';
@@ -74,7 +73,7 @@ export const TodayScreen: React.FC = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView style={[styles.container, { backgroundColor: currentTheme.colors.bg }]}>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.bg }]}>
       <View
         style={[
           styles.header,
@@ -184,7 +183,7 @@ export const TodayScreen: React.FC = () => {
         )}
       </ScrollView>
       <Fab />
-    </GestureHandlerRootView>
+    </View>
   );
 };
 

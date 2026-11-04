@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Platform } from 'react-native';
 import { useThemeStore } from '../../store/themeStore';
-import { useAppStore } from '../../store/appStore';
 import { useToastStore } from '../../store/toastStore';
 import { exportData, copyToClipboard } from '../../services/exportImport';
 import { SvgIcon } from '../icons/SvgIcon';
@@ -14,12 +13,11 @@ type Props = {
 
 export const ExportDialog: React.FC<Props> = ({ visible, onClose }) => {
   const { currentTheme, theme } = useThemeStore();
-  const state = useAppStore((s) => s.state);
   const showToast = useToastStore((s) => s.show);
 
   const handleDownload = async () => {
     try {
-      await exportData(state, theme);
+      await exportData(theme);
       onClose();
       showToast('Файл готов к сохранению');
     } catch (e: any) {
@@ -35,7 +33,7 @@ export const ExportDialog: React.FC<Props> = ({ visible, onClose }) => {
 
   const handleCopy = async () => {
     try {
-      await copyToClipboard(state, theme);
+      await copyToClipboard(theme);
       onClose();
       showToast('JSON скопирован в буфер — вставьте куда нужно ✓');
     } catch (e) {

@@ -1,3 +1,8 @@
+/**
+ * Представление данных для текущего интерфейса (структуры старой версии приложения).
+ * Строится из модели v2 (`src/core/model.ts`) в `src/core/legacy.ts` и уйдёт вместе
+ * со старыми экранами при редизайне. Новую логику пишите на модели v2.
+ */
 export type Priority = 0 | 1 | 2 | 3;
 
 export type Task = {
@@ -60,19 +65,12 @@ export type Area = {
 export type MoodEntry = {
   mood: number;
   note: string;
-  tasksDone: number;
-  tasksTotal: number;
-  habitsDone: number;
-  habitsTotal: number;
-  perfect: boolean;
 };
 
 export type AppState = {
   tasks: Task[];
   habits: Habit[];
-  events: unknown[];
   areas: Area[];
   moods: Record<string, MoodEntry>;
-  fired: Record<string, number>;
   startedAt: string;
 };
