@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootTabs } from '../navigation/RootTabs';
@@ -16,7 +17,7 @@ export const App: React.FC = () => {
   const fontsLoaded = useAppFonts();
   const hydrated = useAppStore((s) => s.hydrated);
   const loadTheme = useThemeStore((s) => s.loadTheme);
-  const { currentTheme } = useThemeStore();
+  const { currentTheme, scheme } = useThemeStore();
 
   useEffect(() => {
     void bootstrap();
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
     <WebFrame>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
+          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
           <NavigationContainer>
             <RootTabs />
           </NavigationContainer>

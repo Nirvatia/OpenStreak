@@ -1,8 +1,8 @@
-// Проверка контраста всех пар цветов из src/theme/palettes.json для каждой темы.
+// Проверка контраста всех пар цветов из src/theme/palettes.json для каждой темы с каждыми чернилами.
 // Формула — WCAG 2.x (relative luminance). Падает с кодом 1, если хоть одна пара не проходит.
 import { readFileSync } from 'node:fs';
 
-const MIN = { text: 4.5, large: 3 };
+const MIN = { text: 4.5, large: 3, ui: 3 };
 
 function luminance(hex) {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -17,25 +17,34 @@ export function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-const { themes, checks } = JSON.parse(
+const { themes, inks, checks } = JSON.parse(
   readFileSync(new URL('../src/theme/palettes.json', import.meta.url), 'utf8')
 );
 
+/** Та же сборка палитры, что в src/theme/palette.ts: тема + чернила, navMark по умолчанию = stamp. */
+function resolve(theme, ink) {
+  const over = inks[ink][theme];
+  return { ...themes[theme], navMark: over.stamp, ...over };
+}
+
 let failed = 0;
-for (const [name, t] of Object.entries(themes)) {
-  console.log(`\n${name}`);
-  for (const [fg, bg, kind] of checks) {
-    if (!t[fg] || !t[bg]) {
-      console.log(`  MISSING  ${fg} / ${bg}`);
-      failed++;
-      continue;
+for (const theme of Object.keys(themes)) {
+  for (const ink of Object.keys(inks)) {
+    const t = resolve(theme, ink);
+    console.log(`\n${theme} · чернила ${ink}`);
+    for (const [fg, bg, kind] of checks) {
+      if (!t[fg] || !t[bg] || !MIN[kind]) {
+        console.log(`  MISSING  ${fg} / ${bg} / ${kind}`);
+        failed++;
+        continue;
+      }
+      const ratio = contrast(t[fg], t[bg]);
+      const ok = ratio >= MIN[kind];
+      if (!ok) failed++;
+      console.log(
+        `  ${ok ? 'ok  ' : 'FAIL'} ${ratio.toFixed(2).padStart(5)} ≥ ${MIN[kind]}  ${fg} (${t[fg]}) на ${bg} (${t[bg]})`
+      );
     }
-    const ratio = contrast(t[fg], t[bg]);
-    const ok = ratio >= MIN[kind];
-    if (!ok) failed++;
-    console.log(
-      `  ${ok ? 'ok  ' : 'FAIL'} ${ratio.toFixed(2).padStart(5)} ≥ ${MIN[kind]}  ${fg} (${t[fg]}) на ${bg} (${t[bg]})`
-    );
   }
 }
 

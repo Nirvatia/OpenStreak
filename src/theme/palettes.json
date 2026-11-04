@@ -1,12 +1,11 @@
 {
-  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x): text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3.",
+  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. stamp — цвет «чернил» печатей и акцентов, выбирается в настройках (inks); navMark — отметка активной вкладки на таб-баре, по умолчанию равна stamp. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x) для каждой темы с каждыми чернилами: text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3, ui — значки и отметки без текста ≥ 3.",
   "themes": {
     "light": {
       "bg": "#E4E1DA",
       "paper": "#F1EFE9",
       "ink": "#151515",
       "pencil": "#5A5650",
-      "stamp": "#C8102E",
       "debt": "#A50D26",
       "rest": "#1F3FA8",
       "nav": "#151515",
@@ -21,7 +20,6 @@
       "paper": "#1E1D1B",
       "ink": "#ECE8DF",
       "pencil": "#A39E93",
-      "stamp": "#FF5A67",
       "debt": "#FF7A85",
       "rest": "#8FA6FF",
       "nav": "#0A0A09",
@@ -47,6 +45,35 @@
     ["onInkMuted", "ink", "text"],
     ["onStamp", "stamp", "text"],
     ["navText", "nav", "text"],
-    ["navMuted", "nav", "text"]
-  ]
+    ["navMuted", "nav", "text"],
+    ["navMark", "nav", "ui"]
+  ],
+  "inks": {
+    "red": {
+      "light": {
+        "stamp": "#C8102E"
+      },
+      "dark": {
+        "stamp": "#FF5A67"
+      }
+    },
+    "blue": {
+      "light": {
+        "stamp": "#1F3FA8",
+        "navMark": "#E4E1DA"
+      },
+      "dark": {
+        "stamp": "#8FA6FF"
+      }
+    },
+    "mono": {
+      "light": {
+        "stamp": "#151515",
+        "navMark": "#E4E1DA"
+      },
+      "dark": {
+        "stamp": "#ECE8DF"
+      }
+    }
+  }
 }
