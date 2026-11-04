@@ -131,6 +131,9 @@ export const ru = {
   'new.habitKind': 'какая',
   'new.deadline': 'срок',
   'new.save': 'Записать',
+  'new.area': 'сфера',
+  'area.none': 'Без сферы',
+  'edit.save': 'Сохранить',
   'when.today': 'Сегодня',
   'when.tomorrow': 'Завтра',
   'when.none': 'Без даты',
@@ -163,6 +166,38 @@ export const ru = {
   'settings.weekStart': 'Неделя с',
   'week.from.1': 'понедельника',
   'week.from.0': 'воскресенья',
+  // Дела
+  'tasks.open': '{count} в работе',
+  'tasks.debts': {
+    plain: {
+      one: '{count} просрочено',
+      few: '{count} просрочено',
+      many: '{count} просрочено',
+      other: '{count} просрочено',
+    },
+    bro: {
+      one: '{count} долг',
+      few: '{count} долга',
+      many: '{count} долгов',
+      other: '{count} долга',
+    },
+  },
+  'tasks.search': 'Найти дело',
+  'tasks.searchLabel': 'Поиск',
+  'tasks.areas': 'Сферы',
+  'tasks.all': 'Все',
+  'tasks.areaCount': '{name} · {count}',
+  'tasks.group.today': 'Сегодня',
+  'tasks.group.tomorrow': 'Завтра',
+  'tasks.group.later': 'Позже',
+  'tasks.group.someday': 'Без даты',
+  'tasks.yesterday': 'вчера',
+  'tasks.swipe': 'вычеркнуть',
+  'tasks.hint': 'свайп влево — вычеркнуть · 5 секунд на «вернуть»',
+  'tasks.empty': { plain: 'Дел нет', bro: 'Дел нет. Чисто.' },
+  'tasks.notFound': 'Ничего не нашлось',
+  'tasks.add': 'Запиши дело',
+  'common.return': 'Вернуть',
 } as const satisfies Record<string, Message>;
 
 export type MessageKey = keyof typeof ru;

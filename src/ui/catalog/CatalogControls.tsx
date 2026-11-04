@@ -8,9 +8,13 @@ import { Button, IconButton } from '../Button';
 import { Chip } from '../Chip';
 import { OptionTile } from '../OptionTile';
 import { PriorityPicker, type PriorityLevel } from '../Priority';
+import { MoonRow } from '../MoonRow';
 import { Segmented } from '../Segmented';
+import { SettingRow } from '../SettingRow';
+import { SwipeRow } from '../SwipeRow';
 import { Switch } from '../Switch';
 import { TextField } from '../TextField';
+import { ThemeTile } from '../ThemeTile';
 import { Section } from './Section';
 
 const PRIORITY_LABELS: [string, string, string, string] = [
@@ -32,6 +36,10 @@ export function CatalogControls() {
   const [title, setTitle] = useState('Записаться в зал');
   const [note, setNote] = useState('');
   const [query, setQuery] = useState('');
+  const [theme, setTheme] = useState<'dark' | 'light' | 'system'>('dark');
+  const [quotes, setQuotes] = useState(true);
+  const [week, setWeek] = useState(true);
+  const [swiped, setSwiped] = useState(0);
 
   const toggleArea = (a: string) =>
     setAreas((s) => (s.includes(a) ? s.filter((x) => x !== a) : [...s, a]));
@@ -155,6 +163,55 @@ export function CatalogControls() {
             onPress={() => setRemind('place')}
           />
         </View>
+      </Section>
+
+      <Section title="Настройки">
+        <View style={{ flexDirection: 'row', gap: SPACE.tight }}>
+          <ThemeTile
+            label="Ночь"
+            schemes={['dark']}
+            selected={theme === 'dark'}
+            onPress={() => setTheme('dark')}
+          />
+          <ThemeTile
+            label="Рассвет"
+            schemes={['light']}
+            selected={theme === 'light'}
+            onPress={() => setTheme('light')}
+          />
+          <ThemeTile
+            label="Как в системе"
+            schemes={['dark', 'light']}
+            selected={theme === 'system'}
+            onPress={() => setTheme('system')}
+          />
+        </View>
+        <View>
+          <SettingRow
+            label="Цитаты волка"
+            hint="одна в день, без фанатизма"
+            value={quotes}
+            onChange={setQuotes}
+          />
+          <SettingRow
+            label="Неделя с"
+            value={week ? 'понедельника' : 'воскресенья'}
+            onPress={() => setWeek(!week)}
+          />
+        </View>
+      </Section>
+
+      <Section title="Свайп влево">
+        <SwipeRow key={swiped} label="вычеркнуть" onSwipe={() => setSwiped((n) => n + 1)}>
+          {(guard) => (
+            <MoonRow
+              title="Смахни влево"
+              sub={`вычеркнуто: ${swiped}`}
+              phase={0}
+              onPress={guard(() => {})}
+            />
+          )}
+        </SwipeRow>
       </Section>
     </>
   );

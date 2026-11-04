@@ -485,3 +485,23 @@ describe('настройки и новые операции', () => {
     expect(cleanCheck({ habitId: 'h', date: TODAY, value: 0 }, NOW)).toBeNull();
   });
 });
+
+describe('вычеркнуть и вернуть', () => {
+  beforeEach(async () => {
+    resetForTests();
+    await initData({ storage: new MemoryStorage() });
+  });
+
+  test('вернуть удалённое дело — с теми же полями и датой создания, свежим updatedAt', () => {
+    const id = A.createTask({ title: 'Позвонить', priority: 2 });
+    const before = useDataStore.getState().data.tasks[id];
+    A.deleteTask(id);
+    A.restoreTask(id);
+    const after = useDataStore.getState().data.tasks[id];
+    expect(after).toMatchObject({ title: 'Позвонить', priority: 2, deletedAt: null });
+    expect(after.createdAt).toBe(before.createdAt);
+    expect(after.updatedAt).toBeGreaterThan(before.updatedAt);
+    A.restoreTask(id); // повтор ничего не меняет
+    expect(useDataStore.getState().data.tasks[id].updatedAt).toBe(after.updatedAt);
+  });
+});

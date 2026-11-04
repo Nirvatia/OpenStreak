@@ -2,8 +2,8 @@
  * Навигация «Луны»: вкладки Сегодня · Дела · Привычки · Цели · Стая (свой таб-бар из src/ui)
  * и экраны поверх вкладок (настройки; позже — карточка привычки, итог дня).
  *
- * Пока экраны «Дела», «Привычки», «Цели» и «Стая» не перенесены на «Луну», на их вкладках
- * открываются старые экраны (Задачи, Привычки, Отсчёт, Статистика).
+ * Пока экраны «Привычки», «Цели» и «Стая» не перенесены на «Луну», на их вкладках
+ * открываются старые экраны (Привычки, Отсчёт, Статистика).
  */
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import {
@@ -12,11 +12,11 @@ import {
 } from '@react-navigation/native-stack';
 import React from 'react';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
+import { TasksScreen } from '../features/tasks/TasksScreen';
 import { TodayScreen } from '../features/today/TodayScreen';
 import { CountdownScreen } from '../screens/CountdownScreen';
 import { HabitsScreen } from '../screens/HabitsScreen';
 import { StatsScreen } from '../screens/StatsScreen';
-import { TasksScreen } from '../screens/TasksScreen';
 import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
 import { TabBar, type TabItem } from '../ui/TabBar';

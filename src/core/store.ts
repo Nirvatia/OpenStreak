@@ -220,6 +220,19 @@ export function draftDelete<K extends CollectionName>(
   return { collection, record: { ...prev, updatedAt: t, deletedAt: t } as AnyRecord };
 }
 
+/** Вернуть мягко удалённую запись как была (для «Отменить»). */
+export function draftRestore<K extends CollectionName>(
+  collection: K,
+  id: string
+): StoredRecord | null {
+  const prev = useDataStore.getState().data[collection][id] as RecordMeta | undefined;
+  if (!prev || prev.deletedAt === null) return null;
+  return {
+    collection,
+    record: { ...prev, updatedAt: stamp(prev), deletedAt: null } as AnyRecord,
+  };
+}
+
 export function compact(drafts: (StoredRecord | null)[]): StoredRecord[] {
   return drafts.filter((d): d is StoredRecord => d !== null);
 }

@@ -4,11 +4,11 @@
  * Цель — срок, зачёт, награда, «если слил». Напоминание по месту появится с геозонами (этап 5).
  */
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import * as A from '../../core/actions';
 import { addDays } from '../../core/dates';
-import type { ISODate, Priority } from '../../core/model';
+import { live, type ISODate, type Priority } from '../../core/model';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
@@ -42,14 +42,23 @@ export function NewSheet() {
 function NewSheetForm() {
   const t = useT();
   const today = useDataStore((s) => s.today);
-  const { open, kind: initialKind, hide } = useNewSheet();
+  const { open, kind: initialKind, editId, areaId: initialArea, hide } = useNewSheet();
   const toast = useToast((s) => s.show);
+  const editing = useDataStore((s) => {
+    const task = editId ? s.data.tasks[editId] : undefined;
+    return task && task.deletedAt === null ? task : undefined;
+  });
+  const areas = useDataStore((s) => s.data.areas);
+  const areaList = useMemo(() => live(areas).sort((a, b) => a.createdAt - b.createdAt), [areas]);
 
   const [kind, setKind] = useState<NewKind>(initialKind);
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState<ISODate | null>(initialKind === 'goal' ? null : today);
-  const [priority, setPriority] = useState<Priority>(0);
-  const [remindAt, setRemindAt] = useState('');
+  const [title, setTitle] = useState(editing?.title ?? '');
+  const [date, setDate] = useState<ISODate | null>(
+    editing ? editing.date : initialKind === 'goal' ? null : today
+  );
+  const [priority, setPriority] = useState<Priority>(editing?.priority ?? 0);
+  const [remindAt, setRemindAt] = useState(editing?.remindAt ?? '');
+  const [areaId, setAreaId] = useState<string | null>(editing ? editing.areaId : initialArea);
   const [bad, setBad] = useState(false);
   const [criterion, setCriterion] = useState('');
   const [reward, setReward] = useState('');
@@ -67,8 +76,10 @@ function NewSheetForm() {
 
   const save = () => {
     if (!canSave) return;
-    if (kind === 'task') {
-      A.createTask({ title, date, priority, remindAt });
+    if (editing) {
+      A.updateTask(editing.id, { title, date, priority, remindAt, areaId });
+    } else if (kind === 'task') {
+      A.createTask({ title, date, priority, remindAt, areaId });
     } else if (kind === 'habit') {
       A.createQuickHabit({ name: title, kind: bad ? 'bad' : 'good', remindAt });
     } else {
@@ -92,22 +103,26 @@ function NewSheetForm() {
     <Sheet
       visible={open}
       onClose={hide}
-      title={t('new.title')}
-      footer={<Button label={t('new.save')} onPress={save} disabled={!canSave} />}
+      title={t(editing ? 'new.kind.task' : 'new.title')}
+      footer={
+        <Button label={t(editing ? 'edit.save' : 'new.save')} onPress={save} disabled={!canSave} />
+      }
     >
-      <Segmented<NewKind>
-        label={t('new.kind')}
-        on="bg"
-        value={kind}
-        onChange={changeKind}
-        items={(['task', 'habit', 'goal'] as const).map((k) => ({ value: k, label: label(k) }))}
-      />
+      {!editing && (
+        <Segmented<NewKind>
+          label={t('new.kind')}
+          on="bg"
+          value={kind}
+          onChange={changeKind}
+          items={(['task', 'habit', 'goal'] as const).map((k) => ({ value: k, label: label(k) }))}
+        />
+      )}
 
       <TextField
         label={t(kind === 'task' ? 'new.task' : kind === 'habit' ? 'new.habit' : 'new.goal')}
         value={title}
         onChangeText={setTitle}
-        autoFocus
+        autoFocus={!editing}
         returnKeyType="done"
         onSubmitEditing={save}
       />
@@ -183,6 +198,30 @@ function NewSheetForm() {
             onChange={setPriority}
             labels={[t('priority.0'), t('priority.1'), t('priority.2'), t('priority.3')]}
           />
+        </Group>
+      )}
+
+      {kind === 'task' && areaList.length > 0 && (
+        <Group title={t('new.area')}>
+          <View style={styles.chips} accessibilityRole="radiogroup">
+            <Chip
+              size="md"
+              role="radio"
+              label={t('area.none')}
+              selected={areaId === null}
+              onPress={() => setAreaId(null)}
+            />
+            {areaList.map((a) => (
+              <Chip
+                key={a.id}
+                size="md"
+                role="radio"
+                label={a.name}
+                selected={areaId === a.id}
+                onPress={() => setAreaId(a.id)}
+              />
+            ))}
+          </View>
         </Group>
       )}
 

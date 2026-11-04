@@ -22,6 +22,7 @@ import {
   draftCreate,
   draftDelete,
   draftPatch,
+  draftRestore,
   get,
   now,
   useDataStore,
@@ -90,6 +91,11 @@ export function toggleTask(id: string): void {
 
 export function deleteTask(id: string): void {
   commit(compact([draftDelete('tasks', id)]));
+}
+
+/** Отменить удаление задачи: запись возвращается с теми же полями и датой создания. */
+export function restoreTask(id: string): void {
+  commit(compact([draftRestore('tasks', id)]));
 }
 
 // ── Сферы и цели ─────────────────────────────────────────────────────────────
