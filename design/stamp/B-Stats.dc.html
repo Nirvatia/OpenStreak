@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Штамп — Статы</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#151515}a:hover{color:#000000}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #E4E1DA; color: #151515; font-family: 'Golos Text', system-ui, sans-serif;">
+  <div style="padding: 52px 20px 120px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #5A5650;">С ТОБОЙ 47 ДНЕЙ</div>
+      <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 44px; line-height: 0.95;">СТАТЫ</h1>
+    </div>
+
+    <article style="position: relative; background: #F1EFE9; border: 2.5px solid #151515; padding: 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: 6px 6px 0 #151515;">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650; text-align: center; border-bottom: 1px dashed #151515; padding-bottom: 8px;">УДОСТОВЕРЕНИЕ СТАИ</div>
+      <div style="display: flex; gap: 14px; align-items: center;">
+        <div style="width: 84px; height: 100px; border: 2px solid #151515; display: flex; align-items: center; justify-content: center; flex: none; background: #E4E1DA;">
+          <svg width="70" height="70" viewBox="0 0 100 100" role="img" aria-label="Фото: волк">
+            <polygon points="16,6 36,32 12,42" fill="#151515"></polygon>
+            <polygon points="84,6 64,32 88,42" fill="#151515"></polygon>
+            <polygon points="12,42 32,30 50,26 68,30 88,42 92,58 72,74 60,92 50,97 40,92 28,74 8,58" fill="#151515"></polygon>
+            <polygon points="32,30 50,26 68,30 50,50" fill="#3A3835"></polygon>
+            <polygon points="40,58 50,52 60,58 58,84 50,90 42,84" fill="#E4E1DA"></polygon>
+            <polygon points="44,80 56,80 50,87" fill="#151515"></polygon>
+            <polygon points="29,47 45,51 39,56" fill="#E4E1DA"></polygon>
+            <polygon points="71,47 55,51 61,56" fill="#E4E1DA"></polygon>
+          </svg>
+        </div>
+        <dl style="margin: 0; display: grid; grid-template-columns: 64px minmax(0, 1fr); row-gap: 4px; font-size: 13px; flex: 1;">
+          <dt style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #5A5650; padding-top: 3px;">РАНГ</dt><dd style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 26px; line-height: 1;">ВОЛК</dd>
+          <dt style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #5A5650; padding-top: 3px;">ОЧКИ</dt><dd style="margin: 0; font-weight: 600;">1 240 / 2 000</dd>
+          <dt style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #5A5650; padding-top: 3px;">СЛЕДУЮЩИЙ</dt><dd style="margin: 0; font-weight: 600;">Вожак</dd>
+        </dl>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px;">
+        <sc-for list="{{ranks}}" as="r" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="height: 6px; box-sizing: border-box; border: 2px solid #151515; background: {{r.bg}};"></div>
+            <span style="font-size: 9px; font-weight: 700; letter-spacing: 0.06em; color: {{r.fg}};">{{r.name}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="position: absolute; right: 12px; top: 40px; width: 72px; height: 72px; border: 3px solid {{ink}}; border-radius: 50%; transform: rotate(12deg); display: flex; align-items: center; justify-content: center; color: {{ink}}; background: #F1EFE9; font-family: Oswald, sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-align: center; line-height: 1.05;">ПРОВЕРЕН<br>В ДЕЛЕ</div>
+    </article>
+
+    <section aria-label="Неделя" style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;"><span>НЕДЕЛЯ</span><span>58 ОТМЕТОК</span></h2>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; height: 110px; align-items: end; border-bottom: 2.5px solid #151515;">
+        <sc-for list="{{bars}}" as="b" hint-placeholder-count="7">
+          <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; height: 110px;">
+            <div style="font-size: 11px; font-weight: 700; text-align: center;">{{b.v}}</div>
+            <div style="height: {{b.h}}; background: {{b.bg}};"></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;">
+        <sc-for list="{{bars}}" as="b" hint-placeholder-count="7"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-align: center; color: #5A5650;">{{b.d}}</div></sc-for>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2.5px solid #151515;">
+      <sc-for list="{{nums}}" as="n" hint-placeholder-count="4">
+        <div style="padding: 10px 0; border-bottom: 1px dashed #151515; display: flex; flex-direction: column;">
+          <span style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 32px; line-height: 1; color: {{n.color}};">{{n.v}}</span>
+          <span style="font-size: 12px; color: #5A5650;">{{n.l}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 84px;">
+    <dc-import name="BNav" active="stats" ink="{{ink}}" hint-size="390px,84px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#C8102E","options":["#C8102E","#1F3FA8","#151515"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#C8102E';
+    const data = [['СР', 7], ['ЧТ', 9], ['ПТ', 6], ['СБ', 4], ['ВС', 8], ['ПН', 11], ['ВТ', 13]];
+    return {
+      ink,
+      ranks: ['ЩЕНОК', 'ВОЛЧОНОК', 'ВОЛК', 'ВОЖАК', 'АЛЬФА'].map((name, i) => ({
+        name, bg: i < 3 ? (i === 2 ? ink : '#151515') : 'transparent', fg: i === 2 ? '#A50D26' : '#5A5650'
+      })),
+      bars: data.map(([d, v], i) => ({
+        d, v: String(v), h: Math.round((v / 13) * 80) + 'px',
+        bg: i === data.length - 1 ? ink : '#151515'
+      })),
+      nums: [
+        { v: '23', l: 'дела закрыто', color: '#151515' },
+        { v: '6', l: 'чистых дней подряд', color: '#151515' },
+        { v: '41', l: 'лучшая серия', color: '#151515' },
+        { v: '1', l: 'слив за неделю', color: '#A50D26' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

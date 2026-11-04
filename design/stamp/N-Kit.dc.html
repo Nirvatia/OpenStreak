@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Палитры и контраст</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 900px; height: 1180px; box-sizing: border-box; padding: 48px; background: #141413; color: #ECE8DF; font-family: 'Golos Text', system-ui, sans-serif; display: flex; flex-direction: column; gap: 32px;">
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #ECE8DF; padding-bottom: 16px;">
+    <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 56px; line-height: 1;">ДВЕ ТЕМЫ</h1>
+    <div style="font-size: 13px; color: #A39E93; text-align: right;">Токены одинаковые, значения разные.<br>Контраст по WCAG 2.x: текст ≥ 4.5, крупный ≥ 3.</div>
+  </header>
+
+  <section style="display: flex; flex-direction: column; gap: 10px;">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #A39E93;">ТОКЕНЫ</h2>
+    <div style="display: grid; grid-template-columns: 150px repeat(2, minmax(0, 1fr)); border-top: 2px solid #ECE8DF;">
+      <div style="padding: 8px 0; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #A39E93;">ТОКЕН</div>
+      <div style="padding: 8px 0; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #A39E93;">СВЕТЛАЯ</div>
+      <div style="padding: 8px 0; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #A39E93;">ТЁМНАЯ</div>
+      <sc-for list="{{tokens}}" as="t" hint-placeholder-count="8">
+        <div style="padding: 8px 0; border-top: 1px dashed #ECE8DF; font-size: 14px; font-weight: 700;">{{t.name}}</div>
+        <div style="padding: 8px 0; border-top: 1px dashed #ECE8DF; display: flex; align-items: center; gap: 10px; font-size: 13px;"><span style="width: 28px; height: 20px; background: {{t.l}}; border: 1px solid #A39E93;"></span>{{t.l}}</div>
+        <div style="padding: 8px 0; border-top: 1px dashed #ECE8DF; display: flex; align-items: center; gap: 10px; font-size: 13px;"><span style="width: 28px; height: 20px; background: {{t.d}}; border: 1px solid #A39E93;"></span>{{t.d}}</div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 10px;">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #A39E93;">ПРОВЕРКА КОНТРАСТА · ВСЕ ПАРЫ ПРОШЛИ</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+      <sc-for list="{{themes}}" as="th" hint-placeholder-count="2">
+        <div style="display: flex; flex-direction: column; border-top: 2px solid #ECE8DF;">
+          <div style="padding: 8px 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 18px;">{{th.name}}</div>
+          <sc-for list="{{th.rows}}" as="r" hint-placeholder-count="10">
+            <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 56px; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px dashed #3A3835;">
+              <div style="height: 28px; background: {{r.bg}}; color: {{r.fg}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 1px solid #A39E93;">Аа</div>
+              <div style="font-size: 13px;">{{r.label}}</div>
+              <div style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px; text-align: right;">{{r.ratio}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size: 13px; color: #A39E93;">Правило для кода: печати без прозрачности; если печать лежит поверх текста — у неё сплошная подложка цвета фона. Самая слабая пара — красный печати на светлом фоне (4.51): светлее этот красный делать нельзя.</div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":900,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const r = (fg, bg, label, ratio) => ({ fg, bg, label, ratio });
+    return {
+      tokens: [
+        { name: 'bg · фон', l: '#E4E1DA', d: '#141413' },
+        { name: 'paper · документ', l: '#F1EFE9', d: '#1E1D1B' },
+        { name: 'ink · текст', l: '#151515', d: '#ECE8DF' },
+        { name: 'pencil · второй', l: '#5A5650', d: '#A39E93' },
+        { name: 'stamp · печать', l: '#C8102E', d: '#FF5A67' },
+        { name: 'debt · мелкий красный', l: '#A50D26', d: '#FF7A85' },
+        { name: 'rest · отдых', l: '#1F3FA8', d: '#8FA6FF' },
+        { name: 'nav · таб-бар', l: '#151515', d: '#0A0A09' }
+      ],
+      themes: [
+        { name: 'СВЕТЛАЯ', rows: [
+          r('#151515', '#E4E1DA', 'текст / фон', '13.98'),
+          r('#151515', '#F1EFE9', 'текст / документ', '15.88'),
+          r('#5A5650', '#E4E1DA', 'второй / фон', '5.58'),
+          r('#5A5650', '#F1EFE9', 'второй / документ', '6.34'),
+          r('#A50D26', '#E4E1DA', 'долг / фон', '5.99'),
+          r('#C8102E', '#E4E1DA', 'печать / фон', '4.51'),
+          r('#1F3FA8', '#E4E1DA', 'отдых / фон', '6.89'),
+          r('#E4E1DA', '#151515', 'инверсия', '13.98'),
+          r('#9A968E', '#151515', 'таб неактивный', '6.20'),
+          r('#E4E1DA', '#C8102E', 'текст / печать', '4.51')
+        ] },
+        { name: 'ТЁМНАЯ', rows: [
+          r('#ECE8DF', '#141413', 'текст / фон', '15.08'),
+          r('#ECE8DF', '#1E1D1B', 'текст / документ', '13.78'),
+          r('#A39E93', '#141413', 'второй / фон', '6.91'),
+          r('#A39E93', '#1E1D1B', 'второй / документ', '6.31'),
+          r('#FF7A85', '#141413', 'долг / фон', '7.35'),
+          r('#FF5A67', '#141413', 'печать / фон', '6.07'),
+          r('#8FA6FF', '#141413', 'отдых / фон', '7.96'),
+          r('#141413', '#ECE8DF', 'инверсия', '15.08'),
+          r('#8F8A80', '#0A0A09', 'таб неактивный', '5.77'),
+          r('#141413', '#FF5A67', 'текст / печать', '6.07')
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

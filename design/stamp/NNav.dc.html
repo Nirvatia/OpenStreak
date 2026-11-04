@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Таб-бар тёмный</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<nav aria-label="Разделы" style="width: 390px; height: 84px; background: #0A0A09; border-top: 2.5px solid #ECE8DF; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding-bottom: 20px; box-sizing: border-box; font-family: 'Golos Text', system-ui, sans-serif; color: #ECE8DF;">
+  <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+    <a href="{{t.href}}" aria-current="{{t.current}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{t.color}}; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; position: relative;">
+      <sc-if value="{{t.active}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; top: 6px; width: 28px; height: 3px; background: {{ink}};"></span>
+      </sc-if>
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="{{t.d}}" stroke="{{t.color}}" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+      {{t.label}}
+    </a>
+  </sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["today","tasks","habits","goals","stats"],"default":"today"},"ink":{"editor":"color","default":"#FF5A67"},"$preview":{"width":390,"height":84}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'today';
+    const ink = this.props.ink ?? '#FF5A67';
+    const defs = [
+      ['today', 'СЕГОДНЯ', 'N-Today.dc.html', 'M3 11 L12 4 L21 11 V20 H3 Z M9 20 V14 H15 V20'],
+      ['tasks', 'ЗАДАЧИ', 'N-Tasks.dc.html', 'M4 4 H20 V20 H4 Z M8 12 L11 15 L16 9'],
+      ['habits', 'ПРИВЫЧКИ', 'N-Habits.dc.html', 'M8 3 L4 21 M14 3 L10 21 M20 3 L16 21'],
+      ['goals', 'ЦЕЛИ', 'N-Goals.dc.html', 'M12 2 V7 M12 17 V22 M2 12 H7 M17 12 H22 M12 7 L17 12 L12 17 L7 12 Z'],
+      ['stats', 'СТАТЫ', 'N-Stats.dc.html', 'M3 21 H21 M5 21 V14 M10 21 V9 M15 21 V12 M20 21 V4']
+    ];
+    return {
+      ink,
+      tabs: defs.map(([k, label, href, d]) => ({
+        label, href, d, active: k === active,
+        current: k === active ? 'page' : 'false',
+        color: k === active ? '#ECE8DF' : '#8F8A80'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

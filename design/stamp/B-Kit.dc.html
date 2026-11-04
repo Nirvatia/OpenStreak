@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Стиль «Штамп»</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#151515}a:hover{color:#000000}
+</style>
+</helmet>
+<div style="width: 900px; height: 1500px; box-sizing: border-box; padding: 48px; background: #E4E1DA; color: #151515; font-family: 'Golos Text', system-ui, sans-serif; display: flex; flex-direction: column; gap: 40px;">
+
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #151515; padding-bottom: 16px;">
+    <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 64px; line-height: 1;">ШТАМП</h1>
+    <div style="font-size: 13px; color: #5A5650; text-align: right;">Стиль OpenStreak<br>бетон · чернила · печати</div>
+  </header>
+
+  <section style="display: flex; flex-direction: column; gap: 14px;">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ПАЛИТРА</h2>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px;">
+      <sc-for list="{{swatches}}" as="s" hint-placeholder-count="7">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="height: 76px; background: {{s.hex}}; border: 2px solid #151515;"></div>
+          <div style="font-size: 14px; font-weight: 700;">{{s.name}}</div>
+          <div style="font-size: 11px; color: #5A5650;">{{s.hex}} · {{s.role}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ЗАГОЛОВКИ · OSWALD 700 · КАПС</h2>
+      <div style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 68px; line-height: 0.92;">СКАЗАЛ —<br>СДЕЛАЛ.</div>
+      <div style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 80px; line-height: 0.9;">47 · 14 · !!!</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ТЕКСТ · GOLOS TEXT</h2>
+      <div style="font-size: 20px; font-weight: 700;">Записаться в зал</div>
+      <div style="font-size: 15px; line-height: 1.5;">Всё рисуется «чернилами»: сплошные рамки 2,5 px, пунктир между строками, тень-оттиск 5 px без размытия. Никаких скруглений, градиентов и полупрозрачных подложек.</div>
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">МЕТКИ · 11–12 PX · РАЗРЯДКА 0.16</div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 14px;">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ПЕЧАТИ — ГЛАВНЫЙ ПРИЁМ</h2>
+    <div style="display: flex; gap: 28px; align-items: center; flex-wrap: wrap; padding: 18px 0; border-top: 1px dashed #151515; border-bottom: 1px dashed #151515;">
+      <sc-for list="{{stamps}}" as="st" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+          <div style="transform: {{st.rot}}; border: {{st.border}}; color: {{st.color}}; font-family: Oswald, sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.12em; padding: 2px 12px;">{{st.text}}</div>
+          <div style="font-size: 11px; color: #5A5650;">{{st.when}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; gap: 28px; align-items: center;">
+      <svg width="132" height="44" viewBox="0 0 132 44" role="img" aria-label="Пример счёта палочками: 14">
+        <g stroke="#151515" stroke-width="3.5" stroke-linecap="round">
+          <line x1="5" y1="5" x2="4" y2="39"></line><line x1="13" y1="4" x2="13" y2="40"></line><line x1="21" y1="5" x2="22" y2="39"></line><line x1="29" y1="4" x2="29" y2="40"></line><line x1="0" y1="32" x2="34" y2="11"></line>
+          <line x1="51" y1="5" x2="50" y2="39"></line><line x1="59" y1="4" x2="59" y2="40"></line><line x1="67" y1="5" x2="68" y2="39"></line><line x1="75" y1="4" x2="75" y2="40"></line><line x1="46" y1="33" x2="80" y2="10"></line>
+          <line x1="97" y1="5" x2="96" y2="39"></line><line x1="105" y1="4" x2="105" y2="40"></line><line x1="113" y1="5" x2="114" y2="39"></line><line x1="121" y1="4" x2="121" y2="40"></line>
+        </g>
+      </svg>
+      <div style="font-size: 14px; line-height: 1.5; max-width: 560px;">Серия считается палочками до 30 дней, дальше — цифрой с одной зачёркнутой пятёркой рядом. Печати ставятся с небольшим случайным поворотом от −12° до +8°, чтобы каждая выглядела «от руки».</div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 14px;">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ИКОНКИ · СЕТКА 24 · ЛИНИЯ 2.5 · ОСТРЫЕ УГЛЫ</h2>
+    <div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px;">
+      <sc-for list="{{icons}}" as="i" hint-placeholder-count="16">
+        <div style="border: 2px solid #151515; height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.d}}" stroke="#151515" fill="none" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"></path></svg>
+          <div style="font-size: 11px; color: #5A5650;">{{i.name}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 32px;">
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ВОЛК-ПЕЧАТЬ · СОСТОЯНИЯ</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+        <sc-for list="{{seals}}" as="m" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div style="width: 96px; height: 96px; border: 3px solid {{m.c}}; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: {{m.rot}};">
+              <svg width="68" height="68" viewBox="0 0 100 100" role="img" aria-label="{{m.name}}">
+                <polygon points="16,6 36,32 12,42" fill="{{m.c}}"></polygon>
+                <polygon points="84,6 64,32 88,42" fill="{{m.c}}"></polygon>
+                <polygon points="12,42 32,30 50,26 68,30 88,42 92,58 72,74 60,92 50,97 40,92 28,74 8,58" fill="{{m.c}}"></polygon>
+                <polygon points="40,58 50,52 60,58 58,84 50,90 42,84" fill="#E4E1DA"></polygon>
+                <polygon points="44,80 56,80 50,87" fill="{{m.c}}"></polygon>
+                <polygon points="{{m.eyeL}}" fill="#E4E1DA"></polygon>
+                <polygon points="{{m.eyeR}}" fill="#E4E1DA"></polygon>
+              </svg>
+            </div>
+            <div style="font-size: 13px; font-weight: 700;">{{m.name}}</div>
+            <div style="font-size: 11px; color: #5A5650; text-align: center;">{{m.when}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ТОН · ОБЫЧНЫЙ → ПАЦАНСКИЙ</h2>
+      <div style="display: flex; flex-direction: column; border-top: 2px solid #151515;">
+        <sc-for list="{{voice}}" as="v" hint-placeholder-count="7">
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1.2fr); gap: 8px; align-items: center; padding: 9px 0; border-bottom: 1px dashed #151515;">
+            <div style="font-size: 13px; color: #5A5650;">{{v.was}}</div>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 H20 M14 6 L20 12 L14 18" stroke="#151515" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+            <div style="font-size: 14px; font-weight: 700;">{{v.now}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#C8102E","options":["#C8102E","#1F3FA8","#151515"]},"$preview":{"width":900,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#C8102E';
+    const i = (name, d) => ({ name, d });
+    const st = (text, when, rot, color, dashed) => ({ text, when, rot: 'rotate(' + rot + 'deg)', color, border: '3px ' + (dashed ? 'dashed ' : 'solid ') + color });
+    return {
+      ink,
+      swatches: [
+        { name: 'Бетон', hex: '#E4E1DA', role: 'фон' },
+        { name: 'Бумага', hex: '#F1EFE9', role: 'документы' },
+        { name: 'Чернила', hex: '#151515', role: 'текст, рамки' },
+        { name: 'Карандаш', hex: '#5A5650', role: 'второй текст' },
+        { name: 'Печать', hex: '#C8102E', role: 'печати, акцент' },
+        { name: 'Долг', hex: '#A50D26', role: 'мелкий красный' },
+        { name: 'Синька', hex: '#1F3FA8', role: 'отдых' }
+      ],
+      stamps: [
+        st('ЗАЧЁТ', 'дело/привычка', -11, ink, false),
+        st('ДОЛГ', 'просрочено', 6, ink, true),
+        st('СЛИВ', 'срыв привычки', -4, ink, false),
+        st('ВЫХ', 'отдых', 3, '#1F3FA8', false),
+        st('ЗАКРЫТ', 'цель выполнена', -8, ink, false),
+        st('ДЕРЖИСЬ', 'вредная, чисто', 5, '#151515', false)
+      ],
+      icons: [
+        i('Сегодня', 'M3 11 L12 4 L21 11 V20 H3 Z M9 20 V14 H15 V20'),
+        i('Задачи', 'M4 4 H20 V20 H4 Z M8 12 L11 15 L16 9'),
+        i('Привычки', 'M8 3 L4 21 M14 3 L10 21 M20 3 L16 21'),
+        i('Цели', 'M12 2 V7 M12 17 V22 M2 12 H7 M17 12 H22 M12 7 L17 12 L12 17 L7 12 Z'),
+        i('Статы', 'M3 21 H21 M5 21 V14 M10 21 V9 M15 21 V12 M20 21 V4'),
+        i('Серия', 'M12 2 L17 9 L15 10 L19 15 L12 22 L5 15 L9 10 L7 9 Z'),
+        i('Отдых', 'M15 3 L9 6 L7 12 L9 18 L15 21 L11 15 L11 9 Z'),
+        i('Место', 'M12 22 L5 11 V7 L9 3 H15 L19 7 V11 Z M10 8 H14 V12 H10 Z'),
+        i('Напомнить', 'M6 17 V10 L12 4 L18 10 V17 Z M4 17 H20 M10 21 H14'),
+        i('Настройки', 'M12 2 L21 7 V17 L12 22 L3 17 V7 Z M12 9 L15 12 L12 15 L9 12 Z'),
+        i('Сфера', 'M12 3 L20 7 V13 L12 21 L4 13 V7 Z'),
+        i('Удалить', 'M4 6 H20 M9 6 V3 H15 V6 M6 6 L7 21 H17 L18 6'),
+        i('Календарь', 'M3 5 H21 V21 H3 Z M3 10 H21 M8 2 V6 M16 2 V6'),
+        i('Поиск', 'M4 4 H15 V15 H4 Z M15 15 L21 21'),
+        i('Зал', 'M3 9 H6 V15 H3 Z M18 9 H21 V15 H18 Z M6 12 H18 M8 6 V18 M16 6 V18'),
+        i('Книга', 'M4 5 H11 V20 H4 Z M13 5 H20 V20 H13 Z')
+      ],
+      seals: [
+        { name: 'В деле', when: 'серия идёт', c: '#151515', rot: 'rotate(-8deg)', eyeL: '29,47 45,51 39,56', eyeR: '71,47 55,51 61,56' },
+        { name: 'Злой', when: 'слив, долг', c: ink, rot: 'rotate(5deg)', eyeL: '28,44 46,52 38,55', eyeR: '72,44 54,52 62,55' },
+        { name: 'Отдых', when: 'выходной', c: '#1F3FA8', rot: 'rotate(-3deg)', eyeL: '29,51 45,51 45,54 29,54', eyeR: '71,51 55,51 55,54 71,54' }
+      ],
+      voice: [
+        { was: 'Все привычки выполнены', now: 'День закрыт. Красава.' },
+        { was: 'Задача удалена', now: 'Вычеркнул.' },
+        { was: 'Нажмите ещё раз для удаления', now: 'Точно? Жми ещё раз.' },
+        { was: 'Сегодня у привычек выходной', now: 'Выходной. Серия не горит.' },
+        { was: 'Серия прервана', now: 'Слил — бывает. Встал и пошёл.' },
+        { was: 'Просроченные задачи', now: 'Долги' },
+        { was: 'Цель создана', now: 'Слово дано. Печать стоит.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

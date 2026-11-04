@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Штамп — Задачи</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#151515}a:hover{color:#000000}
+button{font:inherit;cursor:pointer}
+input::placeholder{color:#5A5650}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #E4E1DA; color: #151515; font-family: 'Golos Text', system-ui, sans-serif;">
+  <div style="padding: 52px 20px 120px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #5A5650;">12 В РАБОТЕ · 1 ДОЛГ</div>
+        <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 44px; line-height: 0.95;">ЗАДАЧИ</h1>
+      </div>
+      <button aria-label="Календарь" style="width: 44px; height: 44px; border: 2.5px solid #151515; background: transparent; display: flex; align-items: center; justify-content: center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5 H21 V21 H3 Z M3 10 H21 M8 2 V6 M16 2 V6" stroke="#151515" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+      </button>
+    </div>
+
+    <label style="display: flex; align-items: center; gap: 10px; height: 44px; border-bottom: 2.5px solid #151515;">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 H15 V15 H4 Z M15 15 L21 21" stroke="#151515" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Поиск</span>
+      <input placeholder="Найти дело" style="flex: 1; border: none; outline: none; background: transparent; font: inherit; font-size: 16px; color: #151515;">
+    </label>
+
+    <div role="group" aria-label="Сферы" style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button aria-pressed="true" style="height: 34px; padding: 0 12px; border: 2px solid #151515; background: #151515; color: #E4E1DA; font-size: 13px; font-weight: 700; letter-spacing: 0.06em;">ВСЕ</button>
+      <button aria-pressed="false" style="height: 34px; padding: 0 12px; border: 2px solid #151515; background: transparent; color: #151515; font-size: 13px; font-weight: 700; letter-spacing: 0.06em;">РАБОТА · 5</button>
+      <button aria-pressed="false" style="height: 34px; padding: 0 12px; border: 2px solid #151515; background: transparent; color: #151515; font-size: 13px; font-weight: 700; letter-spacing: 0.06em;">ЗАЛ · 2</button>
+      <button aria-pressed="false" style="height: 34px; padding: 0 12px; border: 2px dashed #151515; background: transparent; color: #151515; font-size: 13px; font-weight: 700;">+ СФЕРА</button>
+    </div>
+
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+      <section style="display: flex; flex-direction: column;">
+        <h2 style="margin: 0 0 2px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: {{g.color}};"><span>{{g.label}}</span><span>{{g.count}}</span></h2>
+        <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+          <div style="position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px dashed #151515;">
+            <button aria-label="{{r.aria}}" style="width: 28px; height: 28px; border: 2.5px solid #151515; background: {{r.boxBg}}; flex: none; display: flex; align-items: center; justify-content: center;">
+              <sc-if value="{{r.done}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 L10 18 L20 6" stroke="#E4E1DA" stroke-width="3.5" stroke-linecap="square" fill="none"></path></svg></sc-if>
+            </button>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+              <div style="font-size: 16px; font-weight: 600; color: {{r.titleColor}}; text-decoration: {{r.deco}};">{{r.title}}</div>
+              <div style="font-size: 12px; color: #5A5650;">{{r.meta}}</div>
+            </div>
+            <div style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px;">{{r.prio}}</div>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+
+    <div style="position: relative; height: 54px; overflow: hidden; border-bottom: 1px dashed #151515;">
+      <div style="position: absolute; inset: 0; background: {{ink}}; display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; color: #E4E1DA; font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.12em;">ВЫЧЕРКНУТЬ</div>
+      <div style="position: absolute; top: 0; bottom: 0; left: -150px; width: 390px; background: #E4E1DA; display: flex; align-items: center; gap: 14px; padding-left: 0;">
+        <span style="width: 28px; height: 28px; border: 2.5px solid #151515; box-sizing: border-box; flex: none;"></span>
+        <span style="font-size: 16px; font-weight: 600;">Позвонить маме</span>
+      </div>
+    </div>
+    <div style="font-size: 12px; color: #5A5650; text-align: center;">Свайп влево — вычеркнуть. Отменить можно 5 секунд.</div>
+  </div>
+
+  <a href="B-TaskSheet.dc.html" aria-label="Новое дело" style="position: absolute; right: 20px; bottom: 102px; width: 60px; height: 60px; background: #151515; display: flex; align-items: center; justify-content: center; box-shadow: 5px 5px 0 {{ink}};">
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V21 M3 12 H21" stroke="#E4E1DA" stroke-width="3" stroke-linecap="square" fill="none"></path></svg>
+  </a>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 84px;">
+    <dc-import name="BNav" active="tasks" ink="{{ink}}" hint-size="390px,84px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#C8102E","options":["#C8102E","#1F3FA8","#151515"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#C8102E';
+    const row = (title, meta, prio, done) => ({
+      title, meta, prio, done,
+      aria: (done ? 'Вернуть: ' : 'Выполнить: ') + title,
+      boxBg: done ? '#151515' : 'transparent',
+      titleColor: done ? '#5A5650' : '#151515',
+      deco: done ? 'line-through' : 'none'
+    });
+    return {
+      ink,
+      groups: [
+        { label: 'ДОЛГИ', count: '1', color: '#A50D26', rows: [row('Закрыть долг Сане', 'вчера · Личное', '!!!', false)] },
+        { label: 'СЕГОДНЯ', count: '3', color: '#5A5650', rows: [
+          row('Записаться в зал', 'напомнит у зала · Зал', '!!', false),
+          row('Отправить отчёт', '18:00 · Работа', '!', false),
+          row('Купить протеин', 'Зал', '', true)
+        ] },
+        { label: 'ЗАВТРА', count: '2', color: '#5A5650', rows: [
+          row('Созвон с Димоном', '11:30 · Работа', '', false)
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

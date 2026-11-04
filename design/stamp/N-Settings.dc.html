@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Штамп тёмная — Настройки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#ECE8DF}a:hover{color:#FFFFFF}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #141413; color: #ECE8DF; font-family: 'Golos Text', system-ui, sans-serif;">
+  <div style="padding: 52px 20px 28px; display: flex; flex-direction: column; gap: 14px;">
+    <a href="N-Today.dc.html" aria-label="Назад" style="width: 44px; height: 44px; display: flex; align-items: center; margin-left: -4px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 H4 M10 6 L4 12 L10 18" stroke="#ECE8DF" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+    </a>
+    <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 44px; line-height: 0.95;">НАСТРОЙКИ</h1>
+
+    <section style="display: flex; flex-direction: column; gap: 10px; padding-top: 6px;">
+      <h2 style="margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #A39E93;">ОФОРМЛЕНИЕ</h2>
+      <div role="radiogroup" aria-label="Тема" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+        <button role="radio" aria-checked="false" style="height: 76px; border: 2px solid #ECE8DF; background: #E4E1DA; color: #151515; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 8px; font-size: 12px; font-weight: 700;">
+          <span style="display: flex; gap: 3px;"><span style="width: 14px; height: 14px; background: #151515;"></span><span style="width: 14px; height: 14px; background: #C8102E;"></span></span>СВЕТЛАЯ</button>
+        <button role="radio" aria-checked="true" style="height: 76px; border: 3px solid {{ink}}; background: #141413; color: #ECE8DF; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 8px; font-size: 12px; font-weight: 700;">
+          <span style="display: flex; gap: 3px;"><span style="width: 14px; height: 14px; background: #ECE8DF;"></span><span style="width: 14px; height: 14px; background: {{ink}};"></span></span>ТЁМНАЯ</button>
+        <button role="radio" aria-checked="false" style="height: 76px; border: 2px dashed #ECE8DF; background: transparent; color: #ECE8DF; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 8px; font-size: 12px; font-weight: 700;">
+          <span style="display: flex;"><span style="width: 14px; height: 14px; background: #E4E1DA;"></span><span style="width: 14px; height: 14px; background: #141413; border: 2px solid #ECE8DF; box-sizing: border-box;"></span></span>КАК В СИСТЕМЕ</button>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">
+        <span style="font-size: 15px; font-weight: 600;">Цвет чернил</span>
+        <div role="radiogroup" aria-label="Цвет чернил" style="display: flex; gap: 8px;">
+          <button role="radio" aria-checked="true" aria-label="Красные" style="width: 36px; height: 36px; border: 3px solid #ECE8DF; background: #FF5A67;"></button>
+          <button role="radio" aria-checked="false" aria-label="Синие" style="width: 36px; height: 36px; border: 2px solid #141413; outline: 1px solid #A39E93; background: #8FA6FF;"></button>
+          <button role="radio" aria-checked="false" aria-label="Белые" style="width: 36px; height: 36px; border: 2px solid #141413; outline: 1px solid #A39E93; background: #ECE8DF;"></button>
+        </div>
+      </div>
+    </section>
+
+    <sc-for list="{{sections}}" as="s" hint-placeholder-count="3">
+      <section style="display: flex; flex-direction: column;">
+        <h2 style="margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #A39E93;">{{s.title}}</h2>
+        <sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; border-bottom: 1px dashed #ECE8DF;">
+            <span style="display: flex; flex-direction: column;"><span style="font-size: 15px; font-weight: 600;">{{r.label}}</span><sc-if value="{{r.hint}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #A39E93;">{{r.hint}}</span></sc-if></span>
+            <sc-if value="{{r.toggle}}" hint-placeholder-val="{{false}}">
+              <button role="switch" aria-checked="{{r.on}}" aria-label="{{r.label}}" style="width: 52px; height: 30px; border: 2.5px solid #ECE8DF; background: {{r.track}}; padding: 0; display: flex; justify-content: {{r.justify}}; align-items: center;">
+                <span style="width: 20px; height: 20px; margin: 0 3px; background: {{r.knob}};"></span>
+              </button>
+            </sc-if>
+            <sc-if value="{{r.value}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px;">{{r.value}}
+                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19" stroke="#ECE8DF" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg></span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#FF5A67","options":["#FF5A67","#8FA6FF","#ECE8DF"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#FF5A67';
+    const v = (label, value, hint) => ({ label, value, hint: hint || '', toggle: false });
+    const t = (label, on, hint) => ({
+      label, hint: hint || '', toggle: true, value: '', on: on ? 'true' : 'false',
+      track: on ? '#ECE8DF' : 'transparent', knob: on ? '#141413' : '#ECE8DF', justify: on ? 'flex-end' : 'flex-start'
+    });
+    return {
+      ink,
+      sections: [
+        { title: 'ХАРАКТЕР', rows: [
+          t('Пацанский тон', true, 'выкл — обычные формулировки'),
+          t('Звания и очки', true),
+          v('Язык', 'Русский')
+        ] },
+        { title: 'ДНИ И НАПОМИНАНИЯ', rows: [
+          v('Неделя с', 'Понедельника'),
+          v('Итог дня', '21:30'),
+          v('Места', '2 места', 'напоминания у зала, у дома')
+        ] },
+        { title: 'ДАННЫЕ', rows: [
+          v('Бэкап', 'Экспорт'),
+          v('Синхронизация', 'Скоро', 'телефон + ПК')
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

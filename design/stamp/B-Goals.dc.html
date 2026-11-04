@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Штамп — Цели</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#151515}a:hover{color:#000000}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #E4E1DA; color: #151515; font-family: 'Golos Text', system-ui, sans-serif;">
+  <div style="padding: 52px 20px 120px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #5A5650;">3 ДОГОВОРА · 1 ЗАКРЫТ</div>
+        <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 44px; line-height: 0.95;">ЦЕЛИ</h1>
+      </div>
+      <button aria-label="Новая цель" style="width: 44px; height: 44px; border: none; background: #151515; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 {{ink}};">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 V20 M4 12 H20" stroke="#E4E1DA" stroke-width="3" stroke-linecap="square" fill="none"></path></svg>
+      </button>
+    </div>
+
+    <article style="position: relative; background: #F1EFE9; border: 2.5px solid #151515; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 6px 6px 0 #151515;">
+      <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;"><span>ДОГОВОР № 007</span><span>СФЕРА · СПОРТ</span></div>
+      <h2 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 28px; line-height: 1.05;">ПРОБЕЖАТЬ ПОЛУМАРАФОН</h2>
+      <div style="display: flex; align-items: baseline; gap: 10px; border-top: 1px dashed #151515; border-bottom: 1px dashed #151515; padding: 8px 0;">
+        <span style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 64px; line-height: 0.9;">47</span>
+        <span style="display: flex; flex-direction: column;"><span style="font-family: Oswald, sans-serif; font-weight: 600; font-size: 18px;">ДНЕЙ ОСТАЛОСЬ</span><span style="font-size: 12px; color: #5A5650;">срок — 21 декабря</span></span>
+      </div>
+      <dl style="margin: 0; display: grid; grid-template-columns: 92px minmax(0, 1fr); row-gap: 8px; font-size: 14px;">
+        <dt style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #5A5650; padding-top: 2px;">ЗАЧЁТ, ЕСЛИ</dt><dd style="margin: 0; font-weight: 600;">21,1 км без остановок</dd>
+        <dt style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #5A5650; padding-top: 2px;">НАГРАДА</dt><dd style="margin: 0; font-weight: 600;">Новые кроссы</dd>
+        <dt style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #A50D26; padding-top: 2px;">ЕСЛИ СЛИЛ</dt><dd style="margin: 0; font-weight: 600;">5 000 ₽ в общак</dd>
+      </dl>
+      <div style="position: absolute; right: 14px; bottom: 12px; width: 92px; height: 92px; border: 3px solid {{ink}}; border-radius: 50%; transform: rotate(-14deg); display: flex; flex-direction: column; align-items: center; justify-content: center; color: {{ink}}; background: #F1EFE9; text-align: center;">
+        <span style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px; line-height: 1; letter-spacing: 0.08em;">СЛОВО</span>
+        <span style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px; line-height: 1; letter-spacing: 0.08em;">ДАНО</span>
+        <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; margin-top: 2px;">04.11.26</span>
+      </div>
+    </article>
+
+    <section style="display: flex; flex-direction: column;">
+      <h2 style="margin: 0 0 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">ОСТАЛЬНЫЕ</h2>
+      <sc-for list="{{goals}}" as="g" hint-placeholder-count="2">
+        <div style="position: relative; display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px dashed #151515;">
+          <div style="width: 56px; flex: none; font-family: Oswald, sans-serif; font-weight: 700; font-size: 26px; line-height: 1; color: {{g.numColor}};">{{g.days}}</div>
+          <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+            <div style="font-size: 16px; font-weight: 600; text-decoration: {{g.deco}}; color: {{g.titleColor}};">{{g.title}}</div>
+            <div style="font-size: 12px; color: #5A5650;">{{g.meta}}</div>
+          </div>
+          <sc-if value="{{g.closed}}" hint-placeholder-val="{{false}}">
+            <div style="transform: rotate(-8deg); border: 3px solid {{ink}}; color: {{ink}}; font-family: Oswald, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; padding: 0 8px;">ЗАКРЫТ</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #5A5650;">СФЕРЫ</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+        <sc-for list="{{areas}}" as="a" hint-placeholder-count="3">
+          <button style="height: 72px; border: 2.5px solid #151515; background: transparent; color: #151515; text-align: left; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;">
+            <span style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 16px;">{{a.name}}</span>
+            <span style="font-size: 11px; color: #5A5650;">{{a.meta}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 84px;">
+    <dc-import name="BNav" active="goals" ink="{{ink}}" hint-size="390px,84px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#C8102E","options":["#C8102E","#1F3FA8","#151515"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#C8102E';
+    const g = (days, title, meta, closed, late) => ({
+      days, title, meta, closed,
+      numColor: late ? '#A50D26' : '#151515',
+      deco: closed ? 'line-through' : 'none',
+      titleColor: closed ? '#5A5650' : '#151515'
+    });
+    return {
+      ink,
+      goals: [
+        g('112', 'Отложить на тачку', 'Деньги · награда: обмыть', false, false),
+        g('−3', 'Сдать на права', 'Личное · просрочено', false, true),
+        g('✓', 'Бросить курить', 'Здоровье · закрыт 12.10', true, false)
+      ],
+      areas: [
+        { name: 'СПОРТ', meta: '2 цели · 3 привычки' },
+        { name: 'ДЕНЬГИ', meta: '1 цель · 5 дел' },
+        { name: 'ЛИЧНОЕ', meta: '1 цель · 4 дела' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

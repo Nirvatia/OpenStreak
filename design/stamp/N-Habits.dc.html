@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Штамп тёмная — Привычки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Golos+Text:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#ECE8DF}a:hover{color:#FFFFFF}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #141413; color: #ECE8DF; font-family: 'Golos Text', system-ui, sans-serif;">
+  <div style="padding: 52px 20px 120px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #A39E93;">4 В ДЕЛЕ · 1 ВРЕДНАЯ</div>
+        <h1 style="margin: 0; font-family: Oswald, sans-serif; font-weight: 700; font-size: 44px; line-height: 0.95;">ПРИВЫЧКИ</h1>
+      </div>
+      <button aria-label="Новая привычка" style="width: 44px; height: 44px; border: none; background: #ECE8DF; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 {{ink}};">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 V20 M4 12 H20" stroke="#141413" stroke-width="3" stroke-linecap="square" fill="none"></path></svg>
+      </button>
+    </div>
+
+    <div role="tablist" aria-label="Фильтр" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 2.5px solid #ECE8DF;">
+      <button role="tab" aria-selected="true" style="height: 38px; border: none; background: #ECE8DF; color: #141413; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;">ВСЕ</button>
+      <button role="tab" aria-selected="false" style="height: 38px; border: none; border-left: 2.5px solid #ECE8DF; background: transparent; color: #ECE8DF; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;">ПОЛЕЗНЫЕ</button>
+      <button role="tab" aria-selected="false" style="height: 38px; border: none; border-left: 2.5px solid #ECE8DF; background: transparent; color: #ECE8DF; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;">ВРЕДНЫЕ</button>
+    </div>
+
+    <sc-for list="{{habits}}" as="h" hint-placeholder-count="4">
+      <article style="position: relative; display: flex; flex-direction: column; gap: 10px; padding: 12px 0 14px; border-bottom: 2px solid #ECE8DF;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="{{h.icon}}" stroke="#ECE8DF" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none"></path></svg>
+          <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700;">{{h.name}}</h2>
+            <div style="font-size: 12px; color: #A39E93;">{{h.meta}}</div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end;">
+            <div style="font-family: Oswald, sans-serif; font-weight: 700; font-size: 30px; line-height: 1; color: {{h.numColor}};">{{h.streak}}</div>
+            <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #A39E93;">{{h.streakLabel}}</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px;">
+          <sc-for list="{{h.week}}" as="c" hint-placeholder-count="7">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: #A39E93;">{{c.label}}</div>
+              <div style="width: 100%; height: 34px; box-sizing: border-box; border: {{c.border}}; background: {{c.bg}}; display: flex; align-items: center; justify-content: center; font-family: Oswald, sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.06em; color: {{c.fg}};">{{c.text}}</div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{h.stamp}}" hint-placeholder-val="{{false}}">
+          <div style="position: absolute; right: 70px; top: 6px; transform: rotate(-10deg); border: 3px solid {{h.stampColor}}; color: {{h.stampColor}}; font-family: Oswald, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; padding: 0 8px; background: #141413;">{{h.stamp}}</div>
+        </sc-if>
+        <sc-if value="{{h.note}}" hint-placeholder-val="{{false}}">
+          <div style="font-size: 13px; font-weight: 600;">{{h.note}}</div>
+        </sc-if>
+      </article>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 84px;">
+    <dc-import name="NNav" active="habits" ink="{{ink}}" hint-size="390px,84px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ink":{"editor":"color","default":"#FF5A67","options":["#FF5A67","#8FA6FF","#ECE8DF"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ink = this.props.ink ?? '#FF5A67';
+    const labels = ['СР', 'ЧТ', 'ПТ', 'СБ', 'ВС', 'ПН', 'ВТ'];
+    const cell = {
+      d: { border: '2.5px solid #ECE8DF', bg: '#ECE8DF', fg: '#141413', text: '✕' },
+      t: { border: '2.5px dashed #ECE8DF', bg: 'transparent', fg: '#ECE8DF', text: '' },
+      x: { border: '2.5px solid ' + ink, bg: 'transparent', fg: ink, text: 'СЛИВ' },
+      r: { border: '2.5px solid #8FA6FF', bg: 'transparent', fg: '#8FA6FF', text: 'ВЫХ' },
+      c: { border: '2.5px solid #ECE8DF', bg: 'transparent', fg: '#ECE8DF', text: 'ЧИСТО' }
+    };
+    const week = (codes) => codes.split('').map((k, i) => Object.assign({ label: labels[i] }, cell[k]));
+    return {
+      ink,
+      habits: [
+        { name: 'Отжимания', meta: '100 раз · каждый день · 60 сегодня', streak: '14', streakLabel: 'ДНЕЙ', numColor: '#ECE8DF',
+          icon: 'M3 9 H6 V15 H3 Z M18 9 H21 V15 H18 Z M6 12 H18 M8 6 V18 M16 6 V18', week: week('ddddddt'), stamp: '', stampColor: ink, note: '' },
+        { name: 'Читать 20 минут', meta: 'каждый день · отдых на выходных', streak: '9', streakLabel: 'ДНЕЙ', numColor: '#ECE8DF',
+          icon: 'M4 5 H11 V20 H4 Z M13 5 H20 V20 H13 Z', week: week('dddrrdd'), stamp: 'ЗАЧЁТ', stampColor: ink, note: '' },
+        { name: 'Не курить', meta: 'вредная · держусь с 12 октября', streak: '23', streakLabel: 'ЧИСТЫХ', numColor: '#ECE8DF',
+          icon: 'M3 14 H17 V18 H3 Z M20 14 V18 M17 6 C17 9 20 9 20 12', week: week('ccccccc'), stamp: '', stampColor: ink, note: '' },
+        { name: 'Подъём в 6:00', meta: 'пн–пт', streak: '0', streakLabel: 'ДНЕЙ', numColor: '#FF7A85',
+          icon: 'M12 7 V12 L15 15 M12 21 A8 8 0 1 0 12 5 A8 8 0 1 0 12 21', week: week('dddrrxt'), stamp: '', stampColor: ink, note: 'Слил вчера — бывает. Встал и пошёл.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
