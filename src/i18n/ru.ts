@@ -366,6 +366,39 @@ export const ru = {
   'rank.wolf': 'Волк',
   'rank.leader': 'Вожак',
   'rank.alpha': 'Альфа',
+  // Итог дня
+  'review.title': 'Итог дня',
+  'review.kicker': '{date} · {done} из {total}',
+  'review.question': 'Как прошёл день?',
+  'review.mood': 'Оценка дня',
+  'review.mood.1': { plain: 'Плохо', bro: 'Слил' },
+  'review.mood.2': 'Так себе',
+  'review.mood.3': { plain: 'Нормально', bro: 'Норм' },
+  'review.mood.4': { plain: 'Хорошо', bro: 'Хорош' },
+  'review.mood.5': { plain: 'Отлично', bro: 'Красава' },
+  'review.verdict.1': {
+    plain: 'Бывает. Завтра новый день.',
+    bro: 'Бывает. Завтра отыграемся.',
+  },
+  'review.verdict.2': { plain: 'Не лучший день, но он прожит.', bro: 'Не огонь, но день прожит.' },
+  'review.verdict.3': { plain: 'Ровный день. Так держать.', bro: 'Ровно. Так и держи.' },
+  'review.verdict.4': { plain: 'Хороший день.', bro: 'Достойно. Стая видит.' },
+  'review.verdict.5': { plain: 'Отличный день!', bro: 'Полнолуние. Красава.' },
+  'review.note': 'пара слов о дне — по желанию',
+  'review.notePlaceholder': 'Что зашло, что нет',
+  'review.close': 'Закрыть день',
+  'review.save': 'Сохранить итог',
+  'review.link': 'Итог дня',
+  'review.linkSub': 'Как прошёл день?',
+  'review.linkClosed': 'День закрыт',
+  'review.linkClosedSub': 'Поменять оценку или заметку',
+
+  // День закрыт
+  'closed.title': 'День закрыт.',
+  'closed.of': '{done} из {total}',
+  'closed.streak': 'серия {count}',
+  'closed.ok': { plain: 'Хорошо', bro: 'Понял' },
+  'closed.tomorrow': 'завтра первое — в {time}: {title}',
 } as const satisfies Record<string, Message>;
 
 export type MessageKey = keyof typeof ru;

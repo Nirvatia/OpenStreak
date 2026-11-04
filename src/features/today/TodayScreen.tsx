@@ -18,7 +18,7 @@ import { useT, type Translate } from '../../store/prefsStore';
 import { usePalette } from '../../store/themeStore';
 import { RADIUS, SIZE, SPACE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
-import { AddRow, IconButton } from '../../ui/Button';
+import { AddRow, IconButton, LinkRow } from '../../ui/Button';
 import { Moon } from '../../ui/Moon';
 import { LogRow, MoonRow } from '../../ui/MoonRow';
 import { PriorityMarks } from '../../ui/Priority';
@@ -28,9 +28,9 @@ import { useToast } from '../../ui/toast';
 import { dayMonth, fullDate } from '../format';
 import { useNewSheet } from '../new/newSheetStore';
 
-type Props = { onOpenSettings: () => void };
+type Props = { onOpenSettings: () => void; onOpenReview: () => void };
 
-export function TodayScreen({ onOpenSettings }: Props) {
+export function TodayScreen({ onOpenSettings, onOpenReview }: Props) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
@@ -167,6 +167,14 @@ export function TodayScreen({ onOpenSettings }: Props) {
             ))}
           </View>
         </View>
+      )}
+
+      {day.total > 0 && (
+        <LinkRow
+          title={t(closed ? 'review.linkClosed' : 'review.link')}
+          sub={t(closed ? 'review.linkClosedSub' : 'review.linkSub')}
+          onPress={onOpenReview}
+        />
       )}
     </ScrollView>
   );

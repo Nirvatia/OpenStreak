@@ -3,7 +3,7 @@
  * номер дня и серия закрытых дней.
  */
 import { addDays, diffDays } from './dates';
-import { activeHabits, dataOf, habitDay, indexHabits, type HabitData } from './habits';
+import { activeHabits, dataOf, habitDay, indexHabits, isScheduled, type HabitData } from './habits';
 import { live, type ISODate, type Snapshot } from './model';
 import { isDebt } from './tasks';
 
@@ -137,4 +137,28 @@ export function closedStreak(snap: Pick<Snapshot, 'reviews'>, today: ISODate): n
 /** Фаза луны для оценки дня 1…5: от новолуния до полнолуния. */
 export function moodPhase(mood: number): number {
   return (Math.min(5, Math.max(1, mood)) - 1) / 4;
+}
+
+/**
+ * Первое напоминание дня: дело на этот день или привычка по плану (не вредная, не в выходной)
+ * с самым ранним временем. Для подписи «завтра первое — в 6:00: Подъём» на «День закрыт».
+ */
+export function firstReminder(
+  snap: Pick<Snapshot, 'tasks' | 'habits' | 'rests'>,
+  date: ISODate
+): { time: string; title: string } | null {
+  const candidates: { time: string; title: string }[] = [];
+  for (const t of live(snap.tasks)) {
+    if (t.doneOn === null && t.date === date && t.remindAt) {
+      candidates.push({ time: t.remindAt, title: t.title });
+    }
+  }
+  const rests = live(snap.rests);
+  for (const h of activeHabits(snap)) {
+    if (h.kind !== 'good' || !h.remindAt || h.startDate > date || !isScheduled(h, date)) continue;
+    if (rests.some((r) => r.habitId === h.id && date >= r.from && date <= r.to)) continue;
+    candidates.push({ time: h.remindAt, title: h.name });
+  }
+  candidates.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0));
+  return candidates[0] ?? null;
 }

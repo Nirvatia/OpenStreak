@@ -169,21 +169,34 @@ export function Badge({
   );
 }
 
-/** Цитата волка: волк и пузырь с хвостиком к нему. */
+/**
+ * Цитата волка: волк и пузырь с хвостиком к нему. Без волка (`wolf={false}`) — просто пузырь,
+ * когда волк уже нарисован рядом крупно («День закрыт»).
+ */
 export function WolfQuote({
   text,
   sign,
   mood = 'smirk',
+  wolf = true,
+  tone = 'tag',
 }: {
   text: string;
   sign: string;
   mood?: WolfMood;
+  wolf?: boolean;
+  tone?: 'tag' | 'surface';
 }) {
   const p = usePalette();
   return (
     <View style={styles.quote}>
-      <Wolf mood={mood} size={76} />
-      <View style={[styles.bubble, { backgroundColor: p.tag, borderColor: p.line }]}>
+      {wolf && <Wolf mood={mood} size={76} />}
+      <View
+        style={[
+          styles.bubble,
+          { backgroundColor: p[tone], borderColor: p.line },
+          !wolf && styles.bubbleAlone,
+        ]}
+      >
         <Text style={[TYPE.quote, { color: p.text }]}>{text}</Text>
         <Text style={[TYPE.caption, { color: p.muted }]}>{sign}</Text>
       </View>
@@ -214,6 +227,7 @@ const styles = StyleSheet.create({
   },
   badgeValue: { lineHeight: 22 },
   quote: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.tight },
+  bubbleAlone: { marginBottom: 0, borderBottomLeftRadius: 18 },
   bubble: {
     flex: 1,
     marginBottom: 10,

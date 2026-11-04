@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import * as A from '../actions';
 import { addDays, daysBetween, diffDays, startOfWeek, weekday } from '../dates';
-import { closedStreak, dayNumber, dayView, moodPhase } from '../day';
+import { closedStreak, dayNumber, dayView, firstReminder, moodPhase } from '../day';
 import { goalCounts, goalViews } from '../goals';
 import { habitDay, habitDays, habitStats, indexHabits, dataOf } from '../habits';
 import { toLegacyState } from '../legacy';
@@ -563,5 +563,27 @@ describe('договор: правка, удаление и возврат', () 
       reward: 'Кроссы',
       createdAt: g.createdAt,
     });
+  });
+});
+
+describe('первое напоминание завтра', () => {
+  test('самое раннее среди дел на день и привычек по плану; вредные, выходные и выполненные — нет', () => {
+    const tomorrow = '2026-11-05'; // четверг
+    const s = snap({
+      tasks: [
+        task('call', { date: tomorrow, remindAt: '11:30', title: 'Созвон' }),
+        task('done', { date: tomorrow, remindAt: '05:00', doneOn: TODAY }),
+        task('other', { date: '2026-11-06', remindAt: '04:00' }),
+      ],
+      habits: [
+        habit('rise', { name: 'Подъём', remindAt: '06:00' }),
+        habit('early', { name: 'Рано', remindAt: '05:30', days: [1] }), // только пн
+        habit('bad', { kind: 'bad', remindAt: '04:30' }),
+        habit('rest', { remindAt: '05:15' }),
+      ],
+      rests: [['rest', tomorrow, tomorrow]],
+    });
+    expect(firstReminder(s, tomorrow)).toEqual({ time: '06:00', title: 'Подъём' });
+    expect(firstReminder(snap({}), tomorrow)).toBeNull();
   });
 });

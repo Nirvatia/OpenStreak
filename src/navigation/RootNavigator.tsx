@@ -1,6 +1,6 @@
 /**
  * Навигация «Мульта»: вкладки Сегодня · Дела · Привычки · Цели · Стая (свой таб-бар из src/ui)
- * и экраны поверх вкладок: карточка привычки, настройки (позже — итог дня).
+ * и экраны поверх вкладок: карточка привычки, итог дня, «День закрыт», настройки.
  */
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import {
@@ -12,6 +12,8 @@ import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
 import { HabitsScreen } from '../features/habits/HabitsScreen';
 import { PackScreen } from '../features/pack/PackScreen';
+import { ClosedScreen } from '../features/review/ClosedScreen';
+import { ReviewScreen } from '../features/review/ReviewScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { TasksScreen } from '../features/tasks/TasksScreen';
 import { TodayScreen } from '../features/today/TodayScreen';
@@ -20,7 +22,13 @@ import { usePalette } from '../store/themeStore';
 import { TabBar, type TabItem } from '../ui/TabBar';
 
 export type TabKey = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
-export type RootStack = { tabs: undefined; settings: undefined; habit: { id: string } };
+export type RootStack = {
+  tabs: undefined;
+  settings: undefined;
+  habit: { id: string };
+  review: undefined;
+  closed: undefined;
+};
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStack>();
@@ -47,7 +55,12 @@ function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: p.bg } }}
     >
       <Tab.Screen name="today">
-        {() => <TodayScreen onOpenSettings={() => navigation.navigate('settings')} />}
+        {() => (
+          <TodayScreen
+            onOpenSettings={() => navigation.navigate('settings')}
+            onOpenReview={() => navigation.navigate('review')}
+          />
+        )}
       </Tab.Screen>
       <Tab.Screen name="tasks" component={TasksScreen} />
       <Tab.Screen name="habits">
@@ -70,6 +83,17 @@ export function RootNavigator() {
         {({ navigation, route }) => (
           <HabitScreen habitId={route.params.id} onBack={() => navigation.goBack()} />
         )}
+      </Stack.Screen>
+      <Stack.Screen name="review">
+        {({ navigation }) => (
+          <ReviewScreen
+            onBack={() => navigation.goBack()}
+            onClosed={() => navigation.replace('closed')}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="closed" options={{ animation: 'fade' }}>
+        {({ navigation }) => <ClosedScreen onDone={() => navigation.popToTop()} />}
       </Stack.Screen>
       <Stack.Screen name="settings">
         {({ navigation }) => <SettingsScreen onBack={() => navigation.goBack()} />}
