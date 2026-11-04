@@ -122,7 +122,10 @@ export const GoalSheet: React.FC = () => {
                   key={a.id}
                   style={[
                     styles.chip,
-                    { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
+                    {
+                      borderColor: currentTheme.colors.line,
+                      backgroundColor: currentTheme.colors.card,
+                    },
                     areaId === a.id && {
                       backgroundColor: currentTheme.colors.accent,
                       borderColor: currentTheme.colors.accent,
@@ -150,7 +153,10 @@ export const GoalSheet: React.FC = () => {
           Критерий достижения
         </Text>
         <TextInput
-          style={[styles.subInput, { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line }]}
+          style={[
+            styles.subInput,
+            { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line },
+          ]}
           placeholder="Как пойму, что достиг?"
           placeholderTextColor={currentTheme.colors.muted}
           value={crit}
@@ -159,7 +165,10 @@ export const GoalSheet: React.FC = () => {
         />
         <Text style={[styles.label, { color: currentTheme.colors.muted }]}>Награда</Text>
         <TextInput
-          style={[styles.subInput, { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line }]}
+          style={[
+            styles.subInput,
+            { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line },
+          ]}
           placeholder="Что будет, если достигну?"
           placeholderTextColor={currentTheme.colors.muted}
           value={rew}
@@ -168,7 +177,10 @@ export const GoalSheet: React.FC = () => {
         />
         <Text style={[styles.label, { color: currentTheme.colors.muted }]}>Наказание</Text>
         <TextInput
-          style={[styles.subInput, { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line }]}
+          style={[
+            styles.subInput,
+            { color: currentTheme.colors.text, borderBottomColor: currentTheme.colors.line },
+          ]}
           placeholder="Что будет, если нет?"
           placeholderTextColor={currentTheme.colors.muted}
           value={pen}
@@ -214,15 +226,61 @@ export const GoalSheet: React.FC = () => {
 const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingBottom: 48 },
   title: { fontSize: 18, fontWeight: '800', marginBottom: 12 },
-  input: { fontSize: 17, fontWeight: '600', paddingVertical: 10, borderBottomWidth: 2, marginBottom: 6 },
-  subInput: { fontSize: 14, fontWeight: '500', paddingVertical: 10, borderBottomWidth: 2, borderStyle: 'dashed', marginBottom: 8 },
-  label: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, textTransform: 'uppercase', marginVertical: 9 },
+  input: {
+    fontSize: 17,
+    fontWeight: '600',
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    marginBottom: 6,
+  },
+  subInput: {
+    fontSize: 14,
+    fontWeight: '500',
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderStyle: 'dashed',
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 11.5,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+    marginVertical: 9,
+  },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1.5, gap: 6 },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    gap: 6,
+  },
   dot: { width: 9, height: 9, borderRadius: 5 },
   chipText: { fontSize: 13, fontWeight: '600' },
-  dateBtn: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 52, borderRadius: 14, borderWidth: 1.5, paddingHorizontal: 14 },
+  dateBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    height: 52,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    paddingHorizontal: 14,
+  },
   actions: { flexDirection: 'row', gap: 10, marginTop: 24 },
-  buttonAccent: { flex: 1, height: 50, borderRadius: 16, justifyContent: 'center', alignItems: 'center', shadowColor: '#2f7cf6', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 20, elevation: 5 },
+  buttonAccent: {
+    flex: 1,
+    height: 50,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#2f7cf6',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 5,
+  },
   buttonText: { fontSize: 15, fontWeight: '700' },
 });

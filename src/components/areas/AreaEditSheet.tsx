@@ -107,7 +107,9 @@ export const AreaEditSheet: React.FC = () => {
 
   const toggleGoal = (id: string) => {
     setGoals((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, done: !g.done, doneAt: !g.done ? todayStr() : null } : g))
+      prev.map((g) =>
+        g.id === id ? { ...g, done: !g.done, doneAt: !g.done ? todayStr() : null } : g
+      )
     );
   };
 
@@ -165,7 +167,9 @@ export const AreaEditSheet: React.FC = () => {
         <ColorPicker selectedColor={color} onSelect={setColor} />
         <Text style={[styles.label, { color: currentTheme.colors.muted }]}>Иконка</Text>
         <IconPicker selectedIcon={icon} onSelect={setIcon} />
-        <Text style={[styles.label, { color: currentTheme.colors.muted }]}>Цели (необязательно)</Text>
+        <Text style={[styles.label, { color: currentTheme.colors.muted }]}>
+          Цели (необязательно)
+        </Text>
         {goals.length === 0 && !formOpen && (
           <Text style={[styles.empty, { color: currentTheme.colors.muted }]}>
             Целей нет — добавьте, если хотите
@@ -174,7 +178,10 @@ export const AreaEditSheet: React.FC = () => {
         {goals.map((g) => {
           const late = !!g.dead && g.dead < tb && !g.done;
           return (
-            <View key={g.id} style={[styles.goalItem, { backgroundColor: currentTheme.colors.card2 }]}>
+            <View
+              key={g.id}
+              style={[styles.goalItem, { backgroundColor: currentTheme.colors.card2 }]}
+            >
               <TouchableOpacity
                 style={[
                   styles.goalCheck,
@@ -202,19 +209,25 @@ export const AreaEditSheet: React.FC = () => {
                 {g.crit ? (
                   <View style={styles.goalSubRow}>
                     <PlaceholderIcon name="target" size={12} />
-                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>{g.crit}</Text>
+                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>
+                      {g.crit}
+                    </Text>
                   </View>
                 ) : null}
                 {g.rew ? (
                   <View style={styles.goalSubRow}>
                     <PlaceholderIcon name="gift" size={12} />
-                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>{g.rew}</Text>
+                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>
+                      {g.rew}
+                    </Text>
                   </View>
                 ) : null}
                 {g.pen ? (
                   <View style={styles.goalSubRow}>
                     <PlaceholderIcon name="warning" size={12} />
-                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>{g.pen}</Text>
+                    <Text style={[styles.goalSub, { color: currentTheme.colors.muted }]}>
+                      {g.pen}
+                    </Text>
                   </View>
                 ) : null}
                 {g.dead ? (
@@ -232,7 +245,11 @@ export const AreaEditSheet: React.FC = () => {
                   </View>
                 ) : null}
               </View>
-              <TouchableOpacity style={styles.goalDel} onPress={() => removeGoalDraft(g.id)} activeOpacity={0.7}>
+              <TouchableOpacity
+                style={styles.goalDel}
+                onPress={() => removeGoalDraft(g.id)}
+                activeOpacity={0.7}
+              >
                 <PlaceholderIcon name="trash" size={15} />
               </TouchableOpacity>
             </View>
@@ -256,7 +273,14 @@ export const AreaEditSheet: React.FC = () => {
               maxLength={120}
             />
             <TextInput
-              style={[styles.ginput, { color: currentTheme.colors.text, backgroundColor: currentTheme.colors.card, borderColor: 'transparent' }]}
+              style={[
+                styles.ginput,
+                {
+                  color: currentTheme.colors.text,
+                  backgroundColor: currentTheme.colors.card,
+                  borderColor: 'transparent',
+                },
+              ]}
               placeholder="Как пойму, что достиг?"
               placeholderTextColor={currentTheme.colors.muted}
               value={gCrit}
@@ -264,7 +288,14 @@ export const AreaEditSheet: React.FC = () => {
               maxLength={120}
             />
             <TextInput
-              style={[styles.ginput, { color: currentTheme.colors.text, backgroundColor: currentTheme.colors.card, borderColor: 'transparent' }]}
+              style={[
+                styles.ginput,
+                {
+                  color: currentTheme.colors.text,
+                  backgroundColor: currentTheme.colors.card,
+                  borderColor: 'transparent',
+                },
+              ]}
               placeholder="Что будет, если достигну?"
               placeholderTextColor={currentTheme.colors.muted}
               value={gRew}
@@ -272,7 +303,14 @@ export const AreaEditSheet: React.FC = () => {
               maxLength={120}
             />
             <TextInput
-              style={[styles.ginput, { color: currentTheme.colors.text, backgroundColor: currentTheme.colors.card, borderColor: 'transparent' }]}
+              style={[
+                styles.ginput,
+                {
+                  color: currentTheme.colors.text,
+                  backgroundColor: currentTheme.colors.card,
+                  borderColor: 'transparent',
+                },
+              ]}
               placeholder="Что будет, если нет?"
               placeholderTextColor={currentTheme.colors.muted}
               value={gPen}
@@ -304,7 +342,11 @@ export const AreaEditSheet: React.FC = () => {
               >
                 <Text style={[styles.gsaveText, { color: '#fff' }]}>Сохранить</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.gcancel} onPress={() => setFormOpen(false)} activeOpacity={0.7}>
+              <TouchableOpacity
+                style={styles.gcancel}
+                onPress={() => setFormOpen(false)}
+                activeOpacity={0.7}
+              >
                 <PlaceholderIcon name="close" size={16} />
               </TouchableOpacity>
             </View>
@@ -341,26 +383,95 @@ export const AreaEditSheet: React.FC = () => {
 const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingBottom: 48 },
   title: { fontSize: 18, fontWeight: '800', marginBottom: 12 },
-  input: { fontSize: 17, fontWeight: '600', paddingVertical: 10, borderBottomWidth: 2, marginBottom: 16 },
-  label: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, textTransform: 'uppercase', marginVertical: 9 },
-  button: { height: 50, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginTop: 24, shadowColor: '#2f7cf6', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 20, elevation: 5 },
+  input: {
+    fontSize: 17,
+    fontWeight: '600',
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 11.5,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+    marginVertical: 9,
+  },
+  button: {
+    height: 50,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+    shadowColor: '#2f7cf6',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 5,
+  },
   buttonText: { fontSize: 15, fontWeight: '700' },
   empty: { fontSize: 12.5, paddingVertical: 6 },
-  goalItem: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderRadius: 14, padding: 12, marginBottom: 8 },
-  goalCheck: { width: 26, height: 26, borderRadius: 13, borderWidth: 2, justifyContent: 'center', alignItems: 'center', marginTop: 1 },
+  goalItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 8,
+  },
+  goalCheck: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 1,
+  },
   goalBody: { flex: 1 },
   goalText: { fontSize: 14, fontWeight: '600' },
   goalTextDone: { textDecorationLine: 'line-through' },
   goalSubRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 4 },
   goalSub: { fontSize: 12 },
-  goalDel: { width: 34, height: 34, borderRadius: 10, justifyContent: 'center', alignItems: 'center', opacity: 0.45 },
+  goalDel: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity: 0.45,
+  },
   gform: { borderRadius: 14, padding: 12, marginBottom: 8, gap: 8 },
-  ginput: { fontSize: 13.5, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1.5 },
-  gdate: { height: 46, borderRadius: 10, borderWidth: 1.5, paddingHorizontal: 12, justifyContent: 'center' },
+  ginput: {
+    fontSize: 13.5,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderWidth: 1.5,
+  },
+  gdate: {
+    height: 46,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+  },
   gformActions: { flexDirection: 'row', gap: 8, alignItems: 'center' },
   gsave: { flex: 1, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   gsaveText: { fontSize: 14, fontWeight: '700' },
-  gcancel: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
-  addGoalBtn: { borderStyle: 'dashed', borderWidth: 2, borderRadius: 12, paddingVertical: 10, alignItems: 'center' },
+  gcancel: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addGoalBtn: {
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
   addGoalText: { fontSize: 13, fontWeight: '600' },
 });

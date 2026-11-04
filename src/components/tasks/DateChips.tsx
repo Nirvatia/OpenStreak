@@ -40,7 +40,10 @@ export const DateChips: React.FC<Props> = ({ value, onChange }) => {
             style={[
               styles.chip,
               { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-              value === opt.value && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+              value === opt.value && {
+                backgroundColor: currentTheme.colors.accent,
+                borderColor: currentTheme.colors.accent,
+              },
             ]}
             onPress={() => onChange(opt.value)}
           >
@@ -59,7 +62,12 @@ export const DateChips: React.FC<Props> = ({ value, onChange }) => {
           style={[
             styles.chip,
             { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-            value && value !== today && value !== tomorrow && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+            value &&
+              value !== today &&
+              value !== tomorrow && {
+                backgroundColor: currentTheme.colors.accent,
+                borderColor: currentTheme.colors.accent,
+              },
           ]}
           onPress={() => setShowPicker(true)}
         >

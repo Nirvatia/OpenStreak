@@ -57,7 +57,8 @@ export const ProfileSection: React.FC = () => {
     <View style={[styles.container, { backgroundColor: currentTheme.colors.card }]}>
       <Text style={[styles.title, { color: currentTheme.colors.text }]}>Профиль</Text>
       <Text style={[styles.text, { color: currentTheme.colors.muted }]}>
-        Экспортируйте все задачи, привычки, сферы, даты и статистику в файл — или восстановите их на другом устройстве.
+        Экспортируйте все задачи, привычки, сферы, даты и статистику в файл — или восстановите их на
+        другом устройстве.
       </Text>
       <View style={styles.buttons}>
         <TouchableOpacity
@@ -78,9 +79,18 @@ export const ProfileSection: React.FC = () => {
           ]}
           onPress={handleImport}
           activeOpacity={0.8}
-                >
-          <SvgIcon name="ul" size={ICON_SIZES.svg.md} color={importSure ? currentTheme.colors.orange : currentTheme.colors.text} />
-          <Text style={[styles.buttonText, { color: importSure ? currentTheme.colors.orange : currentTheme.colors.text }]}>
+        >
+          <SvgIcon
+            name="ul"
+            size={ICON_SIZES.svg.md}
+            color={importSure ? currentTheme.colors.orange : currentTheme.colors.text}
+          />
+          <Text
+            style={[
+              styles.buttonText,
+              { color: importSure ? currentTheme.colors.orange : currentTheme.colors.text },
+            ]}
+          >
             Импорт
           </Text>
         </TouchableOpacity>

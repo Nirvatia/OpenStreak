@@ -11,9 +11,12 @@ export function daysToGoal(dead: string): number {
 }
 
 export function daysUsed(startedAt: string): number {
-  return Math.round(
-    (new Date(todayStr() + 'T00:00').getTime() - new Date(startedAt + 'T00:00').getTime()) / 86400000
-  ) + 1;
+  return (
+    Math.round(
+      (new Date(todayStr() + 'T00:00').getTime() - new Date(startedAt + 'T00:00').getTime()) /
+        86400000
+    ) + 1
+  );
 }
 
 export function deadlineGoals(areas: Area[]): GoalWithArea[] {

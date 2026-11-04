@@ -5,9 +5,7 @@ export type CalendarView = 'week' | 'month' | 'year';
 export type GoalWithArea = Goal & { area: Area };
 
 export function tasksOn(dateStr: string, tasks: Task[], areaFilter: string | null): Task[] {
-  return tasks.filter(
-    (task) => task.date === dateStr && (!areaFilter || task.area === areaFilter)
-  );
+  return tasks.filter((task) => task.date === dateStr && (!areaFilter || task.area === areaFilter));
 }
 
 export function goalsOn(dateStr: string, areas: Area[]): GoalWithArea[] {

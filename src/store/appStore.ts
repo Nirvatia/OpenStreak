@@ -301,7 +301,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
       ...prev,
       areas: prev.areas.map((a) =>
         a.id === id
-          ? { ...a, name: input.name, color: input.color, icon: input.icon, goals: input.goals ?? a.goals }
+          ? {
+              ...a,
+              name: input.name,
+              color: input.color,
+              icon: input.icon,
+              goals: input.goals ?? a.goals,
+            }
           : a
       ),
     }));

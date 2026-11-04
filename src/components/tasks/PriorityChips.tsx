@@ -25,14 +25,18 @@ export const PriorityChips: React.FC<Props> = ({ value, onChange }) => {
               key={label}
               style={[
                 styles.chip,
-                { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-                isActive && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+                {
+                  borderColor: currentTheme.colors.line,
+                  backgroundColor: currentTheme.colors.card,
+                },
+                isActive && {
+                  backgroundColor: currentTheme.colors.accent,
+                  borderColor: currentTheme.colors.accent,
+                },
               ]}
               onPress={() => onChange(priority)}
             >
-              {color && (
-                <View style={[styles.dot, { backgroundColor: color }]} />
-              )}
+              {color && <View style={[styles.dot, { backgroundColor: color }]} />}
               <Text
                 style={[
                   styles.chipText,

@@ -73,7 +73,15 @@ describe('даты', () => {
   test('plural для русского', () => {
     const p = (n: number) => plural(n, 'день', 'дня', 'дней');
     expect([1, 2, 5, 11, 12, 21, 22, 25, 111].map(p)).toEqual([
-      'день', 'дня', 'дней', 'дней', 'дней', 'день', 'дня', 'дней', 'дней',
+      'день',
+      'дня',
+      'дней',
+      'дней',
+      'дней',
+      'день',
+      'дня',
+      'дней',
+      'дней',
     ]);
   });
 
@@ -151,15 +159,15 @@ describe('серии', () => {
 
 describe('идеальный день', () => {
   test('все привычки по плану закрыты', () => {
-    const habits = [
-      habit({ id: 'a', dates: [TODAY] }),
-      habit({ id: 'b', type: 'bad' }),
-    ];
+    const habits = [habit({ id: 'a', dates: [TODAY] }), habit({ id: 'b', type: 'bad' })];
     expect(isPerfect(TODAY, habits, '2026-10-01')).toBe(true);
   });
 
   test('срыв вредной — не идеальный', () => {
-    const habits = [habit({ id: 'a', dates: [TODAY] }), habit({ id: 'b', type: 'bad', dates: [TODAY] })];
+    const habits = [
+      habit({ id: 'a', dates: [TODAY] }),
+      habit({ id: 'b', type: 'bad', dates: [TODAY] }),
+    ];
     expect(isPerfect(TODAY, habits, '2026-10-01')).toBe(false);
   });
 
@@ -183,7 +191,18 @@ describe('статистика', () => {
   test('activityPerDay складывает отметки привычек и закрытые задачи', () => {
     const habits = [habit({ dates: [TODAY] })];
     const tasks = [
-      { id: 't', title: 'x', date: TODAY, priority: 0 as const, notes: '', done: true, doneAt: TODAY, createdAt: 0, area: null, remind: '' },
+      {
+        id: 't',
+        title: 'x',
+        date: TODAY,
+        priority: 0 as const,
+        notes: '',
+        done: true,
+        doneAt: TODAY,
+        createdAt: 0,
+        area: null,
+        remind: '',
+      },
     ];
     expect(activityPerDay(TODAY, tasks, habits)).toBe(2);
   });

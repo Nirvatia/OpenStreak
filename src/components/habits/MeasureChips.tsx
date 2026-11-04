@@ -24,7 +24,10 @@ export const MeasureChips: React.FC<Props> = ({ value, onChange }) => {
           style={[
             styles.chip,
             { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-            value === opt.val && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+            value === opt.val && {
+              backgroundColor: currentTheme.colors.accent,
+              borderColor: currentTheme.colors.accent,
+            },
           ]}
           onPress={() => onChange(opt.val)}
           activeOpacity={0.8}

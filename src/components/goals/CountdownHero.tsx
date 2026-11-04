@@ -56,7 +56,17 @@ export const CountdownHero: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  hero: { borderRadius: 20, marginBottom: 16, padding: 20, overflow: 'hidden', shadowColor: '#2f7cf6', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.35, shadowRadius: 30, elevation: 8 },
+  hero: {
+    borderRadius: 20,
+    marginBottom: 16,
+    padding: 20,
+    overflow: 'hidden',
+    shadowColor: '#2f7cf6',
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.35,
+    shadowRadius: 30,
+    elevation: 8,
+  },
   bg: { position: 'absolute', top: 0, left: 0 },
   content: { flexDirection: 'row', alignItems: 'center', gap: 16, zIndex: 1 },
   num: { fontSize: 44, fontWeight: '800', color: '#fff', letterSpacing: -1 },

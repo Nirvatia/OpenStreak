@@ -16,9 +16,7 @@ export const ProgressSheet: React.FC = () => {
 
   const [value, setValue] = useState('0');
 
-  const habit = progressHabitId
-    ? state.habits.find((h) => h.id === progressHabitId)
-    : null;
+  const habit = progressHabitId ? state.habits.find((h) => h.id === progressHabitId) : null;
 
   useEffect(() => {
     if (!progressHabitId || !progressDate) return;

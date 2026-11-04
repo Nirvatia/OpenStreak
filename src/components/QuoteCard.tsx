@@ -28,7 +28,19 @@ export const QuoteCard: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'flex-start', borderRadius: 18, padding: 14, marginBottom: 14, gap: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 3 },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    borderRadius: 18,
+    padding: 14,
+    marginBottom: 14,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 3,
+  },
   iconWrap: { marginTop: 2 },
   content: { flex: 1 },
   text: { fontFamily: FONT.golos.medium, fontSize: 14, lineHeight: 20 },

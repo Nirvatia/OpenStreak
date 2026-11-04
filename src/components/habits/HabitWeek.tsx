@@ -60,7 +60,10 @@ export const HabitWeek: React.FC<Props> = ({ habit }) => {
           circle = { backgroundColor: '#ef4444', borderColor: '#ef4444' };
           mark = <SvgIcon name="x" size={ICON_SIZES.svg.sm} color="#fff" />;
         } else if (bad && !marked && d < tb) {
-          circle = { borderColor: 'rgba(31,184,118,0.55)', backgroundColor: 'rgba(31,184,118,0.13)' };
+          circle = {
+            borderColor: 'rgba(31,184,118,0.55)',
+            backgroundColor: 'rgba(31,184,118,0.13)',
+          };
           mark = <SvgIcon name="check" size={ICON_SIZES.svg.sm} color="#1fb876" />;
         } else if (!bad && marked) {
           circle = { backgroundColor: habit.color, borderColor: habit.color };
@@ -72,7 +75,13 @@ export const HabitWeek: React.FC<Props> = ({ habit }) => {
         }
 
         return (
-          <TouchableOpacity key={d} style={styles.cell} onPress={() => handleTap(d)} disabled={disabled} activeOpacity={0.7}>
+          <TouchableOpacity
+            key={d}
+            style={styles.cell}
+            onPress={() => handleTap(d)}
+            disabled={disabled}
+            activeOpacity={0.7}
+          >
             <View
               style={[
                 styles.circle,
@@ -88,7 +97,12 @@ export const HabitWeek: React.FC<Props> = ({ habit }) => {
             >
               {mark}
             </View>
-            <Text style={[styles.dow, { color: currentTheme.colors.muted, opacity: !sched && !rest ? 0.4 : 1 }]}>
+            <Text
+              style={[
+                styles.dow,
+                { color: currentTheme.colors.muted, opacity: !sched && !rest ? 0.4 : 1 },
+              ]}
+            >
               {DAYN2[dow]}
             </Text>
           </TouchableOpacity>
@@ -99,8 +113,23 @@ export const HabitWeek: React.FC<Props> = ({ habit }) => {
 };
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 12, marginTop: 12, borderTopWidth: 1, borderStyle: 'dashed', paddingHorizontal: 4 },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    marginTop: 12,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    paddingHorizontal: 4,
+  },
   cell: { alignItems: 'center', gap: 6 },
-  circle: { width: 30, height: 30, borderRadius: 15, borderWidth: 2, justifyContent: 'center', alignItems: 'center' },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dow: { fontSize: 10.5, fontWeight: '600' },
 });

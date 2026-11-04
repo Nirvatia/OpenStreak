@@ -28,7 +28,9 @@ export const DayPanel: React.FC = () => {
       <View style={styles.header}>
         <Text style={[styles.title, { color: currentTheme.colors.text }]}>{title}</Text>
         <View style={[styles.count, { backgroundColor: currentTheme.colors.card2 }]}>
-          <Text style={[styles.countText, { color: currentTheme.colors.muted }]}>{tasks.length}</Text>
+          <Text style={[styles.countText, { color: currentTheme.colors.muted }]}>
+            {tasks.length}
+          </Text>
         </View>
       </View>
 
@@ -37,7 +39,9 @@ export const DayPanel: React.FC = () => {
         return (
           <View key={goal.id} style={[styles.goalItem, { backgroundColor: color + '22' }]}>
             <PlaceholderIcon name="flag" size={16} />
-            <Text style={[styles.goalText, { color }]} numberOfLines={1}>{goal.text}</Text>
+            <Text style={[styles.goalText, { color }]} numberOfLines={1}>
+              {goal.text}
+            </Text>
             {goal.done && <Text style={styles.goalDone}>✓</Text>}
           </View>
         );
@@ -59,7 +63,9 @@ export const DayPanel: React.FC = () => {
         activeOpacity={0.7}
       >
         <PlaceholderIcon name="plus" size={17} />
-        <Text style={[styles.addText, { color: currentTheme.colors.muted }]}>Добавить на этот день</Text>
+        <Text style={[styles.addText, { color: currentTheme.colors.muted }]}>
+          Добавить на этот день
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -67,15 +73,39 @@ export const DayPanel: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 4, paddingVertical: 6, marginBottom: 4 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 6,
+    marginBottom: 4,
+  },
   title: { fontSize: 13, fontWeight: '800', letterSpacing: 0.7, textTransform: 'uppercase' },
   count: { borderRadius: 20, paddingHorizontal: 9, paddingVertical: 1 },
   countText: { fontSize: 12, fontWeight: '600' },
-  goalItem: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 12, padding: 9, marginBottom: 8 },
+  goalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: 12,
+    padding: 9,
+    marginBottom: 8,
+  },
   goalText: { flex: 1, fontSize: 13, fontWeight: '600' },
   goalDone: { fontSize: 16, color: '#1fb876', fontWeight: '700' },
   empty: { fontSize: 12.5, fontWeight: '500', paddingHorizontal: 4, paddingVertical: 10 },
-  addButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderStyle: 'dashed', borderWidth: 2, borderRadius: 16, padding: 15, marginTop: 6 },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderRadius: 16,
+    padding: 15,
+    marginTop: 6,
+  },
   addText: { fontSize: 14, fontWeight: '600' },
 });
 

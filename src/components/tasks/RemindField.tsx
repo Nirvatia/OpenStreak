@@ -24,7 +24,10 @@ export const RemindField: React.FC<Props> = ({ value, onChange }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: currentTheme.colors.card, borderColor: currentTheme.colors.line }]}
+        style={[
+          styles.button,
+          { backgroundColor: currentTheme.colors.card, borderColor: currentTheme.colors.line },
+        ]}
         onPress={() => setShowPicker(true)}
       >
         <SvgIcon name="bell" size={20} color={currentTheme.colors.muted} />
@@ -51,7 +54,15 @@ export const RemindField: React.FC<Props> = ({ value, onChange }) => {
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  button: { flexDirection: 'row', alignItems: 'center', height: 52, borderRadius: 14, borderWidth: 1.5, paddingHorizontal: 14, gap: 10 },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 52,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    paddingHorizontal: 14,
+    gap: 10,
+  },
   buttonText: { flex: 1, fontSize: 15, fontWeight: '500' },
   clearButton: { padding: 4 },
 });

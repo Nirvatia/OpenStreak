@@ -161,16 +161,17 @@ export const RestSheet: React.FC = () => {
           <Text style={[styles.buttonText, { color: '#fff' }]}>Добавить период</Text>
         </TouchableOpacity>
 
-        <Text style={[styles.label, { color: currentTheme.colors.muted }]}>
-          Запланирован отдых
-        </Text>
+        <Text style={[styles.label, { color: currentTheme.colors.muted }]}>Запланирован отдых</Text>
         {sortedRest.length === 0 ? (
           <Text style={[styles.empty, { color: currentTheme.colors.muted }]}>
             Периодов отдыха нет
           </Text>
         ) : (
           sortedRest.map((r) => (
-            <View key={`${r.f}|${r.t}`} style={[styles.restItem, { backgroundColor: currentTheme.colors.card2 }]}>
+            <View
+              key={`${r.f}|${r.t}`}
+              style={[styles.restItem, { backgroundColor: currentTheme.colors.card2 }]}
+            >
               <PlaceholderIcon name="rest" size={16} />
               <Text style={[styles.restText, { color: currentTheme.colors.text }]}>
                 {human(r.f)} – {human(r.t)}

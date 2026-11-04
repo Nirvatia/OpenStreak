@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 
 type Particle = { id: number; dx: number; dy: number; color: string; size: number };
 type Props = { x: number; y: number; color: string; trigger: number; onDone?: () => void };
@@ -36,17 +41,28 @@ const ParticleItem: React.FC<{ p: Particle; x: number; y: number }> = ({ p, x, y
   }, [t]);
 
   const style = useAnimatedStyle(() => ({
-    transform: [{ translateX: p.dx * t.value }, { translateY: p.dy * t.value }, { scale: 1 - t.value }],
+    transform: [
+      { translateX: p.dx * t.value },
+      { translateY: p.dy * t.value },
+      { scale: 1 - t.value },
+    ],
     opacity: 1 - t.value,
   }));
 
   return (
     <Animated.View
-      style={[styles.spark, style, {
-        left: x, top: y,
-        width: p.size, height: p.size, borderRadius: p.size / 2,
-        backgroundColor: p.color,
-      }]}
+      style={[
+        styles.spark,
+        style,
+        {
+          left: x,
+          top: y,
+          width: p.size,
+          height: p.size,
+          borderRadius: p.size / 2,
+          backgroundColor: p.color,
+        },
+      ]}
     />
   );
 };

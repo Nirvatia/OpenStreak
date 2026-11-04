@@ -16,7 +16,9 @@ export const YearView: React.FC<Props> = ({ cells, onSelectMonth }) => {
             onPress={() => onSelectMonth(cell.month)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.monthName, { color: currentTheme.colors.muted }]}>{cell.monthName}</Text>
+            <Text style={[styles.monthName, { color: currentTheme.colors.muted }]}>
+              {cell.monthName}
+            </Text>
             <View style={styles.daysGrid}>
               {cell.days.map((day, i) =>
                 day.day === 0 ? (
@@ -27,7 +29,8 @@ export const YearView: React.FC<Props> = ({ cells, onSelectMonth }) => {
                     style={[
                       styles.dot,
                       day.hasGoals && { backgroundColor: '#f59e0b' },
-                      !day.hasGoals && day.hasTasks && { backgroundColor: currentTheme.colors.accent },
+                      !day.hasGoals &&
+                        day.hasTasks && { backgroundColor: currentTheme.colors.accent },
                     ]}
                   />
                 )

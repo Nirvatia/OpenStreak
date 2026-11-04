@@ -18,7 +18,17 @@ export const Fab: React.FC<Props> = ({ onPress }) => {
   const goalDetailOpen = useUiStore((s) => s.goalDetailAreaId !== null);
   const reviewSheetOpen = useUiStore((s) => s.reviewDate !== null);
   const reviewHistoryOpen = useUiStore((s) => s.reviewHistoryVisible);
-  if (taskSheetVisible || habitSheetVisible || areasSheetVisible || areaEditVisible || goalSheetVisible || goalDetailOpen || reviewSheetOpen || reviewHistoryOpen) return null;
+  if (
+    taskSheetVisible ||
+    habitSheetVisible ||
+    areasSheetVisible ||
+    areaEditVisible ||
+    goalSheetVisible ||
+    goalDetailOpen ||
+    reviewSheetOpen ||
+    reviewHistoryOpen
+  )
+    return null;
   return (
     <TouchableOpacity
       style={[styles.fab, { backgroundColor: currentTheme.colors.accent }]}
@@ -31,5 +41,19 @@ export const Fab: React.FC<Props> = ({ onPress }) => {
 };
 
 const styles = StyleSheet.create({
-  fab: { position: 'absolute', right: 19, bottom: 84, width: 58, height: 58, borderRadius: 19, justifyContent: 'center', alignItems: 'center', shadowColor: '#2f7cf6', shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.45, shadowRadius: 26, elevation: 8 },
+  fab: {
+    position: 'absolute',
+    right: 19,
+    bottom: 84,
+    width: 58,
+    height: 58,
+    borderRadius: 19,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#2f7cf6',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.45,
+    shadowRadius: 26,
+    elevation: 8,
+  },
 });

@@ -35,7 +35,14 @@ export const App: React.FC = () => {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: currentTheme.colors.bg }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: currentTheme.colors.bg,
+        }}
+      >
         <ActivityIndicator size="large" color={currentTheme.colors.accent} />
       </View>
     );

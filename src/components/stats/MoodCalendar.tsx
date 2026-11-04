@@ -23,14 +23,19 @@ export const MoodCalendar: React.FC = () => {
   const tb = todayStr();
 
   const handleDayTap = (date: string) => {
-    if (date > tb) { showToast('Этот день ещё не наступил'); return; }
+    if (date > tb) {
+      showToast('Этот день ещё не наступил');
+      return;
+    }
     if (!openReview(date)) showToast('Этот день ещё не наступил');
   };
 
   const navigate = (dir: number) => {
     const dt = new Date(cursor + 'T00:00');
     dt.setMonth(dt.getMonth() + dir);
-    setCursor(`${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`);
+    setCursor(
+      `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`
+    );
   };
 
   const renderWeek = () => {
@@ -42,8 +47,18 @@ export const MoodCalendar: React.FC = () => {
           const dow = DAYN2[new Date(d + 'T00:00').getDay()];
           const isToday = d === tb;
           return (
-            <TouchableOpacity key={d} style={styles.weekCol} onPress={() => handleDayTap(d)} activeOpacity={0.7}>
-              <View style={[styles.weekCell, isToday && { backgroundColor: currentTheme.colors.accentSoft }]}>
+            <TouchableOpacity
+              key={d}
+              style={styles.weekCol}
+              onPress={() => handleDayTap(d)}
+              activeOpacity={0.7}
+            >
+              <View
+                style={[
+                  styles.weekCell,
+                  isToday && { backgroundColor: currentTheme.colors.accentSoft },
+                ]}
+              >
                 {mood ? (
                   <FaceIcon mood={mood.mood} sizeClass="sm" />
                 ) : (
@@ -104,11 +119,21 @@ export const MoodCalendar: React.FC = () => {
     return (
       <View>
         <View style={styles.nav}>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: currentTheme.colors.card2 }]} onPress={() => navigate(-1)} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.navBtn, { backgroundColor: currentTheme.colors.card2 }]}
+            onPress={() => navigate(-1)}
+            activeOpacity={0.7}
+          >
             <SvgIcon name="chevl" size={ICON_SIZES.svg.md} color={currentTheme.colors.muted} />
           </TouchableOpacity>
-          <Text style={[styles.navTitle, { color: currentTheme.colors.text }]}>{monthTitle(y, m)}</Text>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: currentTheme.colors.card2 }]} onPress={() => navigate(1)} activeOpacity={0.7}>
+          <Text style={[styles.navTitle, { color: currentTheme.colors.text }]}>
+            {monthTitle(y, m)}
+          </Text>
+          <TouchableOpacity
+            style={[styles.navBtn, { backgroundColor: currentTheme.colors.card2 }]}
+            onPress={() => navigate(1)}
+            activeOpacity={0.7}
+          >
             <SvgIcon name="chevr" size={ICON_SIZES.svg.md} color={currentTheme.colors.muted} />
           </TouchableOpacity>
         </View>
@@ -130,20 +155,38 @@ export const MoodCalendar: React.FC = () => {
         <Text style={[styles.title, { color: currentTheme.colors.text }]}>Настроение</Text>
         <View style={[styles.seg, { backgroundColor: currentTheme.colors.card2 }]}>
           <TouchableOpacity
-            style={[styles.segBtn, view === 'week' && { backgroundColor: currentTheme.colors.accent }]}
+            style={[
+              styles.segBtn,
+              view === 'week' && { backgroundColor: currentTheme.colors.accent },
+            ]}
             onPress={() => setView('week')}
             activeOpacity={0.7}
           >
-            <Text style={[styles.segText, { color: currentTheme.colors.muted }, view === 'week' && { color: '#fff' }]}>
+            <Text
+              style={[
+                styles.segText,
+                { color: currentTheme.colors.muted },
+                view === 'week' && { color: '#fff' },
+              ]}
+            >
               нед
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.segBtn, view === 'month' && { backgroundColor: currentTheme.colors.accent }]}
+            style={[
+              styles.segBtn,
+              view === 'month' && { backgroundColor: currentTheme.colors.accent },
+            ]}
             onPress={() => setView('month')}
             activeOpacity={0.7}
           >
-            <Text style={[styles.segText, { color: currentTheme.colors.muted }, view === 'month' && { color: '#fff' }]}>
+            <Text
+              style={[
+                styles.segText,
+                { color: currentTheme.colors.muted },
+                view === 'month' && { color: '#fff' },
+              ]}
+            >
               мес
             </Text>
           </TouchableOpacity>
@@ -155,23 +198,69 @@ export const MoodCalendar: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { borderRadius: 20, padding: 14, paddingBottom: 12, marginBottom: 14, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 3 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 4, paddingBottom: 10 },
+  container: {
+    borderRadius: 20,
+    padding: 14,
+    paddingBottom: 12,
+    marginBottom: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 3,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 4,
+    paddingBottom: 10,
+  },
   title: { flex: 1, fontSize: 15, fontWeight: '800', letterSpacing: -0.2 },
   seg: { flexDirection: 'row', borderRadius: 10, padding: 2, gap: 2 },
   /* Увеличен паддинг: было 9 — текст «нед»/«мес» обрезался */
-  segBtn: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  segBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   segText: { fontSize: 11, fontWeight: '700' },
-  nav: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 4, paddingBottom: 10 },
-  navBtn: { width: 30, height: 30, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  nav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 4,
+    paddingBottom: 10,
+  },
+  navBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   navTitle: { flex: 1, fontSize: 14, fontWeight: '800', letterSpacing: -0.2, textAlign: 'center' },
   dowRow: { flexDirection: 'row', marginBottom: 4 },
   dowCol: { flex: 1, alignItems: 'center' },
   dow: { fontSize: 10, fontWeight: '700' },
   weekRow: { flexDirection: 'row', paddingVertical: 4 },
   weekCol: { flex: 1, alignItems: 'center', gap: 6 },
-  weekCell: { width: 34, height: 34, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  weekCell: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dot: { fontSize: 22, opacity: 0.35 },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
-  cell: { width: '14.2857%', aspectRatio: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 2 },
+  cell: {
+    width: '14.2857%',
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
 });

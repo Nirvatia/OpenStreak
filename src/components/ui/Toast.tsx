@@ -46,7 +46,10 @@ export const Toast: React.FC = () => {
   // анимацию исчезновения, поэтому тосты просто всегда смонтированы.
 
   return (
-    <View style={StyleSheet.flatten([styles.wrapper, { bottom: insets.bottom + 96 }])} pointerEvents="none">
+    <View
+      style={StyleSheet.flatten([styles.wrapper, { bottom: insets.bottom + 96 }])}
+      pointerEvents="none"
+    >
       <Animated.View
         style={[
           styles.toast,

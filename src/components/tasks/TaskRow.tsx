@@ -25,7 +25,12 @@ export const TaskRow: React.FC<Props> = ({ task }) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const translateX = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }, []);
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    },
+    []
+  );
 
   const area = task.area ? state.areas.find((a) => a.id === task.area) : null;
   const taskColor = area ? area.color : currentTheme.colors.accent;
@@ -48,10 +53,16 @@ export const TaskRow: React.FC<Props> = ({ task }) => {
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_e, gs) => Math.abs(gs.dx) > 10 && Math.abs(gs.dy) < 10,
-      onPanResponderMove: (_e, gs) => { if (gs.dx < 0) translateX.setValue(gs.dx); },
+      onPanResponderMove: (_e, gs) => {
+        if (gs.dx < 0) translateX.setValue(gs.dx);
+      },
       onPanResponderRelease: (_e, gs) => {
         if (gs.dx < -90) {
-          Animated.timing(translateX, { toValue: -1000, duration: 200, useNativeDriver: true }).start(() => {
+          Animated.timing(translateX, {
+            toValue: -1000,
+            duration: 200,
+            useNativeDriver: true,
+          }).start(() => {
             removeTask(task.id);
             showToast('Задача удалена');
           });
@@ -72,14 +83,33 @@ export const TaskRow: React.FC<Props> = ({ task }) => {
       </View>
       <Animated.View
         {...panResponder.panHandlers}
-        style={[styles.container, { backgroundColor: currentTheme.colors.card, transform: [{ translateX }] }]}
+        style={[
+          styles.container,
+          { backgroundColor: currentTheme.colors.card, transform: [{ translateX }] },
+        ]}
       >
-        <TouchableOpacity style={styles.check} onPress={() => toggleTask(task.id)} activeOpacity={0.7}>
-          <View style={[styles.checkbox, { borderColor: task.done ? taskColor : '#b9c3d2', backgroundColor: task.done ? taskColor : 'transparent' }]}>
+        <TouchableOpacity
+          style={styles.check}
+          onPress={() => toggleTask(task.id)}
+          activeOpacity={0.7}
+        >
+          <View
+            style={[
+              styles.checkbox,
+              {
+                borderColor: task.done ? taskColor : '#b9c3d2',
+                backgroundColor: task.done ? taskColor : 'transparent',
+              },
+            ]}
+          >
             {task.done && <SvgIcon name="check" size={ICON_SIZES.svg.sm} color="#fff" />}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.body} onPress={() => openTaskSheet(task.id)} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => openTaskSheet(task.id)}
+          activeOpacity={0.7}
+        >
           <Text
             style={[
               styles.title,
@@ -98,8 +128,14 @@ export const TaskRow: React.FC<Props> = ({ task }) => {
             )}
             {task.date && (
               <View style={styles.metaItem}>
-                <SvgIcon name="cal" size={ICON_SIZES.svg.sm} color={overdue ? currentTheme.colors.red : currentTheme.colors.muted} />
-                <Text style={[styles.metaText, overdue && { color: currentTheme.colors.red }]}>{rel(task.date)}</Text>
+                <SvgIcon
+                  name="cal"
+                  size={ICON_SIZES.svg.sm}
+                  color={overdue ? currentTheme.colors.red : currentTheme.colors.muted}
+                />
+                <Text style={[styles.metaText, overdue && { color: currentTheme.colors.red }]}>
+                  {rel(task.date)}
+                </Text>
               </View>
             )}
             {task.priority > 0 && (
@@ -135,17 +171,49 @@ export const TaskRow: React.FC<Props> = ({ task }) => {
 
 const styles = StyleSheet.create({
   wrapper: { marginBottom: 9, borderRadius: 15, overflow: 'hidden' },
-  swipeBg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'flex-end', paddingRight: 22 },
-  container: { flexDirection: 'row', alignItems: 'center', borderRadius: 15, padding: 13, shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 2 },
+  swipeBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 22,
+  },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 15,
+    padding: 13,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 2,
+  },
   check: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
-  checkbox: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, justifyContent: 'center', alignItems: 'center' },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   body: { flex: 1, marginHorizontal: 8 },
   title: { fontSize: 15, fontWeight: '500', lineHeight: 20 },
   titleDone: { textDecorationLine: 'line-through' },
   meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   metaText: { fontSize: 12.5, fontWeight: '500', color: '#7c8698' },
-  delete: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  delete: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default TaskRow;

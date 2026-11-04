@@ -56,7 +56,7 @@ export const ExportDialog: React.FC<Props> = ({ visible, onClose }) => {
           </Text>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: currentTheme.colors.card2 }]}
-                        onPress={handleDownload}
+            onPress={handleDownload}
             activeOpacity={0.8}
           >
             <SvgIcon name="dl" size={ICON_SIZES.svg.lg} color={currentTheme.colors.accent} />
@@ -66,7 +66,7 @@ export const ExportDialog: React.FC<Props> = ({ visible, onClose }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: currentTheme.colors.card2 }]}
-                        onPress={handleCopy}
+            onPress={handleCopy}
             activeOpacity={0.8}
           >
             <SvgIcon name="copy" size={ICON_SIZES.svg.lg} color={currentTheme.colors.accent} />
@@ -74,11 +74,7 @@ export const ExportDialog: React.FC<Props> = ({ visible, onClose }) => {
               Скопировать JSON в буфер
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={onClose}
-            activeOpacity={0.7}
-          >
+          <TouchableOpacity style={styles.cancelButton} onPress={onClose} activeOpacity={0.7}>
             <Text style={[styles.cancelText, { color: currentTheme.colors.muted }]}>Отмена</Text>
           </TouchableOpacity>
         </View>

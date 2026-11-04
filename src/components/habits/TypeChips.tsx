@@ -27,7 +27,10 @@ export const TypeChips: React.FC<Props> = ({ value, onChange }) => {
             value === opt.val &&
               (opt.val === 'bad'
                 ? { backgroundColor: currentTheme.colors.red, borderColor: currentTheme.colors.red }
-                : { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent }),
+                : {
+                    backgroundColor: currentTheme.colors.accent,
+                    borderColor: currentTheme.colors.accent,
+                  }),
           ]}
           onPress={() => onChange(opt.val)}
           activeOpacity={0.8}

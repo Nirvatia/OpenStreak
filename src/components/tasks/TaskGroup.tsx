@@ -52,7 +52,14 @@ export const TaskGroup: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  labelRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 4, paddingVertical: 6, marginBottom: 4 },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 6,
+    marginBottom: 4,
+  },
   label: { fontSize: 13, fontWeight: '800', letterSpacing: 0.7, textTransform: 'uppercase' },
   count: { borderRadius: 20, paddingHorizontal: 9, paddingVertical: 1 },
   countText: { fontSize: 12, fontWeight: '600' },

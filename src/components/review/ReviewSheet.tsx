@@ -145,9 +145,7 @@ export const ReviewSheet: React.FC = () => {
                   style={[
                     styles.itemIcon,
                     {
-                      backgroundColor: doneH
-                        ? currentTheme.colors.green
-                        : currentTheme.colors.line,
+                      backgroundColor: doneH ? currentTheme.colors.green : currentTheme.colors.line,
                     },
                   ]}
                 >

@@ -149,7 +149,10 @@ export const TaskSheet: React.FC = () => {
               key={a.id}
               style={[
                 styles.areaChip,
-                { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
+                {
+                  borderColor: currentTheme.colors.line,
+                  backgroundColor: currentTheme.colors.card,
+                },
                 area === a.id && { backgroundColor: a.color, borderColor: a.color },
               ]}
               onPress={() => setArea(a.id)}

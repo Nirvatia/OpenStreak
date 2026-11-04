@@ -27,9 +27,7 @@ export const ActivityChart: React.FC = () => {
           const activity = activityPerDay(d, state.tasks, state.habits);
           // Высота в пунктах внутри фиксированной зоны BAR_AREA:
           // процент от колонки шёл вместе с подписями и выходил за край карточки.
-          const height = activity
-            ? Math.max(8, Math.round((activity / max) * BAR_AREA))
-            : MIN_BAR;
+          const height = activity ? Math.max(8, Math.round((activity / max) * BAR_AREA)) : MIN_BAR;
           const dow = DAYN2[new Date(d + 'T00:00').getDay()];
           const isToday = d === tb;
           const hasActivity = activity > 0;

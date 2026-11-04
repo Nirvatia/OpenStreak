@@ -41,7 +41,11 @@ export const RootTabs: React.FC = () => {
         tabBarInactiveTintColor: currentTheme.colors.muted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
         tabBarIcon: ({ color }) => (
-          <SvgIcon name={TAB_ICONS[route.name as TabKey]} size={ICON_SIZES.containers.tabIcon} color={color} />
+          <SvgIcon
+            name={TAB_ICONS[route.name as TabKey]}
+            size={ICON_SIZES.containers.tabIcon}
+            color={color}
+          />
         ),
       })}
     >

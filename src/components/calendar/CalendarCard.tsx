@@ -4,7 +4,14 @@ import { useThemeStore } from '../../store/themeStore';
 import { useCalendarStore } from '../../store/calendarStore';
 import { useAppStore } from '../../store/appStore';
 import { useUiStore } from '../../store/uiStore';
-import { monthCells, weekCells, yearCells, monthTitle, weekTitle, CalendarView } from '../../utils/calendar';
+import {
+  monthCells,
+  weekCells,
+  yearCells,
+  monthTitle,
+  weekTitle,
+  CalendarView,
+} from '../../utils/calendar';
 import { MonthView } from './MonthView';
 import { WeekView } from './WeekView';
 import { YearView } from './YearView';
@@ -78,7 +85,14 @@ export const CalendarCard: React.FC = () => {
 
       {calView === 'month' && (
         <MonthView
-          cells={monthCells(cursorDate.getFullYear(), cursorDate.getMonth(), state.tasks, state.areas, areaFilter, calSel)}
+          cells={monthCells(
+            cursorDate.getFullYear(),
+            cursorDate.getMonth(),
+            state.tasks,
+            state.areas,
+            areaFilter,
+            calSel
+          )}
           onSelectDate={setSel}
         />
       )}

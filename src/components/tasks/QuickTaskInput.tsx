@@ -43,7 +43,19 @@ export const QuickTaskInput: React.FC<Props> = ({ presetDate }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'center', height: 52, borderRadius: 15, paddingHorizontal: 14, marginBottom: 14, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 3 },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 52,
+    borderRadius: 15,
+    paddingHorizontal: 14,
+    marginBottom: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 3,
+  },
   iconWrap: { marginRight: 10 },
   input: { flex: 1, fontSize: 14.5, padding: 0 },
 });

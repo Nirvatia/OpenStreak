@@ -14,7 +14,10 @@ export const StatCards: React.FC = () => {
   const days = last7();
 
   const weekTasks = state.tasks.filter((task) => task.doneAt && days.includes(task.doneAt)).length;
-  const totalActivity = days.reduce((sum, date) => sum + activityPerDay(date, state.tasks, state.habits), 0);
+  const totalActivity = days.reduce(
+    (sum, date) => sum + activityPerDay(date, state.tasks, state.habits),
+    0
+  );
   const weekHabits = totalActivity - weekTasks;
   const pf = perfectStreak(state.habits, state.startedAt);
   const totalTasks = state.tasks.filter((task) => task.done).length;
@@ -60,8 +63,24 @@ export const StatCards: React.FC = () => {
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 14 },
-  card: { width: '48.5%', borderRadius: 18, padding: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 3 },
-  iconWrap: { width: 38, height: 38, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
+  card: {
+    width: '48.5%',
+    borderRadius: 18,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 3,
+  },
+  iconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   value: { fontSize: 26, fontWeight: '800', letterSpacing: -0.5 },
   label: { fontSize: 12, fontWeight: '500', marginTop: 2 },
 });

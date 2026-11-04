@@ -14,7 +14,14 @@ export const AppIcons = {
     return (
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#66BB6A" />
-        <Path d="M19 33 L28 42 L45 23" fill="none" stroke="#FFF" strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" />
+        <Path
+          d="M19 33 L28 42 L45 23"
+          fill="none"
+          stroke="#FFF"
+          strokeWidth={7}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </Svg>
     );
   },
@@ -33,7 +40,13 @@ export const AppIcons = {
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#80DEEA" />
         <Ellipse cx={32} cy={50} rx={15} ry={4.5} fill="#FFE082" />
-        <Path d="M31 50 Q29 38 33 28" stroke="#8D6E63" strokeWidth={4} fill="none" strokeLinecap="round" />
+        <Path
+          d="M31 50 Q29 38 33 28"
+          stroke="#8D6E63"
+          strokeWidth={4}
+          fill="none"
+          strokeLinecap="round"
+        />
         <G stroke="#43A047" strokeWidth={4} fill="none" strokeLinecap="round">
           <Path d="M33 28 Q23 22 15 27" />
           <Path d="M33 28 Q27 16 18 14" />
@@ -49,7 +62,10 @@ export const AppIcons = {
     return (
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#F28B82" />
-        <Path d="M32 10c7 9 12 15 12 25a12 12 0 0 1-24 0c0-6 3-11 7-15 1 4 3 7 6 8-3-7-3-12-1-18z" fill="#FF7043" />
+        <Path
+          d="M32 10c7 9 12 15 12 25a12 12 0 0 1-24 0c0-6 3-11 7-15 1 4 3 7 6 8-3-7-3-12-1-18z"
+          fill="#FF7043"
+        />
         <Path d="M32 32c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10z" fill="#FFD54F" />
       </Svg>
     );
@@ -60,7 +76,14 @@ export const AppIcons = {
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#B39DDB" />
         <Path d="M32 10l16 6v13c0 12-7 20-16 25-9-5-16-13-16-25V16z" fill="#42A5F5" />
-        <Path d="M24 31l6 6 11-12" stroke="#FFF" strokeWidth={5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <Path
+          d="M24 31l6 6 11-12"
+          stroke="#FFF"
+          strokeWidth={5}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </Svg>
     );
   },
@@ -69,7 +92,13 @@ export const AppIcons = {
     return (
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#FFD54F" />
-        <Path d="M32 12 L54 50 H10 Z" fill="#EF5350" stroke="#EF5350" strokeWidth={6} strokeLinejoin="round" />
+        <Path
+          d="M32 12 L54 50 H10 Z"
+          fill="#EF5350"
+          stroke="#EF5350"
+          strokeWidth={6}
+          strokeLinejoin="round"
+        />
         <Rect x={29.5} y={24} width={5} height={14} rx={2.5} fill="#FFF" />
         <Circle cx={32} cy={44} r={3} fill="#FFF" />
       </Svg>
@@ -151,9 +180,20 @@ export const AppIcons = {
     const s = sz({ sizeClass, size });
     return (
       <Svg width={s} height={s} viewBox="0 0 64 64">
-        <Path d="M32 6v5 M12 26h5 M47 26h5 M18 12l4 4 M46 12l-4 4" stroke="#FFA726" strokeWidth={3} strokeLinecap="round" />
+        <Path
+          d="M32 6v5 M12 26h5 M47 26h5 M18 12l4 4 M46 12l-4 4"
+          stroke="#FFA726"
+          strokeWidth={3}
+          strokeLinecap="round"
+        />
         <Circle cx={32} cy={27} r={11} fill="#FFF" />
-        <Path d="M29 27 l3 4 3-4" stroke="#FFA726" strokeWidth={2} fill="none" strokeLinecap="round" />
+        <Path
+          d="M29 27 l3 4 3-4"
+          stroke="#FFA726"
+          strokeWidth={2}
+          fill="none"
+          strokeLinecap="round"
+        />
         <Rect x={27} y={36} width={10} height={5} rx={2} fill="#90A4AE" />
         <Rect x={28.5} y={43} width={7} height={3.5} rx={1.75} fill="#78909C" />
       </Svg>
@@ -164,7 +204,10 @@ export const AppIcons = {
     return (
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#7986CB" />
-        <Path d="M32 16 l5 10 11 1.6 -8 7.8 1.9 11 -9.9 -5.2 -9.9 5.2 1.9 -11 -8 -7.8 11 -1.6z" fill="#FFD54F" />
+        <Path
+          d="M32 16 l5 10 11 1.6 -8 7.8 1.9 11 -9.9 -5.2 -9.9 5.2 1.9 -11 -8 -7.8 11 -1.6z"
+          fill="#FFD54F"
+        />
         <Path d="M12 20h6M15 17v6" stroke="#FFF" strokeWidth={2} strokeLinecap="round" />
         <Path d="M49 40h6M52 37v6" stroke="#FFF" strokeWidth={2} strokeLinecap="round" />
       </Svg>
@@ -188,8 +231,20 @@ export const AppIcons = {
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#80DEEA" />
         <Circle cx={32} cy={32} r={16} fill="#FFD54F" />
-        <Path d="M24 29 q3 3.5 6 0 M34 29 q3 3.5 6 0" stroke="#E8A400" strokeWidth={2.5} fill="none" strokeLinecap="round" />
-        <Path d="M26 38 q6 5 12 0" stroke="#E8A400" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+        <Path
+          d="M24 29 q3 3.5 6 0 M34 29 q3 3.5 6 0"
+          stroke="#E8A400"
+          strokeWidth={2.5}
+          fill="none"
+          strokeLinecap="round"
+        />
+        <Path
+          d="M26 38 q6 5 12 0"
+          stroke="#E8A400"
+          strokeWidth={2.5}
+          fill="none"
+          strokeLinecap="round"
+        />
         <Circle cx={22} cy={35} r={2.5} fill="#FFB74D" />
         <Circle cx={42} cy={35} r={2.5} fill="#FFB74D" />
       </Svg>
@@ -201,9 +256,21 @@ export const AppIcons = {
       <Svg width={s} height={s} viewBox="0 0 64 64">
         <Circle cx={32} cy={32} r={32} fill="#FFCC80" />
         <Rect x={20.5} y={34} width={22} height={13} rx={5} fill="#FFF" />
-        <Path d="M23 36V19M28.5 36V16M34 36V18M39.5 36V23" stroke="#FFF" strokeWidth={4.5} strokeLinecap="round" fill="none" />
+        <Path
+          d="M23 36V19M28.5 36V16M34 36V18M39.5 36V23"
+          stroke="#FFF"
+          strokeWidth={4.5}
+          strokeLinecap="round"
+          fill="none"
+        />
         <Path d="M20.5 40L13 34" stroke="#FFF" strokeWidth={4.5} strokeLinecap="round" />
-        <Path d="M47 20q5 6 0 12M52 16q7 9 0 18" stroke="#EF5350" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+        <Path
+          d="M47 20q5 6 0 12M52 16q7 9 0 18"
+          stroke="#EF5350"
+          strokeWidth={2.5}
+          fill="none"
+          strokeLinecap="round"
+        />
       </Svg>
     );
   },

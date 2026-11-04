@@ -14,14 +14,20 @@ export const MonthView: React.FC<Props> = ({ cells, onSelectDate }) => {
     <View style={styles.container}>
       <View style={styles.dowRow}>
         {DOW.map((d) => (
-          <Text key={d} style={[styles.dow, { color: currentTheme.colors.muted }]}>{d}</Text>
+          <Text key={d} style={[styles.dow, { color: currentTheme.colors.muted }]}>
+            {d}
+          </Text>
         ))}
       </View>
       <View style={styles.grid}>
         {cells.map((cell) => {
-          const bars = cell.tasks.slice(0, 3).map((task) =>
-            task.done ? currentTheme.colors.line : PRIO_C[task.priority] || currentTheme.colors.accent
-          );
+          const bars = cell.tasks
+            .slice(0, 3)
+            .map((task) =>
+              task.done
+                ? currentTheme.colors.line
+                : PRIO_C[task.priority] || currentTheme.colors.accent
+            );
           const more = cell.tasks.length > 3 ? cell.tasks.length - 3 : 0;
           return (
             <View key={cell.date} style={styles.cellWrap}>
@@ -55,7 +61,9 @@ export const MonthView: React.FC<Props> = ({ cells, onSelectDate }) => {
                   {bars.map((color, i) => (
                     <View key={i} style={[styles.bar, { backgroundColor: color }]} />
                   ))}
-                  {more > 0 && <Text style={[styles.more, { color: currentTheme.colors.muted }]}>+{more}</Text>}
+                  {more > 0 && (
+                    <Text style={[styles.more, { color: currentTheme.colors.muted }]}>+{more}</Text>
+                  )}
                 </View>
               </TouchableOpacity>
             </View>
@@ -72,8 +80,22 @@ const styles = StyleSheet.create({
   dow: { width: '14.2857%', textAlign: 'center', fontSize: 10, fontWeight: '700' },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   cellWrap: { width: '14.2857%', padding: 1 },
-  cell: { flex: 1, borderRadius: 10, paddingVertical: 4, paddingHorizontal: 2, alignItems: 'center', gap: 3, minHeight: 48 },
-  dayNumber: { width: 22, height: 22, borderRadius: 11, justifyContent: 'center', alignItems: 'center' },
+  cell: {
+    flex: 1,
+    borderRadius: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
+    alignItems: 'center',
+    gap: 3,
+    minHeight: 48,
+  },
+  dayNumber: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dayText: { fontSize: 11.5, fontWeight: '600' },
   bars: { width: '72%', gap: 2, alignItems: 'stretch', minHeight: 4 },
   bar: { height: 3, borderRadius: 2 },

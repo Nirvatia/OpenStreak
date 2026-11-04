@@ -38,9 +38,7 @@ export const HabitSheet: React.FC = () => {
   const [nameError, setNameError] = useState(false);
   const [targetError, setTargetError] = useState(false);
 
-  const editingHabit = editingHabitId
-    ? state.habits.find((h) => h.id === editingHabitId)
-    : null;
+  const editingHabit = editingHabitId ? state.habits.find((h) => h.id === editingHabitId) : null;
 
   useEffect(() => {
     if (!habitSheetVisible) return;
@@ -209,7 +207,10 @@ export const HabitSheet: React.FC = () => {
             style={[
               styles.chip,
               { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-              area === null && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+              area === null && {
+                backgroundColor: currentTheme.colors.accent,
+                borderColor: currentTheme.colors.accent,
+              },
             ]}
             onPress={() => handleSelectArea(null)}
           >
@@ -228,7 +229,10 @@ export const HabitSheet: React.FC = () => {
               key={a.id}
               style={[
                 styles.chip,
-                { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
+                {
+                  borderColor: currentTheme.colors.line,
+                  backgroundColor: currentTheme.colors.card,
+                },
                 area === a.id && { backgroundColor: a.color, borderColor: a.color },
               ]}
               onPress={() => handleSelectArea(a.id)}

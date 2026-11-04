@@ -1,4 +1,3 @@
-
 export async function askNotificationPermission(): Promise<void> {
   try {
     const N = await import('expo-notifications');

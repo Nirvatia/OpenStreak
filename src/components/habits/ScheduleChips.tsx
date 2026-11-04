@@ -31,7 +31,10 @@ export const ScheduleChips: React.FC<Props> = ({ value, onChange }) => {
         style={[
           styles.chip,
           { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-          value === null && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+          value === null && {
+            backgroundColor: currentTheme.colors.accent,
+            borderColor: currentTheme.colors.accent,
+          },
         ]}
         onPress={() => onChange(null)}
         activeOpacity={0.8}
@@ -54,7 +57,11 @@ export const ScheduleChips: React.FC<Props> = ({ value, onChange }) => {
             styles.chip,
             styles.dayChip,
             { borderColor: currentTheme.colors.line, backgroundColor: currentTheme.colors.card },
-            value !== null && value.includes(d) && { backgroundColor: currentTheme.colors.accent, borderColor: currentTheme.colors.accent },
+            value !== null &&
+              value.includes(d) && {
+                backgroundColor: currentTheme.colors.accent,
+                borderColor: currentTheme.colors.accent,
+              },
           ]}
           onPress={() => toggleDay(d)}
           activeOpacity={0.8}

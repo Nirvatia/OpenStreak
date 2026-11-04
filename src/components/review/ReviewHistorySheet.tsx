@@ -55,9 +55,7 @@ export const ReviewHistorySheet: React.FC = () => {
                 : `${human(date)} · ${DAYN[new Date(date + 'T00:00').getDay()]}`;
             const scope = state.tasks.filter((x) => x.date === date);
             const done = scope.filter((x) => x.done).length;
-            const scheduled = state.habits.filter(
-              (h) => isScheduled(h, date) && !isRest(h, date)
-            );
+            const scheduled = state.habits.filter((h) => isScheduled(h, date) && !isRest(h, date));
             const ok = scheduled.filter((h) =>
               h.type === 'bad' ? !h.dates.includes(date) : h.dates.includes(date)
             ).length;

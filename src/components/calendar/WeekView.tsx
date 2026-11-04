@@ -12,9 +12,13 @@ export const WeekView: React.FC<Props> = ({ cells, onSelectDate }) => {
     <View style={styles.container}>
       <View style={styles.grid}>
         {cells.map((cell) => {
-          const bars = cell.tasks.slice(0, 4).map((task) =>
-            task.done ? currentTheme.colors.line : PRIO_C[task.priority] || currentTheme.colors.accent
-          );
+          const bars = cell.tasks
+            .slice(0, 4)
+            .map((task) =>
+              task.done
+                ? currentTheme.colors.line
+                : PRIO_C[task.priority] || currentTheme.colors.accent
+            );
           return (
             <TouchableOpacity
               key={cell.date}
@@ -28,8 +32,19 @@ export const WeekView: React.FC<Props> = ({ cells, onSelectDate }) => {
               activeOpacity={0.7}
             >
               <Text style={[styles.dow, { color: currentTheme.colors.muted }]}>{cell.dow}</Text>
-              <View style={[styles.dayNumber, cell.isToday && { backgroundColor: currentTheme.colors.accent }]}>
-                <Text style={[styles.dayText, { color: currentTheme.colors.text }, cell.isToday && { color: '#fff' }]}>
+              <View
+                style={[
+                  styles.dayNumber,
+                  cell.isToday && { backgroundColor: currentTheme.colors.accent },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.dayText,
+                    { color: currentTheme.colors.text },
+                    cell.isToday && { color: '#fff' },
+                  ]}
+                >
                   {cell.day}
                 </Text>
               </View>
@@ -49,9 +64,23 @@ export const WeekView: React.FC<Props> = ({ cells, onSelectDate }) => {
 const styles = StyleSheet.create({
   container: { marginTop: 6 },
   grid: { flexDirection: 'row', gap: 4 },
-  cell: { flex: 1, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 3, alignItems: 'center', gap: 5, minHeight: 88 },
+  cell: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 3,
+    alignItems: 'center',
+    gap: 5,
+    minHeight: 88,
+  },
   dow: { fontSize: 9.5, fontWeight: '700' },
-  dayNumber: { width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  dayNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dayText: { fontSize: 12, fontWeight: '700' },
   bars: { width: '100%', minHeight: 20, gap: 3 },
   bar: { height: 4, borderRadius: 2 },

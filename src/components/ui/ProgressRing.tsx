@@ -54,7 +54,15 @@ export const ProgressRing: React.FC<Props> = ({
         viewBox="0 0 64 64"
         style={{ transform: [{ rotate: '-90deg' }] }}
       >
-        <Circle cx={32} cy={32} r={27} stroke={trackColor} strokeWidth={strokeWidth} fill="none" strokeLinecap="round" />
+        <Circle
+          cx={32}
+          cy={32}
+          r={27}
+          stroke={trackColor}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="round"
+        />
         <AnimatedCircle
           cx={32}
           cy={32}
