@@ -1,8 +1,10 @@
 /**
- * Настройки интерфейса, кроме темы: тон и язык. Пока хранятся на устройстве;
- * на этапе 3 переезжают в профиль и синхронизируются.
+ * Тон и язык для строк интерфейса. Источник правды — настройки в данных (`core/settings`),
+ * здесь — их копия для `useT()`; на устройстве — копия тона для экранов до загрузки данных.
  */
 import { create } from 'zustand';
+import { updateSettings } from '../core/actions';
+import { useDataStore } from '../core/store';
 import { translate, type Locale, type MessageKey, type Params, type Tone } from '../i18n';
 import { storage, TONE_KEY } from '../services/storage';
 
@@ -10,6 +12,8 @@ type PrefsStore = {
   locale: Locale;
   tone: Tone;
   setTone: (tone: Tone) => Promise<void>;
+  /** Применить тон и язык из настроек (без записи обратно). */
+  apply: (p: { tone: Tone; locale: Locale }) => void;
   loadPrefs: () => Promise<void>;
 };
 
@@ -21,7 +25,12 @@ export const usePrefsStore = create<PrefsStore>((set) => ({
   tone: 'bro',
   setTone: async (tone) => {
     set({ tone });
+    if (useDataStore.getState().ready) updateSettings({ tone });
     await storage.setString(TONE_KEY, tone);
+  },
+  apply: ({ tone, locale }) => {
+    set({ tone, locale });
+    void storage.setString(TONE_KEY, tone);
   },
   loadPrefs: async () => {
     const saved = await storage.getString(TONE_KEY);

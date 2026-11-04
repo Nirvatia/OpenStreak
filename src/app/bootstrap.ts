@@ -9,6 +9,7 @@ import { flush, initData, setToday, useDataStore } from '../core/store';
 import { syncReminders } from '../services/notifications';
 import { storage as kv, STATE_KEY } from '../services/storage';
 import { todayStr } from '../utils/dates';
+import { followSettings, seedSettingsFromDevice } from './settingsSync';
 
 const REMINDER_SYNC_DELAY_MS = 1500;
 const DAY_CHECK_INTERVAL_MS = 60_000;
@@ -33,6 +34,13 @@ async function start(): Promise<void> {
     // Пустой стор лучше вечной заставки; данные на диске не тронуты.
     useDataStore.setState({ ready: true });
   }
+
+  try {
+    await seedSettingsFromDevice();
+  } catch (e) {
+    console.warn('Device settings were not carried over', e);
+  }
+  followSettings();
 
   let timer: ReturnType<typeof setTimeout> | null = null;
   const scheduleSync = () => {

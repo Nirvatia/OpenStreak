@@ -4,7 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RootTabs } from '../navigation/RootTabs';
+import { NewSheet } from '../features/new/NewSheet';
+import { RootNavigator } from '../navigation/RootNavigator';
+import { SIZE } from '../theme/metrics';
 import { SheetsHost } from '../components/SheetsHost';
 import { useAppStore } from '../store/appStore';
 import { usePrefsStore } from '../store/prefsStore';
@@ -64,10 +66,12 @@ export const App: React.FC = () => {
         <SafeAreaProvider>
           <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
           <NavigationContainer>
-            <RootTabs />
+            <RootNavigator />
           </NavigationContainer>
           <SheetsHost />
+          <NewSheet />
           <Toast />
+          <ToastHost bottom={SIZE.tabBar} />
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </WebFrame>

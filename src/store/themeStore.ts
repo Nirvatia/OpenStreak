@@ -1,5 +1,7 @@
 import { Appearance } from 'react-native';
 import { create } from 'zustand';
+import { updateSettings } from '../core/actions';
+import { useDataStore } from '../core/store';
 import { storage, THEME_KEY } from '../services/storage';
 import {
   isThemeMode,
@@ -31,6 +33,7 @@ type ThemeStore = {
   setTheme: (theme: Scheme) => Promise<void>;
   /** @deprecated старые экраны: переключить на противоположную показываемой */
   toggleTheme: () => Promise<void>;
+  applyMode: (mode: ThemeMode) => void;
   loadTheme: () => Promise<void>;
 };
 
@@ -56,12 +59,21 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
 
   setMode: async (mode) => {
     set(derive(mode, get().system));
+    // Источник правды — настройки в данных (синхронизируются); на устройстве — копия,
+    // чтобы заставка до загрузки данных была в нужной теме.
+    if (useDataStore.getState().ready) updateSettings({ theme: mode });
     await storage.setString(THEME_KEY, mode);
   },
 
   setTheme: (theme) => get().setMode(theme),
 
   toggleTheme: () => get().setMode(get().scheme === 'dark' ? 'light' : 'dark'),
+
+  /** Применить тему из настроек (без записи обратно). */
+  applyMode: (mode: ThemeMode) => {
+    if (mode !== get().mode) set(derive(mode, get().system));
+    void storage.setString(THEME_KEY, mode);
+  },
 
   loadTheme: async () => {
     const saved = await storage.getString(THEME_KEY);

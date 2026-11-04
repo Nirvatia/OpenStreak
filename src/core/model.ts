@@ -95,7 +95,8 @@ export type Area = RecordMeta & {
 };
 
 export type Goal = RecordMeta & {
-  areaId: string;
+  /** сфера; null — цель без сферы */
+  areaId: string | null;
   text: string;
   /** «зачёт, если» */
   criterion: string;

@@ -3,7 +3,7 @@
  * note — многострочное на подложке. Метка над полем — всегда видимая.
  */
 import React from 'react';
-import { Text, TextInput, View, type TextInputProps } from 'react-native';
+import { Platform, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { usePalette } from '../store/themeStore';
 import { LINE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
@@ -14,6 +14,9 @@ type Props = Omit<TextInputProps, 'style'> & {
   label: string;
   variant?: 'title' | 'search' | 'note';
 };
+
+/** На вебе браузер рисует свою скруглённую рамку фокуса; у полей «Луны» фокус видно по черте. */
+const NO_WEB_OUTLINE = Platform.OS === 'web' ? { outlineWidth: 0 } : null;
 
 export function TextField({ label, variant = 'title', ...input }: Props) {
   const p = usePalette();
@@ -39,7 +42,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
         <Icon name="search" size={18} tone="muted" />
         <TextInput
           {...common}
-          style={[TYPE.body, { flex: 1, color: p.text, paddingVertical: 0 }]}
+          style={[TYPE.body, { flex: 1, color: p.text, paddingVertical: 0 }, NO_WEB_OUTLINE]}
         />
       </View>
     );
@@ -59,6 +62,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
               borderBottomWidth: LINE.bold,
               borderBottomColor: p.text,
             },
+            NO_WEB_OUTLINE,
           ]}
         />
       ) : (
@@ -77,6 +81,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
               borderWidth: LINE.hair,
               borderColor: p.line,
             },
+            NO_WEB_OUTLINE,
           ]}
         />
       )}

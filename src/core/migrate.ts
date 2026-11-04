@@ -170,7 +170,7 @@ export function cleanGoal(x: unknown, now: number): Goal | null {
   const m = meta(x, now);
   const text = nonEmpty(x.text);
   const areaId = idOrNull(x.areaId);
-  if (!m || !text || !areaId) return null;
+  if (!m || !text) return null;
   return {
     ...m,
     areaId,

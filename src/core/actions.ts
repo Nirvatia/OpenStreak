@@ -133,7 +133,7 @@ export type GoalInput = {
   doneOn?: ISODate | null;
 };
 
-export function createGoal(areaId: string, input: GoalInput, id: string = newId()): string {
+export function createGoal(areaId: string | null, input: GoalInput, id: string = newId()): string {
   commit([
     draftCreate('goals', id, {
       areaId,
@@ -231,6 +231,28 @@ export function createHabit(input: HabitInput): string {
     }),
   ]);
   return id;
+}
+
+/** Привычка из шторки «Новое»: только название, вид и напоминание; остальное — по умолчанию. */
+export function createQuickHabit(input: {
+  name: string;
+  kind: HabitKind;
+  remindAt: string;
+}): string {
+  return createHabit({
+    name: input.name,
+    kind: input.kind,
+    icon: 'target',
+    // Цвет нужен только старым экранам; в «Луне» привычки без цвета.
+    color: '#2f7cf6',
+    days: null,
+    question: '',
+    remindAt: input.kind === 'bad' ? '' : input.remindAt,
+    areaId: null,
+    measure: 'boolean',
+    unit: 'count',
+    target: 1,
+  });
 }
 
 export function updateHabit(id: string, input: HabitInput): void {

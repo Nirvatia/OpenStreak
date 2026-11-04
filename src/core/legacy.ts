@@ -88,6 +88,8 @@ export function toLegacyState(snap: Snapshot): AppState {
       done: g.doneOn !== null,
       doneAt: g.doneOn,
     };
+    // Цели без сферы старые экраны не показывают — они живут только на новом экране «Цели».
+    if (g.areaId === null) continue;
     const list = goalsByArea.get(g.areaId);
     if (list) list.push(lg);
     else goalsByArea.set(g.areaId, [lg]);

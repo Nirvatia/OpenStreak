@@ -27,3 +27,10 @@ export function translate(locale: Locale, tone: Tone, key: MessageKey, params?: 
     name in params ? String(params[name]) : whole
   );
 }
+
+/** Сколько цитат волка в словаре (ключи `quote.0`, `quote.1`, …). */
+export function quoteCount(locale: Locale): number {
+  let n = 0;
+  while (`quote.${n}` in DICTS[locale]) n++;
+  return n;
+}
