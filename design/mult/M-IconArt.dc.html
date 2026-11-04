@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Рисунок иконки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div role="img" aria-label="{{label}}" style="width: {{px}}; height: {{px}}; position: relative; overflow: hidden; border-radius: {{radius}}; background: {{bg}};">
+<sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
+<span style="position: absolute; left: {{s.x}}; top: {{s.y}}; width: {{s.r}}; height: {{s.r}}; border-radius: 50%; background: #F6EBD3;"></span>
+</sc-for>
+<sc-if value="{{hasHill}}" hint-placeholder-val="{{false}}">
+<svg width="{{size}}" height="{{size}}" viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0;" aria-hidden="true">
+<path d="M-2 74 C20 60 42 62 58 70 C74 78 88 70 102 66 L102 102 L-2 102 Z" fill="#F7D9A8" stroke="#1E2233" stroke-width="1.6"></path>
+</svg>
+</sc-if>
+<div style="position: absolute; left: {{moon.x}}; top: {{moon.y}};">
+<dc-import name="M-Moon" phase="1" state="normal" size="{{moon.size}}" theme="{{moonTheme}}" hint-size="{{moon.px}},{{moon.px}}"></dc-import>
+</div>
+<div style="position: absolute; left: {{wolf.x}}; top: {{wolf.y}};">
+<dc-import name="M-Wolf" mood="{{mood}}" size="{{wolf.size}}" theme="night" hint-size="{{wolf.px}},{{wolf.px}}"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","default":"moon","options":["moon","sticker","hill"]},"size":{"editor":"int","default":160},"rounded":{"editor":"boolean","default":true},"$preview":{"width":160,"height":160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const size = Number(this.props.size ?? 160);
+    const variant = this.props.variant ?? 'moon';
+    const at = (fx, fy, fs) => {
+      const s = Math.round(size * fs);
+      return { x: Math.round(size * fx) + 'px', y: Math.round(size * fy) + 'px', size: s, px: s + 'px' };
+    };
+    const pct = (v) => Math.round(size * v) + 'px';
+    const looks = {
+      // Волк на полной луне в вечернем небе — как «День закрыт».
+      moon: {
+        bg: '#1D2740', mood: 'smirk', moonTheme: 'night', hasHill: false,
+        moon: at(0.12, 0.05, 0.76), wolf: at(0.2, 0.36, 0.6),
+        stars: [[0.08, 0.14, 0.03], [0.86, 0.1, 0.035], [0.9, 0.5, 0.025], [0.06, 0.6, 0.025], [0.78, 0.82, 0.02]]
+      },
+      // Просто волк на жёлтой наклейке — самый читаемый на маленьком размере.
+      sticker: {
+        bg: '#F5B82E', mood: 'smirk', moonTheme: 'day', hasHill: false,
+        moon: at(2, 2, 0.1), wolf: at(0.06, 0.08, 0.88), stars: []
+      },
+      // Дневное небо, луна сбоку, волк на холме.
+      hill: {
+        bg: '#9CCFDB', mood: 'proud', moonTheme: 'day', hasHill: true,
+        moon: at(0.5, 0.06, 0.44), wolf: at(0.04, 0.3, 0.62), stars: []
+      }
+    };
+    const l = looks[variant] ?? looks.moon;
+    const labels = { moon: 'Волк на полной луне', sticker: 'Волк на жёлтом', hill: 'Волк на холме под луной' };
+    return {
+      ...l,
+      size, px: size + 'px',
+      radius: this.props.rounded === false ? '0' : Math.round(size * 0.2237) + 'px',
+      label: labels[variant] ?? labels.moon,
+      stars: l.stars.map(([x, y, r]) => ({ x: pct(x), y: pct(y), r: Math.max(2, Math.round(size * r)) + 'px' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

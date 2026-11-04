@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -17,6 +18,9 @@ import { ToastHost } from '../ui/ToastHost';
 import { bootstrap } from './bootstrap';
 import { WebFrame } from './WebFrame';
 
+// Системный сплэш (волк на луне) держим, пока не загрузятся шрифты и данные.
+void SplashScreen.preventAutoHideAsync().catch(() => {});
+
 export const App: React.FC = () => {
   const fontsLoaded = useAppFonts();
   const ready = useDataStore((s) => s.ready);
@@ -29,6 +33,10 @@ export const App: React.FC = () => {
     void usePrefsStore.getState().loadPrefs();
     void bootstrap();
   }, []);
+
+  useEffect(() => {
+    if (fontsLoaded && ready) void SplashScreen.hideAsync().catch(() => {});
+  }, [fontsLoaded, ready]);
 
   if (!fontsLoaded || !ready) {
     return (

@@ -198,6 +198,34 @@
       "w": 1280,
       "h": 1880,
       "title": "Иконки — обе темы"
+    },
+    "M-IconArt.dc.html": {
+      "x": 1080,
+      "y": 2080,
+      "w": 160,
+      "h": 160,
+      "title": "Рисунок иконки"
+    },
+    "M-AppIcon.dc.html": {
+      "x": 1440,
+      "y": 2528,
+      "w": 1280,
+      "h": 1160,
+      "title": "Иконка приложения — варианты"
+    },
+    "M-Splash.dc.html": {
+      "x": 2800,
+      "y": 2528,
+      "w": 390,
+      "h": 844,
+      "title": "Сплэш — день"
+    },
+    "M-Splash-Night.dc.html": {
+      "x": 3270,
+      "y": 2528,
+      "w": 390,
+      "h": 844,
+      "title": "Сплэш — вечерний мульт"
     }
   },
   "order": [
@@ -226,7 +254,11 @@
     "M-Review-Night.dc.html",
     "M-Settings-Night.dc.html",
     "M-Icon.dc.html",
-    "M-Icons.dc.html"
+    "M-Icons.dc.html",
+    "M-IconArt.dc.html",
+    "M-AppIcon.dc.html",
+    "M-Splash.dc.html",
+    "M-Splash-Night.dc.html"
   ],
   "notes": {
     "rowDay": {
@@ -242,6 +274,13 @@
       "text": "Вечерний мульт",
       "kind": "title1",
       "maxW": 4620
+    },
+    "rowIcon": {
+      "x": 1440,
+      "y": 2228,
+      "text": "Иконка и сплэш",
+      "kind": "title1",
+      "maxW": 2220
     }
   },
   "designSystems": []

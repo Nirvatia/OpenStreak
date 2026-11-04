@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Сплэш</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{bg}}; color: {{text}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; font-family: Unbounded, system-ui, sans-serif;">
+<sc-for list="{{stars}}" as="s" hint-placeholder-count="6">
+<span aria-hidden="true" style="position: absolute; left: {{s.x}}; top: {{s.y}}; width: {{s.r}}; height: {{s.r}}; border-radius: 50%; background: #F6EBD3;"></span>
+</sc-for>
+<div role="img" aria-label="Волк на полной луне" style="position: relative; width: 220px; height: 260px; display: flex; flex-direction: column; align-items: center;">
+<dc-import name="M-Moon" phase="1" state="normal" size="200" theme="{{theme}}" hint-size="200px,200px"></dc-import>
+<div style="margin-top: -92px;">
+<dc-import name="M-Wolf" mood="smirk" size="150" theme="{{theme}}" hint-size="150px,150px"></dc-import>
+</div>
+</div>
+<span style="transform: rotate(-3deg); padding: 6px 16px; background: #F5B82E; color: #1E2233; border: 2.5px solid #1E2233; border-radius: 12px; box-shadow: 4px 4px 0 {{shadow}}; font-size: 22px; font-weight: 800;">OpenStreak</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","default":"day","options":["day","night"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const night = this.props.theme === 'night';
+    const pts = [[40, 120, 4], [330, 90, 5], [300, 210, 3], [60, 300, 3], [330, 640, 3], [50, 700, 4]];
+    return {
+      theme: night ? 'night' : 'day',
+      bg: night ? '#1D2740' : '#F3E9D2',
+      text: night ? '#F6EBD3' : '#1E2233',
+      shadow: night ? '#0B1020' : '#1E2233',
+      stars: night ? pts.map(([x, y, r]) => ({ x: x + 'px', y: y + 'px', r: r + 'px' })) : []
+    };
+  }
+}
+</script>
+</body>
+</html>

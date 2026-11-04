@@ -135,7 +135,9 @@
 - ✅ Удалены старые экраны и слой совместимости (`screens`, `components`, `store/appStore.ts`,
   `core/legacy.ts`, `types/models.ts`, `theme/tokens.ts`, старые `utils` и сторы), а с ними —
   `@gorhom/bottom-sheet`, `expo-clipboard`, Golos Text и Manrope; вибро — в новых экранах
-- Иконка приложения и сплэш: волк на полной луне
+- ✅ Иконка приложения: волк на жёлтом (вариант Б из трёх), адаптивная и монохромная для
+  Android; сплэш — волк на полной луне с плашкой «OpenStreak», днём и вечером свой фон;
+  картинки собирает `scripts/app-assets.cjs`
 
 ## ⏳ Этап 5. Напоминания по месту
 
