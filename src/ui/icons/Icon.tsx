@@ -11,16 +11,18 @@ type Props = {
   color?: string;
   /** подпись для чтения с экрана; без неё иконка декоративная */
   label?: string;
+  /** толщина линии; по умолчанию 2.5 */
+  weight?: number;
 };
 
-function Glyph({ d, size = 24, color, label }: Props & { d: string }) {
+function Glyph({ d, size = 24, color, label, weight = 2.5 }: Props & { d: string }) {
   const palette = usePalette();
   const svg = (
     <Svg width={size} height={size} viewBox="0 0 24 24">
       <Path
         d={d}
         stroke={color ?? palette.ink}
-        strokeWidth={2.5}
+        strokeWidth={weight}
         strokeLinecap="square"
         strokeLinejoin="miter"
         fill="none"

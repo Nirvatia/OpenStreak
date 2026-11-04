@@ -21,10 +21,10 @@ const { themes, inks, checks } = JSON.parse(
   readFileSync(new URL('../src/theme/palettes.json', import.meta.url), 'utf8')
 );
 
-/** Та же сборка палитры, что в src/theme/palette.ts: тема + чернила, navMark по умолчанию = stamp. */
+/** Та же сборка палитры, что в src/theme/palette.ts: тема + чернила, navMark и stampOnInk по умолчанию = stamp. */
 function resolve(theme, ink) {
   const over = inks[ink][theme];
-  return { ...themes[theme], navMark: over.stamp, ...over };
+  return { ...themes[theme], navMark: over.stamp, stampOnInk: over.stamp, ...over };
 }
 
 let failed = 0;

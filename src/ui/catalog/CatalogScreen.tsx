@@ -10,6 +10,7 @@ import { usePalette, useThemeStore } from '../../store/themeStore';
 import { INK_NAMES, THEME_MODES, type Palette } from '../../theme/palette';
 import { LINE, SPACE } from '../../theme/stamp';
 import { TYPE, type TypeVariant } from '../../theme/type';
+import { CatalogControls } from './CatalogControls';
 import { CatalogRows } from './CatalogRows';
 import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, WolfSeal, type UiIconName } from '../icons';
 
@@ -156,6 +157,7 @@ export function CatalogScreen() {
       </Section>
 
       <CatalogRows Section={Section} />
+      <CatalogControls Section={Section} />
     </ScrollView>
   );
 }

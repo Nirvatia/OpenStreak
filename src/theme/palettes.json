@@ -1,5 +1,5 @@
 {
-  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. stamp — цвет «чернил» печатей и акцентов, выбирается в настройках (inks); navMark — отметка активной вкладки на таб-баре, по умолчанию равна stamp. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x) для каждой темы с каждыми чернилами: text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3, ui — значки и отметки без текста ≥ 3.",
+  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. stamp — цвет «чернил» печатей и акцентов, выбирается в настройках (inks); navMark — отметка активной вкладки на таб-баре, stampOnInk — значок цвета печати на заливке чернилами (бегунок переключателя); оба по умолчанию равны stamp. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x) для каждой темы с каждыми чернилами: text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3, ui — значки и отметки без текста ≥ 3.",
   "themes": {
     "light": {
       "bg": "#E4E1DA",
@@ -46,7 +46,9 @@
     ["onStamp", "stamp", "text"],
     ["navText", "nav", "text"],
     ["navMuted", "nav", "text"],
-    ["navMark", "nav", "ui"]
+    ["navMark", "nav", "ui"],
+    ["stampOnInk", "ink", "ui"],
+    ["onInk", "pencil", "text"]
   ],
   "inks": {
     "red": {
@@ -54,25 +56,30 @@
         "stamp": "#C8102E"
       },
       "dark": {
-        "stamp": "#FF5A67"
+        "stamp": "#FF5A67",
+        "stampOnInk": "#141413"
       }
     },
     "blue": {
       "light": {
         "stamp": "#1F3FA8",
-        "navMark": "#E4E1DA"
+        "navMark": "#E4E1DA",
+        "stampOnInk": "#E4E1DA"
       },
       "dark": {
-        "stamp": "#8FA6FF"
+        "stamp": "#8FA6FF",
+        "stampOnInk": "#141413"
       }
     },
     "mono": {
       "light": {
         "stamp": "#151515",
-        "navMark": "#E4E1DA"
+        "navMark": "#E4E1DA",
+        "stampOnInk": "#E4E1DA"
       },
       "dark": {
-        "stamp": "#ECE8DF"
+        "stamp": "#ECE8DF",
+        "stampOnInk": "#141413"
       }
     }
   }

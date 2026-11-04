@@ -36,6 +36,8 @@ export type Palette = {
   navMuted: string;
   /** отметка активной вкладки */
   navMark: string;
+  /** значок цвета печати на заливке `ink` (бегунок переключателя) */
+  stampOnInk: string;
   /** текст на `ink` (инверсия) */
   onInk: string;
   onInkMuted: string;
@@ -45,12 +47,12 @@ export type Palette = {
 
 type InkOverride = Partial<Palette> & { stamp: string };
 
-const themes = palettes.themes as Record<Scheme, Omit<Palette, 'stamp' | 'navMark'>>;
+const themes = palettes.themes as Record<Scheme, Omit<Palette, 'stamp' | 'navMark' | 'stampOnInk'>>;
 const inks = palettes.inks as Record<InkName, Record<Scheme, InkOverride>>;
 
 export function resolvePalette(scheme: Scheme, ink: InkName): Palette {
   const over = inks[ink][scheme];
-  return { ...themes[scheme], navMark: over.stamp, ...over };
+  return { ...themes[scheme], navMark: over.stamp, stampOnInk: over.stamp, ...over };
 }
 
 /** Тема, которая реально показывается. `system` — null, если система не сообщила свою. */
