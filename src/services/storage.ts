@@ -4,6 +4,8 @@ export const STATE_KEY = 'CoolTick.v4';
 export const THEME_KEY = 'tickdo.theme';
 /** Цвет чернил «Штампа». */
 export const INK_KEY = 'openstreak.ink';
+/** Тон текста: обычный / пацанский. */
+export const TONE_KEY = 'openstreak.tone';
 export const TIP_KEY = 'tickdo.tip';
 
 // Используем AsyncStorage вместо MMKV для Expo Go

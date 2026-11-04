@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootTabs } from '../navigation/RootTabs';
 import { SheetsHost } from '../components/SheetsHost';
 import { useAppStore } from '../store/appStore';
+import { usePrefsStore } from '../store/prefsStore';
 import { useThemeStore } from '../store/themeStore';
 import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     void bootstrap();
     void loadTheme();
+    void usePrefsStore.getState().loadPrefs();
   }, [loadTheme]);
 
   if (!fontsLoaded || !hydrated) {
