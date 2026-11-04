@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { translate, type MessageKey, type Params } from '../../i18n';
+import { quoteCount, translate, type MessageKey, type Params } from '../../i18n';
 import { dayMonth, fullDate, groupDigits, shortDate } from '../format';
 
 const t = (key: MessageKey, params?: Params) => translate('ru', 'bro', key, params);
@@ -20,5 +20,16 @@ describe('форматирование', () => {
     expect(t('pack.slips', { count: 2 })).toBe('слива за неделю');
     expect(translate('ru', 'plain', 'pack.slips', { count: 1 })).toBe('срыв за неделю');
     expect(t('goals.daysLeft', { count: 47 })).toBe('дней осталось');
+  });
+});
+
+describe('цитаты волка', () => {
+  test('29 утверждённых, без пустых и повторов; одинаковые в обоих тонах', () => {
+    const n = quoteCount('ru');
+    expect(n).toBe(29);
+    const all = Array.from({ length: n }, (_, i) => t(`quote.${i}` as MessageKey));
+    expect(new Set(all).size).toBe(n);
+    expect(all.every((q) => q.trim().length > 0)).toBe(true);
+    expect(translate('ru', 'plain', 'quote.0')).toBe(all[0]);
   });
 });
