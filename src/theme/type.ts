@@ -1,83 +1,63 @@
 /**
- * Шкала текста «Штампа» по макету (`design/stamp/B-Kit.dc.html`).
- * Oswald 600/700 — заголовки капсом, числа, печати, кнопки; Golos Text — остальной текст.
- * Разрядка в макете задана в em, здесь — в пикселях (em × размер).
- * Цвет не задаётся: его берут из палитры (`ink`, `pencil`, …).
+ * Шкала текста «Луны» (design/luna/L-Kit): один шрифт — Onest, громкое — только жирностью,
+ * подписи — обычным регистром, цифры — табличные. Цвет не задаётся: его берут из палитры.
  */
 import type { TextStyle } from 'react-native';
 import { FONT } from './fonts';
 
-const em = (size: number, value: number) => Math.round(size * value * 10) / 10;
-
+type Weight = keyof typeof FONT.onest;
 type Variant = Pick<
   TextStyle,
-  'fontFamily' | 'fontSize' | 'lineHeight' | 'letterSpacing' | 'textTransform'
+  'fontFamily' | 'fontSize' | 'lineHeight' | 'letterSpacing' | 'fontVariant'
 >;
 
-function oswald(size: number, lh: number, spacing = 0, bold = true): Variant {
+function onest(size: number, weight: Weight, lh = 1.3, tracking = 0): Variant {
   return {
-    fontFamily: bold ? FONT.oswald.bold : FONT.oswald.semibold,
+    fontFamily: FONT.onest[weight],
     fontSize: size,
     lineHeight: Math.round(size * lh),
-    letterSpacing: em(size, spacing),
-    textTransform: 'uppercase',
-  };
-}
-
-function golos(
-  size: number,
-  weight: 'regular' | 'semibold' | 'bold',
-  lh = 1.3,
-  spacing = 0,
-  caps = false
-): Variant {
-  return {
-    fontFamily: FONT.golos[weight],
-    fontSize: size,
-    lineHeight: Math.round(size * lh),
-    letterSpacing: em(size, spacing),
-    ...(caps ? { textTransform: 'uppercase' as const } : null),
+    letterSpacing: Math.round(size * tracking * 100) / 100,
+    fontVariant: ['tabular-nums'],
   };
 }
 
 export const TYPE = {
-  /** заголовок экрана: «ПРИВЫЧКИ» */
-  display: oswald(44, 0.95),
-  /** заголовок документа: «ПРОБЕЖАТЬ ПОЛУМАРАФОН» */
-  title: oswald(28, 1.05),
-  /** подзаголовок рядом с числом: «ДНЕЙ ОСТАЛОСЬ» */
-  subtitle: oswald(18, 1.1, 0, false),
-  /** главное число: дни до срока */
-  numberXL: oswald(64, 0.9),
-  /** число итога, серии: «4/5», «14» */
-  numberL: oswald(34, 1),
-  /** число в строке: «47», «−3» */
-  numberM: oswald(26, 1),
-  /** надпись на печати */
-  stamp: oswald(15, 1.2, 0.12),
-  /** большая кнопка: «ЗАКРЫТЬ ДЕНЬ» */
-  button: oswald(20, 1.2, 0.14),
-
-  /** метка над заголовком экрана: «3 ДОГОВОРА · 1 ЗАКРЫТ» */
-  kicker: golos(12, 'bold', 1.3, 0.14, true),
-  /** метка раздела и поля: «ОСТАЛЬНЫЕ», «ЗАЧЁТ, ЕСЛИ» */
-  label: golos(11, 'bold', 1.3, 0.16, true),
-  /** название в строке списка */
-  rowTitle: golos(17, 'bold', 1.25),
-  /** дело / привычка в строке с чекбоксом */
-  item: golos(16, 'semibold', 1.3),
+  /** «День закрыт.» */
+  display: onest(44, 'extrabold', 1.05, -0.02),
+  /** счёт дня: «3 / 9» */
+  numberXL: onest(44, 'bold', 1.05, -0.02),
+  /** заголовок экрана: «Привычки» */
+  title: onest(30, 'bold', 1.15, -0.02),
+  /** звание: «Волк» */
+  rank: onest(34, 'extrabold', 1.1),
+  /** число на карточке: «4/5», «47» */
+  numberL: onest(30, 'bold', 1.1),
+  /** число в строке: серия «14», «−3» */
+  numberM: onest(22, 'bold', 1.15),
+  /** заголовок карточки, шторки: «Пробежать полумарафон», «Новое» */
+  heading: onest(22, 'bold', 1.2),
+  /** главная кнопка */
+  button: onest(17, 'bold', 1.25),
+  /** дело / привычка в строке */
+  item: onest(16, 'medium', 1.3),
+  /** выделенное: название привычки на карточке */
+  itemStrong: onest(16, 'semibold', 1.3),
+  /** цитата волка */
+  quote: onest(16, 'medium', 1.35),
   /** основной текст, поля ввода */
-  body: golos(15, 'regular', 1.5),
-  /** выделенный текст, значения */
-  bodyStrong: golos(15, 'semibold', 1.4),
-  /** подпись под строкой: «вчера · Личное» */
-  meta: golos(12, 'regular', 1.35),
-  /** подпись дня недели над клеткой */
-  dayLabel: golos(10, 'bold', 1.2, 0.06, true),
-  /** надпись в клетке недели: «СЛИВ», «ВЫХ» */
-  cell: oswald(12, 1.1, 0.03),
-  /** вкладка таб-бара, кнопки сегментов */
-  tab: golos(11, 'bold', 1.2, 0.08, true),
+  body: onest(15, 'regular', 1.45),
+  /** кнопки второго плана, сегменты, чипы */
+  control: onest(14, 'semibold', 1.25),
+  /** подпись раздела: «Осталось 4» */
+  label: onest(13, 'medium', 1.3),
+  /** пометка в журнале: «зачёт», «слив» */
+  mark: onest(13, 'semibold', 1.3),
+  /** подпись под строкой, время */
+  meta: onest(12, 'regular', 1.35),
+  /** вкладка таб-бара */
+  tab: onest(11, 'medium', 1.25),
+  /** подпись дня под луной */
+  tiny: onest(10, 'regular', 1.2),
 } as const satisfies Record<string, Variant>;
 
 export type TypeVariant = keyof typeof TYPE;

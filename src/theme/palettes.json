@@ -1,86 +1,57 @@
 {
-  "$comment": "Тема «Штамп». Источник правды для цветов обеих тем. stamp — цвет «чернил» печатей и акцентов, выбирается в настройках (inks); navMark — отметка активной вкладки на таб-баре, stampOnInk — значок цвета печати на заливке чернилами (бегунок переключателя); оба по умолчанию равны stamp. Пары в checks проверяются скриптом scripts/check-contrast.mjs (WCAG 2.x) для каждой темы с каждыми чернилами: text — обычный текст ≥ 4.5, large — крупный/жирный текст и печати ≥ 3, ui — значки и отметки без текста ≥ 3.",
+  "$comment": "Тема «Луна» (design/luna). dark — «Ночь» (основная), light — «Рассвет». Отдельного акцентного цвета нет: главное выделяется инверсией (text на фоне, onText поверх), цвет только со смыслом — blood (слив, долг). *Shade — тёмная грань гранёных иконок и волка. Пары в checks проверяет scripts/check-contrast.mjs (WCAG 2.x): text — обычный текст ≥ 4.5, large — крупный текст ≥ 3, ui — значки, луна, бегунки без текста ≥ 3. silhouette* — волк-силуэт на полной луне: декоративная картинка, в проверку не входит (как утверждено в макете).",
   "themes": {
-    "light": {
-      "bg": "#E4E1DA",
-      "paper": "#F1EFE9",
-      "ink": "#151515",
-      "pencil": "#5A5650",
-      "debt": "#A50D26",
-      "rest": "#1F3FA8",
-      "nav": "#151515",
-      "navText": "#E4E1DA",
-      "navMuted": "#9A968E",
-      "onInk": "#E4E1DA",
-      "onInkMuted": "#BDBAB3",
-      "onStamp": "#E4E1DA"
-    },
     "dark": {
-      "bg": "#141413",
-      "paper": "#1E1D1B",
-      "ink": "#ECE8DF",
-      "pencil": "#A39E93",
-      "debt": "#FF7A85",
-      "rest": "#8FA6FF",
-      "nav": "#0A0A09",
-      "navText": "#ECE8DF",
-      "navMuted": "#8F8A80",
-      "onInk": "#141413",
-      "onInkMuted": "#3A3835",
-      "onStamp": "#141413"
+      "bg": "#0E1220",
+      "surface": "#161B2C",
+      "raised": "#262D44",
+      "line": "#262D44",
+      "text": "#ECE6D6",
+      "textShade": "#A79F8C",
+      "muted": "#9AA0B4",
+      "mutedShade": "#6E7488",
+      "blood": "#F0605F",
+      "bloodShade": "#B8474A",
+      "onText": "#0E1220",
+      "scrim": "#05070E",
+      "silhouette": "#0E1220",
+      "silhouetteShade": "#1B2133",
+      "silhouetteFeature": "#3A4260"
+    },
+    "light": {
+      "bg": "#F3EEE4",
+      "surface": "#FBF8F2",
+      "raised": "#E7E0D2",
+      "line": "#DAD2C2",
+      "text": "#1A1F2E",
+      "textShade": "#4A5168",
+      "muted": "#5E6375",
+      "mutedShade": "#8A8FA0",
+      "blood": "#B4232A",
+      "bloodShade": "#D9555B",
+      "onText": "#FBF8F2",
+      "scrim": "#1A1F2E",
+      "silhouette": "#F3EEE4",
+      "silhouetteShade": "#DAD2C2",
+      "silhouetteFeature": "#1A1F2E"
     }
   },
   "checks": [
-    ["ink", "bg", "text"],
-    ["ink", "paper", "text"],
-    ["pencil", "bg", "text"],
-    ["pencil", "paper", "text"],
-    ["debt", "bg", "text"],
-    ["debt", "paper", "text"],
-    ["stamp", "bg", "text"],
-    ["stamp", "paper", "text"],
-    ["rest", "bg", "text"],
-    ["rest", "paper", "text"],
-    ["onInk", "ink", "text"],
-    ["onInkMuted", "ink", "text"],
-    ["onStamp", "stamp", "text"],
-    ["navText", "nav", "text"],
-    ["navMuted", "nav", "text"],
-    ["navMark", "nav", "ui"],
-    ["stampOnInk", "ink", "ui"],
-    ["onInk", "pencil", "text"]
-  ],
-  "inks": {
-    "red": {
-      "light": {
-        "stamp": "#C8102E"
-      },
-      "dark": {
-        "stamp": "#FF5A67",
-        "stampOnInk": "#141413"
-      }
-    },
-    "blue": {
-      "light": {
-        "stamp": "#1F3FA8",
-        "navMark": "#E4E1DA",
-        "stampOnInk": "#E4E1DA"
-      },
-      "dark": {
-        "stamp": "#8FA6FF",
-        "stampOnInk": "#141413"
-      }
-    },
-    "mono": {
-      "light": {
-        "stamp": "#151515",
-        "navMark": "#E4E1DA",
-        "stampOnInk": "#E4E1DA"
-      },
-      "dark": {
-        "stamp": "#ECE8DF",
-        "stampOnInk": "#141413"
-      }
-    }
-  }
+    ["text", "bg", "text"],
+    ["text", "surface", "text"],
+    ["text", "raised", "text"],
+    ["muted", "bg", "text"],
+    ["muted", "surface", "text"],
+    ["muted", "raised", "text"],
+    ["blood", "bg", "text"],
+    ["blood", "surface", "text"],
+    ["onText", "text", "text"],
+    ["onText", "textShade", "text"],
+    ["onText", "muted", "text"],
+    ["muted", "raised", "ui"],
+    ["text", "raised", "ui"],
+    ["blood", "raised", "ui"],
+    ["textShade", "bg", "ui"],
+    ["textShade", "surface", "ui"]
+  ]
 }

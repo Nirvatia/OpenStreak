@@ -1,8 +1,8 @@
-/** Плитка выбора с иконкой: «По времени», «У зала · при входе 150 м». Пустая — пунктир. */
+/** Плитка выбора с иконкой: «По времени», «У зала · при входе 150 м». Не выбрана — пунктир. */
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE } from '../theme/stamp';
+import { LINE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
 
@@ -23,37 +23,21 @@ export function OptionTile({ icon, label, hint, selected = false, onPress }: Pro
       onPress={onPress}
       style={({ pressed }) => ({
         flex: 1,
-        minHeight: 52,
+        minHeight: 54,
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
         paddingHorizontal: 12,
-        borderWidth: LINE.frame,
+        borderWidth: LINE.hair,
         borderStyle: selected ? 'solid' : 'dashed',
-        borderColor: p.ink,
-        backgroundColor: selected ? p.ink : pressed ? p.paper : 'transparent',
+        borderColor: selected ? p.text : p.muted,
+        backgroundColor: selected ? p.raised : pressed ? p.surface : 'transparent',
       })}
     >
-      <Icon name={icon} size={20} color={selected ? p.onInk : p.ink} />
+      <Icon name={icon} size={20} tone={selected ? 'text' : 'muted'} />
       <View style={{ flex: 1 }}>
-        <Text
-          style={[
-            TYPE.bodyStrong,
-            { fontSize: 14, lineHeight: 17, color: selected ? p.onInk : p.ink },
-          ]}
-        >
-          {label}
-        </Text>
-        {!!hint && (
-          <Text
-            style={[
-              TYPE.meta,
-              { fontSize: 11, lineHeight: 14, color: selected ? p.onInkMuted : p.pencil },
-            ]}
-          >
-            {hint}
-          </Text>
-        )}
+        <Text style={[TYPE.item, { fontSize: 14, color: p.text }]}>{label}</Text>
+        {!!hint && <Text style={[TYPE.meta, { color: p.muted }]}>{hint}</Text>}
       </View>
     </Pressable>
   );

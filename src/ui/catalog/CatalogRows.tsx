@@ -1,121 +1,118 @@
-/** Каталог: печати, строки, счёт палочками, прогресс, неделя привычки. */
+/** Каталог: строки с луной, журнал, строка «Запиши», неделя и месяц лунами, зарубки. */
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
+import { useT } from '../../store/prefsStore';
 import { usePalette } from '../../store/themeStore';
-import { SPACE } from '../../theme/stamp';
+import { SPACE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
-import { CheckRow } from '../CheckRow';
-import { Divider } from '../Divider';
-import { Icon } from '../icons';
-import { ProgressTicks } from '../ProgressTicks';
-import { Stamp, type StampKind } from '../Stamp';
-import { Tally } from '../Tally';
-import { WeekStrip, type DayState } from '../WeekStrip';
+import { AddRow, LinkRow } from '../Button';
+import { HabitGlyph } from '../icons';
+import type { DayState } from '../moon';
+import { LogRow, MoonRow } from '../MoonRow';
+import { Notches } from '../Notches';
+import { PriorityMarks } from '../Priority';
+import { SectionTitle } from '../ScreenHeader';
+import { MoonGrid, WeekMoons } from '../WeekMoons';
+import { Section } from './Section';
 
-const KINDS: StampKind[] = ['done', 'debt', 'slip', 'rest', 'closed', 'clean'];
+const CODES: Record<string, DayState> = {
+  d: 'done',
+  p: 'partial',
+  t: 'today',
+  x: 'slip',
+  r: 'rest',
+  c: 'clean',
+  e: 'empty',
+};
+/** Неделя, кончающаяся сегодняшним вторником. */
+const week = (codes: string, part = 0.6) =>
+  codes.split('').map((k, i) => ({ weekday: (3 + i) % 7, state: CODES[k], part, today: i === 6 }));
 
-/** Неделя, кончающаяся сегодняшним днём (вт = 2), по кодам из макета. */
-function week(codes: string) {
-  const map: Record<string, DayState> = {
-    d: 'done',
-    t: 'today',
-    x: 'slip',
-    r: 'rest',
-    c: 'clean',
-    o: 'off',
-  };
-  return codes.split('').map((k, i) => ({ weekday: (3 + i) % 7, state: map[k] }));
-}
-
-export function CatalogRows({
-  Section,
-}: {
-  Section: React.FC<{ title: string; children: React.ReactNode }>;
-}) {
+export function CatalogRows() {
   const p = usePalette();
-  const [done, setDone] = useState<Record<string, boolean>>({ water: true });
-  const toggle = (k: string) => (v: boolean) => setDone((s) => ({ ...s, [k]: v }));
+  const t = useT();
+  const [done, setDone] = useState<Record<string, boolean>>({});
+  const toggle = (k: string) => () => setDone((s) => ({ ...s, [k]: !s[k] }));
+  const meta = (text: string, color = p.muted) => (
+    <Text style={[TYPE.meta, { color }]}>{text}</Text>
+  );
 
   return (
     <>
-      <Section title="Печати · sm / md / lg">
-        {(['sm', 'md', 'lg'] as const).map((size) => (
-          <View
-            key={size}
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: SPACE.lg,
-              paddingVertical: SPACE.sm,
-            }}
-          >
-            {KINDS.map((k) => (
-              <Stamp key={k} kind={k} size={size} tilt={`${k}-${size}`} />
-            ))}
-          </View>
-        ))}
-      </Section>
-
       <Section title="Строки">
+        <AddRow label={t('common.addPrompt')} />
         <View>
-          <CheckRow
+          <SectionTitle title="Осталось" count={4} />
+          <MoonRow
             title="Отжимания"
-            checked={!!done.push}
+            sub="ещё 40 · серия 14"
+            phase={done.push ? 1 : 0.6}
+            done={!!done.push}
             onToggle={toggle('push')}
-            checkLabel="Добавить подходы: Отжимания"
-            below={<ProgressTicks done={60} total={100} />}
-            right={<Text style={[TYPE.subtitle, { color: p.ink }]}>60/100</Text>}
+            toggleLabel="Добавить подходы: Отжимания"
+            right={meta('60/100')}
           />
-          <CheckRow
-            title="Вода 2 литра"
-            checked={!!done.water}
-            onToggle={toggle('water')}
-            stamp={done.water ? <Stamp kind="done" size="lg" tilt={-11} /> : undefined}
-          />
-          <CheckRow
+          <MoonRow
             title="Читать 20 минут"
-            checked={!!done.read}
+            phase={done.read ? 1 : 0}
+            done={!!done.read}
             onToggle={toggle('read')}
-            right={<Text style={[TYPE.meta, { color: p.pencil, fontSize: 13 }]}>9 дней</Text>}
+            right={meta('9 дн')}
           />
-          <CheckRow
+          <MoonRow
             title="Закрыть долг Сане"
-            meta="вчера · Личное"
-            checked={!!done.debt}
+            sub="со вчера"
+            debt
+            phase={done.debt ? 1 : 0}
+            done={!!done.debt}
             onToggle={toggle('debt')}
-            right={<Stamp kind="debt" size="sm" tilt={6} />}
+            right={meta(t('mark.debt'), p.blood)}
           />
-          <CheckRow
+          <MoonRow
             title="Записаться в зал"
-            meta="напомнит у зала · Зал"
-            checked={!!done.gym}
+            sub="напомню у зала"
+            phase={done.gym ? 1 : 0}
+            done={!!done.gym}
             onToggle={toggle('gym')}
-            right={
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Icon name="place" size={16} />
-                <Text style={[TYPE.subtitle, { color: p.ink, fontSize: 16 }]}>!!</Text>
-              </View>
-            }
+            right={<PriorityMarks level={2} />}
           />
         </View>
-      </Section>
-
-      <Section title="Счёт палочками · 3 / 14 / 30 / 47">
-        {[3, 14, 30, 47].map((n) => (
-          <View key={n} style={{ gap: SPACE.sm }}>
-            <Tally count={n} />
-            <Divider />
-          </View>
-        ))}
-      </Section>
-
-      <Section title="Неделя привычки">
-        <View style={{ gap: SPACE.lg }}>
-          <WeekStrip days={week('ddddddt')} />
-          <WeekStrip days={week('ddrrdxt')} />
-          <WeekStrip days={week('ccccccx')} />
-          <WeekStrip days={week('dododdo')} />
+        <View>
+          <SectionTitle title="Сделано" count={3} />
+          <LogRow time="13:20" title="Вода 2 литра" mark={t('mark.done')} />
+          <LogRow time="08:00" title="Не курить" mark={t('mark.clean')} />
+          <LogRow time="07:05" title="Подъём в 6:00" mark={t('mark.slip')} bad />
         </View>
+        <LinkRow title="Итог дня" sub="Как отработал?" />
+      </Section>
+
+      <Section title="Привычка: неделя лунами">
+        <View style={{ gap: SPACE.md, padding: 14, backgroundColor: p.surface }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <HabitGlyph icon="dumbbell" size={26} />
+            <View style={{ flex: 1 }}>
+              <Text style={[TYPE.itemStrong, { color: p.text }]}>Отжимания</Text>
+              {meta('100 в день · сегодня 60')}
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={[TYPE.numberM, { color: p.text }]}>14</Text>
+              {meta('дней')}
+            </View>
+          </View>
+          <WeekMoons days={week('ddddddp')} />
+        </View>
+        <WeekMoons days={week('ddrrdxt', 0)} />
+        <WeekMoons days={week('ccccccc')} />
+      </Section>
+
+      <Section title="Карточка привычки: месяц и зарубки">
+        <MoonGrid
+          days={'pddddrrdddddrrdxdddrrpddtee'
+            .split('')
+            .map((k) => ({ state: CODES[k], part: 0.6 }))}
+        />
+        <Notches count={14} />
+        <Notches count={47} />
       </Section>
     </>
   );

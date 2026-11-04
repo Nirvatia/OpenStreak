@@ -8,17 +8,18 @@ import type { Message } from './types';
 
 export const ru = {
   'tab.today': 'Сегодня',
-  'tab.tasks': 'Задачи',
+  'tab.tasks': 'Дела',
   'tab.habits': 'Привычки',
   'tab.goals': 'Цели',
-  'tab.stats': 'Статы',
+  'tab.pack': 'Стая',
 
-  'stamp.done': { plain: 'Готово', bro: 'Зачёт' },
-  'stamp.debt': { plain: 'Просрочено', bro: 'Долг' },
-  'stamp.slip': { plain: 'Срыв', bro: 'Слив' },
-  'stamp.rest': 'Вых',
-  'stamp.closed': 'Закрыт',
-  'stamp.clean': { plain: 'Чисто', bro: 'Держись' },
+  // Пометки в журнале дня и на карточках
+  'mark.done': 'зачёт',
+  'mark.slip': { plain: 'срыв', bro: 'слив' },
+  'mark.clean': { plain: 'чисто', bro: 'держусь' },
+  'mark.rest': 'выходной',
+  'mark.debt': { plain: 'просрочено', bro: 'долг' },
+  'mark.closed': 'закрыт',
 
   'wolf.active': 'В деле',
   'wolf.angry': 'Злой',
@@ -28,25 +29,32 @@ export const ru = {
   'common.back': 'Назад',
   'common.close': 'Закрыть',
   'common.add': 'Добавить',
+  'common.addPrompt': 'Запиши дело или привычку',
 
-  'day.short.0': 'Вс',
-  'day.short.1': 'Пн',
-  'day.short.2': 'Вт',
-  'day.short.3': 'Ср',
-  'day.short.4': 'Чт',
-  'day.short.5': 'Пт',
-  'day.short.6': 'Сб',
+  'theme.dark': 'Ночь',
+  'theme.light': 'Рассвет',
+  'theme.system': 'Как в системе',
+
+  'wolf.signature': '— волк',
+
+  'day.short.0': 'вс',
+  'day.short.1': 'пн',
+  'day.short.2': 'вт',
+  'day.short.3': 'ср',
+  'day.short.4': 'чт',
+  'day.short.5': 'пт',
+  'day.short.6': 'сб',
 
   'a11y.check': 'Отметить: {title}',
   'a11y.uncheck': 'Снять отметку: {title}',
   'a11y.progress': '{done} из {total}',
-  'a11y.tally': {
-    one: '{count} палочка',
-    few: '{count} палочки',
-    many: '{count} палочек',
-    other: '{count} палочки',
+  'a11y.notches': {
+    one: '{count} зарубка',
+    few: '{count} зарубки',
+    many: '{count} зарубок',
+    other: '{count} зарубки',
   },
-  'week.clean': 'Чисто',
+  'a11y.priority': 'Важность {count} из 3',
 
   'unit.days': {
     one: '{count} день',

@@ -1,93 +1,55 @@
 /**
- * Каталог компонентов «Штампа» — для визуальной проверки в обеих темах и со всеми чернилами.
+ * Каталог компонентов «Луны» — для визуальной проверки в обеих темах.
  * Открывается только в разработке: `EXPO_PUBLIC_CATALOG=1 npx expo start` или `?catalog` на вебе.
  */
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePrefsStore, useT } from '../../store/prefsStore';
 import { usePalette, useThemeStore } from '../../store/themeStore';
-import { INK_NAMES, THEME_MODES, type Palette } from '../../theme/palette';
-import { LINE, SPACE } from '../../theme/stamp';
+import { THEME_MODES, type Palette, type ThemeMode } from '../../theme/palette';
+import { SPACE } from '../../theme/metrics';
 import { TYPE, type TypeVariant } from '../../theme/type';
+import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, Wolf, type UiIconName } from '../icons';
+import { Moon } from '../Moon';
+import { moonLook, type DayState } from '../moon';
+import { Segmented } from '../Segmented';
 import { CatalogControls } from './CatalogControls';
 import { CatalogRows } from './CatalogRows';
 import { CatalogShell } from './CatalogShell';
-import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, WolfSeal, type UiIconName } from '../icons';
+import { Section } from './Section';
 
-const SWATCHES: (keyof Palette)[] = [
-  'bg',
-  'paper',
-  'ink',
-  'pencil',
-  'stamp',
-  'debt',
-  'rest',
-  'nav',
-  'navMark',
-];
+const SWATCHES: (keyof Palette)[] = ['bg', 'surface', 'raised', 'line', 'text', 'muted', 'blood'];
 
 const SAMPLES: [TypeVariant, string][] = [
-  ['display', 'Привычки'],
-  ['title', 'Пробежать полумарафон'],
-  ['numberXL', '47'],
-  ['numberL', '4/5'],
-  ['subtitle', 'Дней осталось'],
-  ['button', 'Закрыть день'],
-  ['kicker', '3 договора · 1 закрыт'],
-  ['label', 'Зачёт, если'],
-  ['rowTitle', 'Записаться в зал'],
-  ['body', 'Всё рисуется чернилами: сплошные рамки, пунктир между строками.'],
-  ['bodyStrong', '21,1 км без остановок'],
-  ['meta', 'вчера · Личное'],
+  ['display', 'День закрыт.'],
+  ['numberXL', '3 / 9'],
+  ['title', 'Привычки'],
+  ['rank', 'Волк'],
+  ['heading', 'Пробежать полумарафон'],
+  ['button', 'Записать'],
+  ['item', 'Записаться в зал'],
+  ['quote', 'Волк не ждёт понедельника. Волк и есть понедельник.'],
+  ['body', 'Блоки отделяются фоном, а не рамками.'],
+  ['label', 'Осталось 4'],
+  ['mark', 'зачёт'],
+  ['meta', '18:00 · Работа'],
   ['tab', 'Сегодня'],
 ];
 
-function Choice<T extends string>(props: {
-  values: readonly T[];
-  value: T;
-  onChange: (v: T) => void;
-}) {
-  const p = usePalette();
-  return (
-    <View style={[styles.choice, { borderColor: p.ink }]}>
-      {props.values.map((v, i) => {
-        const on = v === props.value;
-        return (
-          <Pressable
-            key={v}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: on }}
-            onPress={() => props.onChange(v)}
-            style={[
-              styles.choiceItem,
-              { backgroundColor: on ? p.ink : 'transparent', borderColor: p.ink },
-              i > 0 && { borderLeftWidth: LINE.frame },
-            ]}
-          >
-            <Text style={[TYPE.tab, { color: on ? p.onInk : p.ink }]}>{v}</Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  const p = usePalette();
-  return (
-    <View style={styles.section}>
-      <Text style={[TYPE.label, { color: p.pencil }]}>{title}</Text>
-      {children}
-    </View>
-  );
-}
+const STATES: [DayState, string][] = [
+  ['empty', 'не сделано'],
+  ['partial', 'в процессе'],
+  ['done', 'зачёт'],
+  ['slip', 'слив'],
+  ['rest', 'выходной'],
+];
 
 export function CatalogScreen() {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
-  const { mode, ink, setMode, setInk } = useThemeStore();
+  const { mode, setMode } = useThemeStore();
   const { tone, setTone } = usePrefsStore();
 
   return (
@@ -95,93 +57,118 @@ export function CatalogScreen() {
       style={{ backgroundColor: p.bg }}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.lg }]}
     >
-      <Text style={[TYPE.kicker, { color: p.pencil }]}>dev · каталог</Text>
-      <Text style={[TYPE.display, { color: p.ink }]}>Штамп</Text>
+      <Text style={[TYPE.meta, { color: p.muted }]}>dev · каталог</Text>
+      <Text style={[TYPE.title, { color: p.text }]}>Луна</Text>
 
       <Section title="Тема">
-        <Choice values={THEME_MODES} value={mode} onChange={setMode} />
-      </Section>
-      <Section title="Чернила">
-        <Choice values={INK_NAMES} value={ink} onChange={setInk} />
+        <Segmented<ThemeMode>
+          label="Тема"
+          value={mode}
+          onChange={setMode}
+          items={THEME_MODES.map((m) => ({ value: m, label: t(`theme.${m}`) }))}
+        />
       </Section>
       <Section title="Тон">
-        <Choice values={['plain', 'bro'] as const} value={tone} onChange={setTone} />
+        <Segmented
+          label="Тон"
+          value={tone}
+          onChange={setTone}
+          items={[
+            { value: 'plain', label: 'Обычный' },
+            { value: 'bro', label: 'Пацанский' },
+          ]}
+        />
       </Section>
 
       <Section title="Палитра">
         <View style={styles.swatches}>
           {SWATCHES.map((k) => (
             <View key={k} style={styles.swatch}>
-              <View style={[styles.chip, { backgroundColor: p[k], borderColor: p.ink }]} />
-              <Text style={[TYPE.meta, { color: p.ink }]}>{k}</Text>
-              <Text style={[TYPE.meta, { color: p.pencil }]}>{p[k]}</Text>
+              <View style={[styles.chip, { backgroundColor: p[k], borderColor: p.line }]} />
+              <Text style={[TYPE.meta, { color: p.text }]}>{k}</Text>
+              <Text style={[TYPE.meta, { color: p.muted }]}>{p[k]}</Text>
             </View>
           ))}
         </View>
       </Section>
 
-      <Section title="Текст">
+      <Section title="Текст · Onest">
         {SAMPLES.map(([v, text]) => (
-          <View key={v} style={styles.sample}>
-            <Text style={[TYPE.meta, { color: p.pencil }]}>{v}</Text>
-            <Text style={[TYPE[v], { color: p.ink }]}>{text}</Text>
+          <View key={v} style={{ gap: 2 }}>
+            <Text style={[TYPE.meta, { color: p.muted }]}>{v}</Text>
+            <Text style={[TYPE[v], { color: p.text }]}>{text}</Text>
           </View>
         ))}
       </Section>
 
-      <Section title="Иконки · сетка 24 · линия 2.5">
+      <Section title="Луна — отметка, прогресс, день">
+        <View style={styles.row}>
+          {[0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1].map((ph) => (
+            <Moon key={ph} phase={ph} size={30} />
+          ))}
+        </View>
+        <View style={styles.row}>
+          {STATES.map(([s, name]) => (
+            <View key={s} style={styles.state}>
+              <Moon size={34} {...moonLook(s, 0.6)} />
+              <Text style={[TYPE.meta, { color: p.muted }]}>{name}</Text>
+            </View>
+          ))}
+        </View>
+      </Section>
+
+      <Section title="Иконки · грани">
         <View style={styles.icons}>
           {(Object.keys(UI_ICONS) as UiIconName[]).map((name) => (
-            <View key={name} style={[styles.iconCell, { borderColor: p.ink }]}>
-              <Icon name={name} size={28} />
-              <Text style={[TYPE.meta, { color: p.pencil }]}>{name}</Text>
+            <View key={name} style={[styles.iconCell, { backgroundColor: p.surface }]}>
+              <Icon name={name} size={26} />
+              <Text style={[TYPE.tiny, { color: p.muted }]}>{name}</Text>
             </View>
           ))}
+        </View>
+        <View style={styles.icons}>
           {Object.keys(HABIT_ICONS).map((name) => (
-            <View key={name} style={[styles.iconCell, { borderColor: p.ink }]}>
-              <HabitGlyph icon={name} size={28} />
-              <Text style={[TYPE.meta, { color: p.pencil }]}>{name}</Text>
+            <View key={name} style={[styles.iconCell, { backgroundColor: p.surface }]}>
+              <HabitGlyph icon={name} size={26} />
+              <Text style={[TYPE.tiny, { color: p.muted }]}>{name}</Text>
             </View>
           ))}
         </View>
       </Section>
 
-      <Section title="Волк-печать">
+      <Section title="Волк">
         <View style={styles.row}>
           {(['active', 'angry', 'rest'] as const).map((m) => (
-            <View key={m} style={styles.wolf}>
-              <WolfSeal mood={m} size={96} />
-              <Text style={[TYPE.bodyStrong, { color: p.ink }]}>{t(`wolf.${m}`)}</Text>
+            <View key={m} style={styles.state}>
+              <Wolf mood={m} size={72} />
+              <Text style={[TYPE.meta, { color: p.text }]}>{t(`wolf.${m}`)}</Text>
             </View>
           ))}
+          <View style={{ width: 110, height: 110, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ position: 'absolute' }}>
+              <Moon phase={1} size={110} ring="text" />
+            </View>
+            <View style={{ marginTop: 26 }}>
+              <Wolf size={64} silhouette />
+            </View>
+          </View>
         </View>
       </Section>
 
-      <CatalogRows Section={Section} />
-      <CatalogControls Section={Section} />
-      <CatalogShell Section={Section} />
+      <CatalogRows />
+      <CatalogControls />
+      <CatalogShell />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: 64, gap: SPACE.xl },
-  section: { gap: SPACE.sm },
-  choice: { flexDirection: 'row', borderWidth: LINE.frame },
-  choiceItem: { flex: 1, height: 38, alignItems: 'center', justifyContent: 'center' },
+  content: { paddingHorizontal: SPACE.screenX, paddingBottom: 120, gap: SPACE.xl },
   swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md },
-  swatch: { width: 100, gap: 2 },
-  chip: { height: 44, borderWidth: LINE.row },
-  sample: { gap: 2 },
-  icons: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.sm },
-  iconCell: {
-    width: 80,
-    height: 80,
-    borderWidth: LINE.row,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-  row: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.lg, alignItems: 'center' },
-  wolf: { alignItems: 'center', gap: SPACE.sm },
+  swatch: { width: 92, gap: 2 },
+  chip: { height: 40, borderWidth: 1 },
+  row: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md, alignItems: 'center' },
+  state: { alignItems: 'center', gap: 4, minWidth: 56 },
+  icons: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  iconCell: { width: 66, height: 66, alignItems: 'center', justifyContent: 'center', gap: 5 },
 });

@@ -1,22 +1,29 @@
-/** Каталог: кнопки, сегменты, переключатель, чипы, поля, плитки. */
+/** Каталог: кнопки, сегменты, чипы, важность, переключатель, поля, плитки. */
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { usePalette } from '../../store/themeStore';
-import { SPACE } from '../../theme/stamp';
+import { SPACE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
-import { ActionCard, Button, Fab, IconButton } from '../Button';
+import { Button, IconButton } from '../Button';
 import { Chip } from '../Chip';
 import { OptionTile } from '../OptionTile';
+import { PriorityPicker, type PriorityLevel } from '../Priority';
 import { Segmented } from '../Segmented';
 import { Switch } from '../Switch';
 import { TextField } from '../TextField';
+import { Section } from './Section';
 
-type SectionC = React.FC<{ title: string; children: React.ReactNode }>;
+const PRIORITY_LABELS: [string, string, string, string] = [
+  'Без важности',
+  'Низкая',
+  'Средняя',
+  'Высокая',
+];
 
-export function CatalogControls({ Section }: { Section: SectionC }) {
+export function CatalogControls() {
   const p = usePalette();
   const [filter, setFilter] = useState<'all' | 'good' | 'bad'>('all');
-  const [prio, setPrio] = useState<'0' | '1' | '2' | '3'>('2');
+  const [prio, setPrio] = useState<PriorityLevel>(2);
   const [tone, setTone] = useState(true);
   const [ranks, setRanks] = useState(false);
   const [areas, setAreas] = useState<string[]>(['all']);
@@ -32,72 +39,57 @@ export function CatalogControls({ Section }: { Section: SectionC }) {
   return (
     <>
       <Section title="Кнопки">
-        <View style={{ gap: SPACE.lg }}>
+        <View style={{ gap: SPACE.md }}>
           <Button label="Записать" onPress={() => {}} />
-          <Button label="Экспорт" variant="outline" onPress={() => {}} />
+          <Button label="Выходной" variant="secondary" onPress={() => {}} />
+          <Button label="Слил сегодня" variant="danger" onPress={() => {}} />
           <Button label="Записать" disabled />
-          <ActionCard title="Подвести итог дня" meta="Вечер. Как отработал?" onPress={() => {}} />
           <View style={{ flexDirection: 'row', gap: SPACE.lg, alignItems: 'center' }}>
-            <IconButton icon="settings" label="Настройки" />
-            <IconButton icon="calendar" label="Календарь" variant="frame" />
+            <IconButton icon="settings" label="Настройки" tone="muted" />
+            <IconButton icon="calendar" label="Календарь" tone="muted" />
             <IconButton icon="plus" label="Новая привычка" variant="solid" />
-            <View style={{ flex: 1 }} />
-            <Fab label="Новое дело" />
           </View>
         </View>
       </Section>
 
-      <Section title="Сегменты">
-        <View style={{ gap: SPACE.md }}>
-          <Segmented
-            label="Фильтр"
-            value={filter}
-            onChange={setFilter}
-            items={[
-              { value: 'all', label: 'Все' },
-              { value: 'good', label: 'Полезные' },
-              { value: 'bad', label: 'Вредные' },
-            ]}
-          />
-          <Segmented
-            label="Важность"
-            value={prio}
-            onChange={setPrio}
-            font="marks"
-            height={44}
-            items={[
-              { value: '0', label: '—', a11yLabel: 'Без важности' },
-              { value: '1', label: '!', a11yLabel: 'Низкая' },
-              { value: '2', label: '!!', a11yLabel: 'Средняя' },
-              { value: '3', label: '!!!', a11yLabel: 'Высокая', color: p.debt },
-            ]}
-          />
-        </View>
+      <Section title="Сегменты и важность">
+        <Segmented
+          label="Фильтр"
+          value={filter}
+          onChange={setFilter}
+          items={[
+            { value: 'all', label: 'Все' },
+            { value: 'good', label: 'Полезные' },
+            { value: 'bad', label: 'Вредные' },
+          ]}
+        />
+        <PriorityPicker label="Важность" value={prio} onChange={setPrio} labels={PRIORITY_LABELS} />
       </Section>
 
       <Section title="Переключатели">
-        <View style={{ gap: SPACE.md }}>
-          {[
-            ['Пацанский тон', tone, setTone] as const,
-            ['Звания и очки', ranks, setRanks] as const,
-          ].map(([label, v, set]) => (
-            <View
-              key={label}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={[TYPE.bodyStrong, { color: p.ink }]}>{label}</Text>
-              <Switch value={v} onChange={set} label={label} />
-            </View>
-          ))}
-        </View>
+        {[
+          ['Пацанский тон', tone, setTone] as const,
+          ['Звания и очки', ranks, setRanks] as const,
+        ].map(([label, v, set]) => (
+          <View
+            key={label}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              minHeight: 52,
+              borderBottomWidth: 1,
+              borderBottomColor: p.line,
+            }}
+          >
+            <Text style={[TYPE.item, { color: p.text }]}>{label}</Text>
+            <Switch value={v} onChange={set} label={label} />
+          </View>
+        ))}
       </Section>
 
       <Section title="Чипы">
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.sm }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
           {['all', 'Работа · 5', 'Зал · 2'].map((a) => (
             <Chip
               key={a}
@@ -108,7 +100,7 @@ export function CatalogControls({ Section }: { Section: SectionC }) {
           ))}
           <Chip label="+ Сфера" dashed />
         </View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.sm }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
           {[
             ['today', 'Сегодня'],
             ['tomorrow', 'Завтра'],
@@ -129,7 +121,7 @@ export function CatalogControls({ Section }: { Section: SectionC }) {
 
       <Section title="Поля">
         <View style={{ gap: SPACE.lg }}>
-          <TextField label="Что сделать" value={title} onChangeText={setTitle} />
+          <TextField label="что сделать" value={title} onChangeText={setTitle} />
           <TextField
             label="Поиск"
             variant="search"
@@ -138,7 +130,7 @@ export function CatalogControls({ Section }: { Section: SectionC }) {
             onChangeText={setQuery}
           />
           <TextField
-            label="Пару слов (для себя)"
+            label="пару слов (для себя)"
             variant="note"
             placeholder="Что зашло, что нет"
             value={note}
@@ -148,7 +140,7 @@ export function CatalogControls({ Section }: { Section: SectionC }) {
       </Section>
 
       <Section title="Плитки">
-        <View style={{ flexDirection: 'row', gap: SPACE.sm }}>
+        <View style={{ flexDirection: 'row', gap: 6 }}>
           <OptionTile
             icon="remind"
             label="По времени"

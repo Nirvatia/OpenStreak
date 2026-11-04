@@ -30,8 +30,8 @@ describe('translate', () => {
   });
 
   test('tone picks its own variant', () => {
-    expect(translate('ru', 'plain', 'stamp.slip')).toBe('Срыв');
-    expect(translate('ru', 'bro', 'stamp.slip')).toBe('Слив');
+    expect(translate('ru', 'plain', 'mark.slip')).toBe('срыв');
+    expect(translate('ru', 'bro', 'mark.slip')).toBe('слив');
   });
 
   test('plural forms with count substitution', () => {

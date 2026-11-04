@@ -1,5 +1,5 @@
 /**
- * Показ тоста: чёрная плашка с тенью-оттиском у нижнего края, над таб-баром.
+ * Показ тоста: плашка лунного цвета (инверсия) у нижнего края, над таб-баром.
  * Появляется сдвигом снизу (без прозрачности — в нём текст). Объявляется для чтения с экрана.
  */
 import React, { useEffect } from 'react';
@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { usePalette } from '../store/themeStore';
-import { PRINT, printShadow, SPACE } from '../theme/stamp';
+import { SPACE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { useToast } from './toast';
 
@@ -40,13 +40,9 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
       <Animated.View
         pointerEvents={visible ? 'auto' : 'none'}
         accessibilityLiveRegion="polite"
-        style={[
-          styles.toast,
-          { backgroundColor: p.ink, boxShadow: printShadow(PRINT.md, p.stamp) },
-          slide,
-        ]}
+        style={[styles.toast, { backgroundColor: p.text }, slide]}
       >
-        <Text style={[TYPE.bodyStrong, styles.text, { color: p.onInk }]}>{current.text}</Text>
+        <Text style={[TYPE.item, styles.text, { color: p.onText }]}>{current.text}</Text>
         {current.action && (
           <Pressable
             accessibilityRole="button"
@@ -54,11 +50,11 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
             hitSlop={8}
             style={({ pressed }) => [
               styles.action,
-              { borderLeftColor: p.onInkMuted },
-              pressed && { backgroundColor: p.pencil },
+              { borderLeftColor: p.textShade },
+              pressed && { backgroundColor: p.textShade },
             ]}
           >
-            <Text style={[TYPE.stamp, { fontSize: 16, color: p.onInk }]}>
+            <Text style={[TYPE.button, { fontSize: 15, color: p.onText }]}>
               {current.action.label}
             </Text>
           </Pressable>

@@ -1,4 +1,4 @@
-// Проверка контраста всех пар цветов из src/theme/palettes.json для каждой темы с каждыми чернилами.
+// Проверка контраста всех пар цветов из src/theme/palettes.json для каждой темы.
 // Формула — WCAG 2.x (relative luminance). Падает с кодом 1, если хоть одна пара не проходит.
 import { readFileSync } from 'node:fs';
 
@@ -17,34 +17,25 @@ export function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-const { themes, inks, checks } = JSON.parse(
+const { themes, checks } = JSON.parse(
   readFileSync(new URL('../src/theme/palettes.json', import.meta.url), 'utf8')
 );
 
-/** Та же сборка палитры, что в src/theme/palette.ts: тема + чернила, navMark и stampOnInk по умолчанию = stamp. */
-function resolve(theme, ink) {
-  const over = inks[ink][theme];
-  return { ...themes[theme], navMark: over.stamp, stampOnInk: over.stamp, ...over };
-}
-
 let failed = 0;
-for (const theme of Object.keys(themes)) {
-  for (const ink of Object.keys(inks)) {
-    const t = resolve(theme, ink);
-    console.log(`\n${theme} · чернила ${ink}`);
-    for (const [fg, bg, kind] of checks) {
-      if (!t[fg] || !t[bg] || !MIN[kind]) {
-        console.log(`  MISSING  ${fg} / ${bg} / ${kind}`);
-        failed++;
-        continue;
-      }
-      const ratio = contrast(t[fg], t[bg]);
-      const ok = ratio >= MIN[kind];
-      if (!ok) failed++;
-      console.log(
-        `  ${ok ? 'ok  ' : 'FAIL'} ${ratio.toFixed(2).padStart(5)} ≥ ${MIN[kind]}  ${fg} (${t[fg]}) на ${bg} (${t[bg]})`
-      );
+for (const [name, t] of Object.entries(themes)) {
+  console.log(`\n${name}`);
+  for (const [fg, bg, kind] of checks) {
+    if (!t[fg] || !t[bg] || !MIN[kind]) {
+      console.log(`  MISSING  ${fg} / ${bg} / ${kind}`);
+      failed++;
+      continue;
     }
+    const ratio = contrast(t[fg], t[bg]);
+    const ok = ratio >= MIN[kind];
+    if (!ok) failed++;
+    console.log(
+      `  ${ok ? 'ok  ' : 'FAIL'} ${ratio.toFixed(2).padStart(5)} ≥ ${MIN[kind]}  ${fg} (${t[fg]}) на ${bg} (${t[bg]})`
+    );
   }
 }
 

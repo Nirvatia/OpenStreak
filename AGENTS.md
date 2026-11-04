@@ -20,7 +20,7 @@ so versions match `expo/bundledNativeModules.json`; never bump `expo` to another
 # Rules for this repo
 
 - **Contrast is mandatory.** Every text/background pair must pass WCAG 2.x (≥ 4.5 for normal text,
-  ≥ 3 for large text and stamps) in **both** light and dark themes. Colours live in
+  ≥ 3 for large text and for icons, moons and other non-text marks) in **both** themes (Night and Dawn). Colours live in
   `src/theme/palettes.json`; add any new pair to `checks` there and run `npm run check:contrast`.
   No `opacity` on elements that carry text — use a solid colour token instead.
 - Before committing run `npm run check` (typecheck + lint + tests + contrast) and `npm run format:check`.

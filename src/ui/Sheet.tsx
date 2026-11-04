@@ -1,5 +1,5 @@
 /**
- * Шторка «Штампа» поверх экрана: жирная черта сверху, «язычок», заголовок капсом и крестик.
+ * Шторка «Луны» поверх экрана: подложка surface, «язычок», заголовок и крестик.
  * Высота — по содержимому, не больше 82% экрана. Закрывается крестиком, тапом по затемнению,
  * системной «назад» и жестом вниз за верх шторки.
  *
@@ -34,7 +34,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useT } from '../store/prefsStore';
 import { usePalette, useThemeStore } from '../store/themeStore';
-import { LINE, SPACE } from '../theme/stamp';
+import { SCRIM_OPACITY, SPACE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { IconButton } from './Button';
 
@@ -96,7 +96,9 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
 
   const panelStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() }] }));
   // Затемнение без текста — прозрачность здесь допустима.
-  const shadeStyle = useAnimatedStyle(() => ({ opacity: shade.get() * (dark ? 0.72 : 0.62) }));
+  const shadeStyle = useAnimatedStyle(() => ({
+    opacity: shade.get() * (dark ? SCRIM_OPACITY.dark : SCRIM_OPACITY.light),
+  }));
 
   if (!mounted) return null;
   return (
@@ -109,13 +111,7 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
       navigationBarTranslucent
     >
       <GestureHandlerRootView style={styles.fill}>
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            { backgroundColor: dark ? '#000000' : p.nav },
-            shadeStyle,
-          ]}
-        >
+        <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: p.scrim }, shadeStyle]}>
           <Pressable
             style={styles.fill}
             onPress={onClose}
@@ -131,27 +127,30 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
           <Animated.View
             accessibilityViewIsModal
             style={[
-              styles.panel,
               {
                 maxHeight: Math.round(height * 0.82),
-                backgroundColor: p.bg,
-                borderTopColor: p.ink,
+                backgroundColor: p.surface,
               },
               panelStyle,
             ]}
           >
             <GestureDetector gesture={drag}>
               <View style={styles.top}>
-                <View style={[styles.grabber, { backgroundColor: p.ink }]} />
+                <View style={[styles.grabber, { backgroundColor: p.raised }]} />
                 <View style={styles.head}>
                   <Text
                     accessibilityRole="header"
-                    style={[TYPE.title, { flex: 1, fontSize: 30, lineHeight: 32, color: p.ink }]}
+                    style={[TYPE.heading, { flex: 1, fontSize: 24, lineHeight: 30, color: p.text }]}
                   >
                     {title}
                   </Text>
                   <View style={{ marginRight: -10 }}>
-                    <IconButton icon="close" label={t('common.close')} onPress={onClose} />
+                    <IconButton
+                      icon="close"
+                      tone="muted"
+                      label={t('common.close')}
+                      onPress={onClose}
+                    />
                   </View>
                 </View>
               </View>
@@ -185,9 +184,8 @@ const styles = StyleSheet.create({
     left: 0,
     justifyContent: 'flex-end',
   },
-  panel: { borderTopWidth: LINE.bold },
   top: { paddingTop: 12, paddingHorizontal: SPACE.screenX, gap: 6 },
-  grabber: { alignSelf: 'center', width: 44, height: 4 },
+  grabber: { alignSelf: 'center', width: 40, height: 4 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   content: { paddingHorizontal: SPACE.screenX, paddingTop: 12, gap: 18 },
   footer: { paddingHorizontal: SPACE.screenX, paddingTop: 12 },

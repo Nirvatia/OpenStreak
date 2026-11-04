@@ -1,13 +1,10 @@
 import { Appearance } from 'react-native';
 import { create } from 'zustand';
-import { INK_KEY, storage, THEME_KEY } from '../services/storage';
+import { storage, THEME_KEY } from '../services/storage';
 import {
-  DEFAULT_INK,
-  isInkName,
   isThemeMode,
   resolvePalette,
   resolveScheme,
-  type InkName,
   type Palette,
   type Scheme,
   type ThemeMode,
@@ -15,14 +12,13 @@ import {
 import { lightTheme, darkTheme, Theme } from '../theme/tokens';
 
 type ThemeStore = {
-  /** выбор пользователя */
+  /** выбор пользователя: «Ночь», «Рассвет» или как в системе */
   mode: ThemeMode;
-  ink: InkName;
   /** что сообщает система (для режима «как в системе») */
   system: Scheme | null;
   /** тема, которая реально показывается */
   scheme: Scheme;
-  /** палитра «Штампа» для новых компонентов */
+  /** палитра «Луны» для новых компонентов */
   palette: Palette;
 
   /** @deprecated старые экраны: то же, что `scheme` */
@@ -31,7 +27,6 @@ type ThemeStore = {
   currentTheme: Theme;
 
   setMode: (mode: ThemeMode) => Promise<void>;
-  setInk: (ink: InkName) => Promise<void>;
   /** @deprecated старые экраны: явная тема */
   setTheme: (theme: Scheme) => Promise<void>;
   /** @deprecated старые экраны: переключить на противоположную показываемой */
@@ -44,32 +39,24 @@ function systemScheme(): Scheme | null {
   return s === 'dark' || s === 'light' ? s : null;
 }
 
-function derive(mode: ThemeMode, ink: InkName, system: Scheme | null) {
+function derive(mode: ThemeMode, system: Scheme | null) {
   const scheme = resolveScheme(mode, system);
   return {
     mode,
-    ink,
     system,
     scheme,
-    palette: resolvePalette(scheme, ink),
+    palette: resolvePalette(scheme),
     theme: scheme,
     currentTheme: scheme === 'dark' ? darkTheme : lightTheme,
   };
 }
 
 export const useThemeStore = create<ThemeStore>((set, get) => ({
-  ...derive('system', DEFAULT_INK, systemScheme()),
+  ...derive('system', systemScheme()),
 
   setMode: async (mode) => {
-    const { ink, system } = get();
-    set(derive(mode, ink, system));
+    set(derive(mode, get().system));
     await storage.setString(THEME_KEY, mode);
-  },
-
-  setInk: async (ink) => {
-    const { mode, system } = get();
-    set(derive(mode, ink, system));
-    await storage.setString(INK_KEY, ink);
   },
 
   setTheme: (theme) => get().setMode(theme),
@@ -77,27 +64,17 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
   toggleTheme: () => get().setMode(get().scheme === 'dark' ? 'light' : 'dark'),
 
   loadTheme: async () => {
-    const [savedMode, savedInk] = await Promise.all([
-      storage.getString(THEME_KEY),
-      storage.getString(INK_KEY),
-    ]);
-    const { mode, ink, system } = get();
-    set(
-      derive(
-        isThemeMode(savedMode) ? savedMode : mode,
-        isInkName(savedInk) ? savedInk : ink,
-        system
-      )
-    );
+    const saved = await storage.getString(THEME_KEY);
+    const { mode, system } = get();
+    set(derive(isThemeMode(saved) ? saved : mode, system));
   },
 }));
 
 // Смена темы в системе — пересчитать показываемую (важно для режима «как в системе»).
 Appearance.addChangeListener(({ colorScheme }) => {
   const system = colorScheme === 'dark' || colorScheme === 'light' ? colorScheme : null;
-  const { mode, ink } = useThemeStore.getState();
-  useThemeStore.setState(derive(mode, ink, system));
+  useThemeStore.setState(derive(useThemeStore.getState().mode, system));
 });
 
-/** Палитра «Штампа» текущей темы и чернил. */
+/** Палитра «Луны» текущей темы. */
 export const usePalette = (): Palette => useThemeStore((s) => s.palette);

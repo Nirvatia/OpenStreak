@@ -1,38 +1,26 @@
 /**
- * Кнопки «Штампа». Нажатие — «оттиск»: кнопка с тенью сдвигается на тень,
- * остальные получают бумажную подложку. Прозрачность не меняем — по правилам контраста.
+ * Кнопки «Луны»: главная — лунным светом (инверсия), второстепенная — в тонкой рамке,
+ * опасная — красной рамкой. Нажатие — смена подложки; прозрачность не меняем (правила контраста).
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { usePalette } from '../store/themeStore';
-import { LINE, PRINT, printShadow, SIZE } from '../theme/stamp';
+import { LINE, SIZE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
-
-/** Стиль «оттиска» для кнопок с тенью: в нажатом состоянии тень «вдавливается». */
-function printed(offset: number, color: string, pressed: boolean): ViewStyle {
-  const pressedBy = Math.max(0, offset - 2);
-  return pressed
-    ? {
-        boxShadow: printShadow(offset - pressedBy, color),
-        transform: [{ translateX: pressedBy }, { translateY: pressedBy }],
-      }
-    : { boxShadow: printShadow(offset, color) };
-}
 
 type ButtonProps = {
   label: string;
   onPress?: () => void;
-  /** primary — залитая чернилами с тенью-оттиском; outline — рамка */
-  variant?: 'primary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'danger';
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
-/** Большая кнопка внизу экрана или шторки: «ЗАПИСАТЬ», «ЗАКРЫТЬ ДЕНЬ». */
 export function Button({ label, onPress, variant = 'primary', disabled, style }: ButtonProps) {
   const p = usePalette();
   const primary = variant === 'primary';
+  const fg = primary ? p.onText : variant === 'danger' ? p.blood : p.text;
   return (
     <Pressable
       accessibilityRole="button"
@@ -42,19 +30,17 @@ export function Button({ label, onPress, variant = 'primary', disabled, style }:
       style={({ pressed }) => [
         styles.button,
         primary
-          ? [
-              { backgroundColor: disabled ? p.pencil : p.ink },
-              !disabled && printed(PRINT.md, p.stamp, pressed),
-            ]
+          ? { backgroundColor: disabled ? p.muted : pressed ? p.textShade : p.text }
           : {
-              borderWidth: LINE.frame,
-              borderColor: p.ink,
-              backgroundColor: pressed ? p.paper : 'transparent',
+              height: 48,
+              borderWidth: LINE.hair,
+              borderColor: variant === 'danger' ? p.blood : p.line,
+              backgroundColor: pressed ? p.surface : 'transparent',
             },
         style,
       ]}
     >
-      <Text style={[TYPE.button, { color: primary ? p.onInk : p.ink }]}>{label}</Text>
+      <Text style={[primary ? TYPE.button : TYPE.item, { color: fg }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -64,79 +50,74 @@ type IconButtonProps = {
   /** обязательно: у кнопки нет текста */
   label: string;
   onPress?: () => void;
-  /** bare — только иконка; frame — в рамке; solid — залитая с тенью-оттиском */
-  variant?: 'bare' | 'frame' | 'solid';
+  /** bare — только иконка; solid — квадрат лунного цвета («+ привычка») */
+  variant?: 'bare' | 'solid';
+  tone?: 'text' | 'muted';
 };
 
-/** Квадратная кнопка 44 с иконкой: настройки, календарь, «+» в шапке. */
-export function IconButton({ icon, label, onPress, variant = 'bare' }: IconButtonProps) {
+export function IconButton({
+  icon,
+  label,
+  onPress,
+  variant = 'bare',
+  tone = 'text',
+}: IconButtonProps) {
   const p = usePalette();
+  const solid = variant === 'solid';
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
+      hitSlop={solid ? 0 : 4}
       style={({ pressed }) => [
         styles.icon,
-        variant === 'frame' && {
-          borderWidth: LINE.frame,
-          borderColor: p.ink,
-          backgroundColor: pressed ? p.paper : 'transparent',
-        },
-        variant === 'solid' && [{ backgroundColor: p.ink }, printed(PRINT.sm, p.stamp, pressed)],
-        variant === 'bare' && pressed && { backgroundColor: p.paper },
+        solid && { backgroundColor: pressed ? p.textShade : p.text },
+        !solid && pressed && { backgroundColor: p.surface },
       ]}
     >
-      <Icon
-        name={icon}
-        size={variant === 'solid' ? 20 : 22}
-        weight={variant === 'solid' ? 3 : 2.5}
-        color={variant === 'solid' ? p.onInk : p.ink}
-      />
+      <Icon name={icon} size={solid ? 18 : 22} tone={solid ? 'onText' : tone} />
     </Pressable>
   );
 }
 
-/** Главная «+» в правом нижнем углу экрана. */
-export function Fab({ label, onPress }: { label: string; onPress?: () => void }) {
-  const p = usePalette();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.fab,
-        { backgroundColor: p.ink },
-        printed(PRINT.md, p.stamp, pressed),
-      ]}
-    >
-      <Icon name="plus" size={26} weight={3} color={p.onInk} />
-    </Pressable>
-  );
-}
-
-type ActionCardProps = { title: string; meta?: string; onPress?: () => void };
-
-/** Карточка-ссылка в рамке со стрелкой: «ПОДВЕСТИ ИТОГ ДНЯ». */
-export function ActionCard({ title, meta, onPress }: ActionCardProps) {
+/** Строка-приглашение вверху списка: «+ Запиши дело или привычку» (вместо плавающей «+»). */
+export function AddRow({ label, onPress }: { label: string; onPress?: () => void }) {
   const p = usePalette();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.card,
-        { borderColor: p.ink, backgroundColor: pressed ? p.paper : 'transparent' },
-      ]}
+      style={({ pressed }) => [styles.add, { backgroundColor: pressed ? p.raised : p.surface }]}
+    >
+      <Icon name="plus" size={18} tone="text" />
+      <Text style={[TYPE.body, { color: p.muted }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** Строка-ссылка с текстом и стрелкой: «Итог дня →». */
+export function LinkRow({
+  title,
+  sub,
+  onPress,
+}: {
+  title: string;
+  sub?: string;
+  onPress?: () => void;
+}) {
+  const p = usePalette();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.link, { backgroundColor: pressed ? p.raised : p.surface }]}
     >
       <View style={{ flex: 1 }}>
-        <Text style={[TYPE.subtitle, { color: p.ink, fontFamily: TYPE.title.fontFamily }]}>
-          {title}
-        </Text>
-        {!!meta && <Text style={[TYPE.meta, { color: p.pencil, fontSize: 13 }]}>{meta}</Text>}
+        <Text style={[TYPE.itemStrong, { color: p.text }]}>{title}</Text>
+        {!!sub && <Text style={[TYPE.meta, { color: p.muted }]}>{sub}</Text>}
       </View>
-      <Icon name="arrow" size={22} />
+      <Icon name="arrow" size={18} tone="muted" />
     </Pressable>
   );
 }
@@ -149,13 +130,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   icon: { width: SIZE.touch, height: SIZE.touch, alignItems: 'center', justifyContent: 'center' },
-  fab: { width: SIZE.fab, height: SIZE.fab, alignItems: 'center', justifyContent: 'center' },
-  card: {
+  add: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderWidth: LINE.frame,
+    minHeight: 48,
+    paddingHorizontal: 14,
+  },
+  link: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    minHeight: 56,
+    paddingHorizontal: 14,
   },
 });

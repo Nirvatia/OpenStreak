@@ -1,11 +1,12 @@
 /**
- * Таб-бар «Штампа»: чёрная полоса, иконка и подпись капсом; активная вкладка —
- * светлым цветом и чертой цвета печати сверху. Высота — 64 + нижний отступ системы.
+ * Таб-бар «Луны»: подложка surface, гранёная иконка и подпись; активная вкладка — лунным
+ * светом и чертой сверху, остальные приглушены. Высота — 58 + нижний отступ системы.
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePalette } from '../store/themeStore';
+import { LINE, SIZE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
 
@@ -19,8 +20,6 @@ type Props<K extends string> = {
   label?: string;
 };
 
-export const TAB_BAR_HEIGHT = 64;
-
 export function TabBar<K extends string>({ items, active, onSelect, label }: Props<K>) {
   const p = usePalette();
   const insets = useSafeAreaInsets();
@@ -31,15 +30,15 @@ export function TabBar<K extends string>({ items, active, onSelect, label }: Pro
       style={[
         styles.bar,
         {
-          backgroundColor: p.nav,
-          height: TAB_BAR_HEIGHT + insets.bottom,
+          backgroundColor: p.surface,
+          borderTopColor: p.line,
+          height: SIZE.tabBar + insets.bottom,
           paddingBottom: insets.bottom,
         },
       ]}
     >
       {items.map((it) => {
         const on = it.key === active;
-        const color = on ? p.navText : p.navMuted;
         return (
           <Pressable
             key={it.key}
@@ -48,9 +47,9 @@ export function TabBar<K extends string>({ items, active, onSelect, label }: Pro
             onPress={() => onSelect(it.key)}
             style={styles.item}
           >
-            {on && <View style={[styles.mark, { backgroundColor: p.navMark }]} />}
-            <Icon name={it.icon} size={24} color={color} />
-            <Text style={[TYPE.tab, { color }]} numberOfLines={1}>
+            {on && <View style={[styles.mark, { backgroundColor: p.text }]} />}
+            <Icon name={it.icon} size={22} tone={on ? 'text' : 'muted'} />
+            <Text style={[TYPE.tab, { color: on ? p.text : p.muted }]} numberOfLines={1}>
               {it.label}
             </Text>
           </Pressable>
@@ -61,7 +60,7 @@ export function TabBar<K extends string>({ items, active, onSelect, label }: Pro
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: 'row' },
+  bar: { flexDirection: 'row', borderTopWidth: LINE.hair },
   item: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 4 },
-  mark: { position: 'absolute', top: 6, width: 28, height: 3 },
+  mark: { position: 'absolute', top: -1, width: 22, height: 3 },
 });

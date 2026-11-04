@@ -1,19 +1,20 @@
 /** Имена загруженных шрифтов (`hooks/useFonts.ts`). На Android жирность задаётся только файлом. */
 export const FONT = {
-  /** «Штамп»: заголовки капсом, числа, печати, кнопки */
-  oswald: {
-    semibold: 'Oswald_600SemiBold',
-    bold: 'Oswald_700Bold',
+  /** «Луна»: единственный шрифт интерфейса */
+  onest: {
+    regular: 'Onest_400Regular',
+    medium: 'Onest_500Medium',
+    semibold: 'Onest_600SemiBold',
+    bold: 'Onest_700Bold',
+    extrabold: 'Onest_800ExtraBold',
   },
-  /** «Штамп»: весь текст */
+  /** только старые экраны; уходят вместе с ними (этап 4) */
   golos: {
     regular: 'GolosText_400Regular',
-    /** только старые экраны */
     medium: 'GolosText_500Medium',
     semibold: 'GolosText_600SemiBold',
     bold: 'GolosText_700Bold',
   },
-  /** только старые экраны; уходит вместе с ними (этап 3) */
   manrope: {
     medium: 'Manrope_500Medium',
     bold: 'Manrope_700Bold',

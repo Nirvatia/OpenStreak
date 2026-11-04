@@ -1,30 +1,32 @@
-/** Каталог: шапки, заголовки разделов, таб-бар, шторка, тост. */
+/** Каталог: шапки, таб-бар, шторка, тост. */
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useT } from '../../store/prefsStore';
 import { usePalette } from '../../store/themeStore';
-import { SPACE } from '../../theme/stamp';
+import { SPACE } from '../../theme/metrics';
+import { TYPE } from '../../theme/type';
 import { Button, IconButton } from '../Button';
 import { Chip } from '../Chip';
-import { Divider } from '../Divider';
 import { OptionTile } from '../OptionTile';
-import { ScreenHeader, SectionTitle } from '../ScreenHeader';
+import { PriorityPicker, type PriorityLevel } from '../Priority';
+import { ScreenHeader } from '../ScreenHeader';
 import { Segmented } from '../Segmented';
 import { Sheet } from '../Sheet';
 import { TabBar } from '../TabBar';
 import { TextField } from '../TextField';
 import { showToast } from '../toast';
+import { Section } from './Section';
 
-type SectionC = React.FC<{ title: string; children: React.ReactNode }>;
-type Tab = 'today' | 'tasks' | 'habits' | 'goals' | 'stats';
+type Tab = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
 
-export function CatalogShell({ Section }: { Section: SectionC }) {
+export function CatalogShell() {
   const p = usePalette();
   const t = useT();
   const [tab, setTab] = useState<Tab>('today');
   const [sheet, setSheet] = useState(false);
+  const [kind, setKind] = useState<'task' | 'habit' | 'goal'>('task');
   const [title, setTitle] = useState('Записаться в зал');
-  const [prio, setPrio] = useState<'0' | '1' | '2' | '3'>('2');
+  const [prio, setPrio] = useState<PriorityLevel>(2);
 
   return (
     <>
@@ -37,15 +39,19 @@ export function CatalogShell({ Section }: { Section: SectionC }) {
           />
           <ScreenHeader
             kicker="12 в работе · 1 долг"
-            title="Задачи"
-            right={<IconButton icon="calendar" label="Календарь" variant="frame" />}
+            title="Дела"
+            right={<IconButton icon="calendar" label="Календарь" tone="muted" />}
           />
           <ScreenHeader title="Настройки" onBack={() => {}} />
-          <View>
-            <SectionTitle title="Долги" count={1} color={p.debt} />
-            <Divider dashed />
-            <SectionTitle title="Сегодня" count={3} />
-          </View>
+        </View>
+      </Section>
+
+      <Section title="Цитата">
+        <View style={{ gap: 2 }}>
+          <Text style={[TYPE.quote, { color: p.text }]}>
+            Волк не ждёт понедельника. Волк и есть понедельник.
+          </Text>
+          <Text style={[TYPE.label, { color: p.muted }]}>{t('wolf.signature')}</Text>
         </View>
       </Section>
 
@@ -60,19 +66,23 @@ export function CatalogShell({ Section }: { Section: SectionC }) {
               { key: 'tasks', label: t('tab.tasks'), icon: 'tasks' },
               { key: 'habits', label: t('tab.habits'), icon: 'habits' },
               { key: 'goals', label: t('tab.goals'), icon: 'goals' },
-              { key: 'stats', label: t('tab.stats'), icon: 'stats' },
+              { key: 'pack', label: t('tab.pack'), icon: 'pack' },
             ]}
           />
         </View>
       </Section>
 
       <Section title="Шторка и тост">
-        <View style={{ gap: SPACE.md }}>
-          <Button label="Открыть шторку" variant="outline" onPress={() => setSheet(true)} />
-          <Button label="Тост" variant="outline" onPress={() => showToast(t('toast.dayClosed'))} />
+        <View style={{ gap: SPACE.sm }}>
+          <Button label="Открыть шторку" variant="secondary" onPress={() => setSheet(true)} />
+          <Button
+            label="Тост"
+            variant="secondary"
+            onPress={() => showToast(t('toast.dayClosed'))}
+          />
           <Button
             label="Тост с отменой"
-            variant="outline"
+            variant="secondary"
             onPress={() =>
               showToast(t('toast.taskDeleted'), {
                 label: t('common.undo'),
@@ -86,29 +96,33 @@ export function CatalogShell({ Section }: { Section: SectionC }) {
       <Sheet
         visible={sheet}
         onClose={() => setSheet(false)}
-        title="Новое дело"
+        title="Новое"
         footer={<Button label="Записать" onPress={() => setSheet(false)} />}
       >
-        <TextField label="Что сделать" value={title} onChangeText={setTitle} />
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.sm }}>
+        <Segmented
+          label="Что это"
+          on="bg"
+          value={kind}
+          onChange={setKind}
+          items={[
+            { value: 'task', label: 'Дело' },
+            { value: 'habit', label: 'Привычка' },
+            { value: 'goal', label: 'Цель' },
+          ]}
+        />
+        <TextField label="что сделать" value={title} onChangeText={setTitle} />
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
           <Chip size="md" role="radio" label="Сегодня" selected />
           <Chip size="md" role="radio" label="Завтра" />
           <Chip size="md" label="Дата…" dashed />
         </View>
-        <Segmented
+        <PriorityPicker
           label="Важность"
           value={prio}
           onChange={setPrio}
-          font="marks"
-          height={44}
-          items={[
-            { value: '0', label: '—', a11yLabel: 'Без важности' },
-            { value: '1', label: '!', a11yLabel: 'Низкая' },
-            { value: '2', label: '!!', a11yLabel: 'Средняя' },
-            { value: '3', label: '!!!', a11yLabel: 'Высокая', color: p.debt },
-          ]}
+          labels={['Без важности', 'Низкая', 'Средняя', 'Высокая']}
         />
-        <View style={{ flexDirection: 'row', gap: SPACE.sm }}>
+        <View style={{ flexDirection: 'row', gap: 6 }}>
           <OptionTile icon="remind" label="По времени" />
           <OptionTile icon="place" label="У зала" hint="при входе · 150 м" selected />
         </View>

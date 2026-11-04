@@ -1,70 +1,56 @@
 /**
- * Палитра «Штампа»: тема (светлая / тёмная) + выбранные чернила.
+ * Палитра «Луны»: «Ночь» (dark, основная) и «Рассвет» (light).
  * Цвета берутся только из `palettes.json` — там же список пар для проверки контраста.
- * Сборка палитры повторена в `scripts/check-contrast.mjs`; меняя её здесь, поменяйте и там.
  */
 import palettes from './palettes.json';
 
 export type Scheme = 'light' | 'dark';
 /** Что выбрал пользователь: конкретная тема или «как в системе». */
 export type ThemeMode = Scheme | 'system';
-/** Цвет чернил: красные, синие или «одноцветные» (чёрные в светлой теме, белые в тёмной). */
-export type InkName = 'red' | 'blue' | 'mono';
 
-export const THEME_MODES: readonly ThemeMode[] = ['light', 'dark', 'system'];
-export const INK_NAMES: readonly InkName[] = ['red', 'blue', 'mono'];
-export const DEFAULT_INK: InkName = 'red';
+export const THEME_MODES: readonly ThemeMode[] = ['dark', 'light', 'system'];
 
 export type Palette = {
-  /** фон экрана — бетон */
+  /** фон экрана */
   bg: string;
-  /** «документ»: карточки, поля ввода, шторки */
-  paper: string;
-  /** основной текст, рамки, тёмные кнопки */
-  ink: string;
-  /** второй текст, метки */
-  pencil: string;
-  /** мелкий красный: просрочено, срыв */
-  debt: string;
-  /** отдых, выходной */
-  rest: string;
-  /** печати и акценты — цвет выбранных чернил */
-  stamp: string;
-  /** таб-бар */
-  nav: string;
-  navText: string;
-  navMuted: string;
-  /** отметка активной вкладки */
-  navMark: string;
-  /** значок цвета печати на заливке `ink` (бегунок переключателя) */
-  stampOnInk: string;
-  /** текст на `ink` (инверсия) */
-  onInk: string;
-  onInkMuted: string;
-  /** текст на `stamp` */
-  onStamp: string;
+  /** карточки, поля, шторка, таб-бар */
+  surface: string;
+  /** выбранный сегмент, пустая луна, дорожка выключенного переключателя */
+  raised: string;
+  /** разделители и рамки */
+  line: string;
+  /** основной текст и «лунный свет»: полная луна, главная кнопка (инверсия) */
+  text: string;
+  /** тёмная грань гранёной иконки цвета text */
+  textShade: string;
+  /** второй текст, подписи */
+  muted: string;
+  mutedShade: string;
+  /** единственный смысловой цвет: слив, долг, просрочено */
+  blood: string;
+  bloodShade: string;
+  /** текст и значки поверх `text` (инверсия) */
+  onText: string;
+  /** затемнение под шторкой (с прозрачностью из metrics) */
+  scrim: string;
+  /** волк-силуэт на полной луне */
+  silhouette: string;
+  silhouetteShade: string;
+  silhouetteFeature: string;
 };
 
-type InkOverride = Partial<Palette> & { stamp: string };
+const themes = palettes.themes as Record<Scheme, Palette>;
 
-const themes = palettes.themes as Record<Scheme, Omit<Palette, 'stamp' | 'navMark' | 'stampOnInk'>>;
-const inks = palettes.inks as Record<InkName, Record<Scheme, InkOverride>>;
-
-export function resolvePalette(scheme: Scheme, ink: InkName): Palette {
-  const over = inks[ink][scheme];
-  return { ...themes[scheme], navMark: over.stamp, stampOnInk: over.stamp, ...over };
+export function resolvePalette(scheme: Scheme): Palette {
+  return themes[scheme];
 }
 
 /** Тема, которая реально показывается. `system` — null, если система не сообщила свою. */
 export function resolveScheme(mode: ThemeMode, system: Scheme | null | undefined): Scheme {
-  if (mode === 'system') return system ?? 'light';
+  if (mode === 'system') return system ?? 'dark';
   return mode;
 }
 
 export function isThemeMode(v: unknown): v is ThemeMode {
   return typeof v === 'string' && (THEME_MODES as readonly string[]).includes(v);
-}
-
-export function isInkName(v: unknown): v is InkName {
-  return typeof v === 'string' && (INK_NAMES as readonly string[]).includes(v);
 }
