@@ -2,7 +2,7 @@
  * План напоминаний — чистая функция от данных и текущего момента.
  * Сервис уведомлений сверяет план с тем, что уже запланировано в системе.
  */
-import { addDays, dstr } from '../utils/dates';
+import { addDays, dstr } from './dates';
 import {
   live,
   type Habit,

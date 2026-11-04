@@ -6,7 +6,7 @@
  * (например, удаление сферы вместе с целями) уходят одной транзакцией.
  */
 import { create } from 'zustand';
-import { todayStr } from '../utils/dates';
+import { todayStr } from './dates';
 import { fromLegacyV4 } from './migrate';
 import {
   COLLECTIONS,

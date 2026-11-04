@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { vibrateSuccess } from '../../services/haptics';
 import { goalCounts, goalViews, type GoalView } from '../../core/goals';
 import { useDataStore } from '../../core/store';
 import { useT, type Translate } from '../../store/prefsStore';
@@ -47,6 +48,7 @@ export function GoalsScreen() {
   const toggle = (v: GoalView) => {
     A.toggleGoal(v.goal.id);
     if (v.state !== 'done') {
+      vibrateSuccess();
       toast(t('toast.goalDone'), {
         label: t('common.undo'),
         onPress: () => A.toggleGoal(v.goal.id),

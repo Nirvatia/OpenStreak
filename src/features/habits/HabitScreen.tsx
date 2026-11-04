@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { vibrateImpact } from '../../services/haptics';
 import { addDays, startOfWeek } from '../../core/dates';
 import { dataOf, fullValue, habitDay, habitDays, habitStats, indexHabits } from '../../core/habits';
 import { settingsOf } from '../../core/settings';
@@ -175,7 +176,10 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
                     label={t('habit.add', { step: n })}
                     variant={i === all.length - 1 ? 'primary' : 'secondary'}
                     style={styles.add}
-                    onPress={() => A.setCheckValue(h.id, today, Math.min(full, value + n))}
+                    onPress={() => {
+                      vibrateImpact();
+                      A.setCheckValue(h.id, today, Math.min(full, value + n));
+                    }}
                   />
                 ))
               )
@@ -184,7 +188,10 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
                 label={t(day.mark === 'full' ? 'habit.unmark' : 'habit.mark')}
                 variant={day.mark === 'full' ? 'secondary' : 'primary'}
                 style={styles.add}
-                onPress={() => A.toggleCheck(h.id, today)}
+                onPress={() => {
+                  if (day.mark !== 'full') vibrateImpact();
+                  A.toggleCheck(h.id, today);
+                }}
               />
             )}
           </View>

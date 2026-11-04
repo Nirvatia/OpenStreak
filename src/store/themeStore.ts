@@ -11,7 +11,6 @@ import {
   type Scheme,
   type ThemeMode,
 } from '../theme/palette';
-import { lightTheme, darkTheme, Theme } from '../theme/tokens';
 
 type ThemeStore = {
   /** выбор пользователя: «Ночь», «Рассвет» или как в системе */
@@ -20,19 +19,10 @@ type ThemeStore = {
   system: Scheme | null;
   /** тема, которая реально показывается */
   scheme: Scheme;
-  /** палитра «Мульта» для новых компонентов */
+  /** палитра «Мульта» */
   palette: Palette;
 
-  /** @deprecated старые экраны: то же, что `scheme` */
-  theme: Scheme;
-  /** @deprecated старые экраны: токены из `theme/tokens.ts` */
-  currentTheme: Theme;
-
   setMode: (mode: ThemeMode) => Promise<void>;
-  /** @deprecated старые экраны: явная тема */
-  setTheme: (theme: Scheme) => Promise<void>;
-  /** @deprecated старые экраны: переключить на противоположную показываемой */
-  toggleTheme: () => Promise<void>;
   applyMode: (mode: ThemeMode) => void;
   loadTheme: () => Promise<void>;
 };
@@ -49,8 +39,6 @@ function derive(mode: ThemeMode, system: Scheme | null) {
     system,
     scheme,
     palette: resolvePalette(scheme),
-    theme: scheme,
-    currentTheme: scheme === 'dark' ? darkTheme : lightTheme,
   };
 }
 
@@ -64,10 +52,6 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
     if (useDataStore.getState().ready) updateSettings({ theme: mode });
     await storage.setString(THEME_KEY, mode);
   },
-
-  setTheme: (theme) => get().setMode(theme),
-
-  toggleTheme: () => get().setMode(get().scheme === 'dark' ? 'light' : 'dark'),
 
   /** Применить тему из настроек (без записи обратно). */
   applyMode: (mode: ThemeMode) => {

@@ -131,8 +131,9 @@
 - Цитаты волка: свои, не чужие; одна в день, только в пацанском тоне, выключаются
 - Локализация en / es для обоих тонов
 - Отмена удаления (5 секунд), свайпы на gesture-handler, без лишних перерисовок
-- Удаление старых экранов и слоя совместимости (`store/appStore.ts`, `core/legacy.ts`,
-  `types/models.ts`, `theme/tokens.ts`), а с ними — `@gorhom/bottom-sheet` и Manrope
+- ✅ Удалены старые экраны и слой совместимости (`screens`, `components`, `store/appStore.ts`,
+  `core/legacy.ts`, `types/models.ts`, `theme/tokens.ts`, старые `utils` и сторы), а с ними —
+  `@gorhom/bottom-sheet`, `expo-clipboard`, Golos Text и Manrope; вибро — в новых экранах
 - Иконка приложения и сплэш: волк на полной луне
 
 ## ⏳ Этап 5. Напоминания по месту

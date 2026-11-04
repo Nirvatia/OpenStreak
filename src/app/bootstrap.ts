@@ -8,7 +8,7 @@ import { createPlatformStorage } from '../core/storage';
 import { flush, initData, setToday, useDataStore } from '../core/store';
 import { syncReminders } from '../services/notifications';
 import { storage as kv, STATE_KEY } from '../services/storage';
-import { todayStr } from '../utils/dates';
+import { todayStr } from '../core/dates';
 import { followSettings, seedSettingsFromDevice } from './settingsSync';
 
 const REMINDER_SYNC_DELAY_MS = 1500;

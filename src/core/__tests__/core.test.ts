@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import * as A from '../actions';
-import { toLegacyState } from '../legacy';
+import { dataOf, habitDay, indexHabits } from '../habits';
 import { fromLegacyV4, parseBackup, toExportV5 } from '../migrate';
 import { checkId, live } from '../model';
 import { planReminders } from '../reminders';
@@ -152,14 +152,17 @@ describe('перенос данных v4', () => {
     expect(s.reviews['2026-11-03']).toMatchObject({ mood: 4, note: 'норм' });
   });
 
-  test('старое представление из перенесённых данных совпадает по смыслу с исходным', () => {
-    const v = toLegacyState(fromLegacyV4(LEGACY, NOW, TODAY));
-    const h1 = v.habits.find((h) => h.id === 'h1')!;
-    expect(h1.dates).toEqual(['2026-11-02', '2026-11-03']); // 60 из 100 — не засчитано
-    expect(h1.progress['2026-11-04']).toBe(60);
-    expect(h1.rest).toEqual([{ f: '2026-10-10', t: '2026-10-12' }]);
-    expect(v.areas[0].goals[0]).toMatchObject({ id: 'g1', crit: '21 км', done: false });
-    expect(v.moods['2026-11-03']).toEqual({ mood: 4, note: 'норм' });
+  test('перенесённые данные читаются новым ядром по смыслу так же, как в старой версии', () => {
+    const s = fromLegacyV4(LEGACY, NOW, TODAY);
+    const h1 = s.habits.h1;
+    const d = dataOf(indexHabits(s), 'h1');
+    const mark = (date: string) => habitDay(h1, d, date, TODAY);
+    expect(mark('2026-11-02').mark).toBe('full');
+    expect(mark('2026-11-03').mark).toBe('full');
+    expect(mark('2026-11-04')).toMatchObject({ mark: 'partial', value: 60 }); // 60 из 100
+    expect(mark('2026-10-11').mark).toBe('rest');
+    expect(s.goals.g1).toMatchObject({ criterion: '21 км', doneOn: null });
+    expect(s.reviews['2026-11-03']).toMatchObject({ mood: 4, note: 'норм' });
   });
 
   test('не похоже на состояние — ошибка, а не пустые данные', () => {
@@ -234,7 +237,7 @@ describe('операции', () => {
 
     A.deleteTask(id);
     expect(data().tasks[id].deletedAt).not.toBeNull(); // запись осталась — для синхронизации
-    expect(toLegacyState(data()).tasks).toHaveLength(0);
+    expect(live(data().tasks)).toHaveLength(0);
   });
 
   test('отметка привычки: numeric засчитывается только по достижении цели', () => {
@@ -251,17 +254,15 @@ describe('операции', () => {
       unit: 'count',
       target: 100,
     });
+    const today = () => habitDay(data().habits[id], dataOf(indexHabits(data()), id), TODAY, TODAY);
     A.setCheckValue(id, TODAY, 60);
-    let h = toLegacyState(data()).habits[0];
-    expect(h.dates).toEqual([]);
-    expect(h.progress[TODAY]).toBe(60);
+    expect(today()).toMatchObject({ mark: 'partial', value: 60 });
 
     A.setCheckValue(id, TODAY, 100);
-    h = toLegacyState(data()).habits[0];
-    expect(h.dates).toEqual([TODAY]);
+    expect(today().mark).toBe('full');
 
     A.toggleCheck(id, TODAY); // снять
-    expect(toLegacyState(data()).habits[0].dates).toEqual([]);
+    expect(today().mark).toBe('empty');
     A.toggleCheck(id, TODAY); // отметить целиком
     expect(data().checks[checkId(id, TODAY)].value).toBe(100);
   });

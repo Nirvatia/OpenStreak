@@ -1,57 +1,53 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useDataStore } from '../core/store';
 import { NewSheet } from '../features/new/NewSheet';
-import { RootNavigator } from '../navigation/RootNavigator';
-import { SheetsHost } from '../components/SheetsHost';
-import { useAppStore } from '../store/appStore';
-import { usePrefsStore } from '../store/prefsStore';
-import { useThemeStore } from '../store/themeStore';
-import { Toast } from '../components/ui/Toast';
 import { useAppFonts } from '../hooks/useFonts';
+import { RootNavigator } from '../navigation/RootNavigator';
+import { usePrefsStore } from '../store/prefsStore';
+import { usePalette, useThemeStore } from '../store/themeStore';
 import { CatalogScreen } from '../ui/catalog/CatalogScreen';
+import { isCatalogRequested } from '../ui/catalog/isCatalog';
 import { TAB_BAR_SPACE } from '../ui/TabBar';
 import { ToastHost } from '../ui/ToastHost';
-import { isCatalogRequested } from '../ui/catalog/isCatalog';
 import { bootstrap } from './bootstrap';
 import { WebFrame } from './WebFrame';
 
 export const App: React.FC = () => {
   const fontsLoaded = useAppFonts();
-  const hydrated = useAppStore((s) => s.hydrated);
-  const loadTheme = useThemeStore((s) => s.loadTheme);
-  const { currentTheme, scheme } = useThemeStore();
+  const ready = useDataStore((s) => s.ready);
+  const scheme = useThemeStore((s) => s.scheme);
+  const p = usePalette();
 
   useEffect(() => {
-    void bootstrap();
-    void loadTheme();
+    // Тема и тон с устройства — только для заставки; дальше их ведут настройки в данных.
+    void useThemeStore.getState().loadTheme();
     void usePrefsStore.getState().loadPrefs();
-  }, [loadTheme]);
+    void bootstrap();
+  }, []);
 
-  if (!fontsLoaded || !hydrated) {
+  if (!fontsLoaded || !ready) {
     return (
       <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: currentTheme.colors.bg,
-        }}
+        style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: p.bg }}
       >
-        <ActivityIndicator size="large" color={currentTheme.colors.accent} />
+        <ActivityIndicator size="large" color={p.text} />
       </View>
     );
   }
+
+  const statusBar = <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />;
 
   if (isCatalogRequested()) {
     return (
       <WebFrame>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+            {statusBar}
             <CatalogScreen />
             <ToastHost />
           </SafeAreaProvider>
@@ -64,13 +60,11 @@ export const App: React.FC = () => {
     <WebFrame>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
-          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+          {statusBar}
           <NavigationContainer>
             <RootNavigator />
           </NavigationContainer>
-          <SheetsHost />
           <NewSheet />
-          <Toast />
           <ToastHost bottom={TAB_BAR_SPACE} />
         </SafeAreaProvider>
       </GestureHandlerRootView>

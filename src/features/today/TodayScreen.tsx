@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { vibrateImpact } from '../../services/haptics';
 import { addDays, clockOf } from '../../core/dates';
 import { closedStreak, dayNumber, dayView, isClosed, type DayItem } from '../../core/day';
 import { dataOf, fullValue, habitStats, indexHabits } from '../../core/habits';
@@ -218,6 +219,7 @@ function LeftRow({ item, today, view, t, last }: RowProps) {
         last={last}
         onToggle={() => {
           A.toggleTask(task.id);
+          vibrateImpact();
           toast(t('toast.marked', { title: item.title }), {
             label: t('common.undo'),
             onPress: () => A.toggleTask(task.id),
@@ -254,6 +256,7 @@ function LeftRow({ item, today, view, t, last }: RowProps) {
       right={meta ? <Text style={[TYPE.badge, { color: p.text }]}>{meta}</Text> : null}
       onToggle={() => {
         A.setCheckValue(habit.id, today, fullValue(habit));
+        vibrateImpact();
         toast(t('toast.marked', { title: item.title }), {
           label: t('common.undo'),
           onPress: () => A.setCheckValue(habit.id, today, value),

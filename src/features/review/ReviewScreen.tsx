@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { vibrateSuccess } from '../../services/haptics';
 import { dayView, moodPhase } from '../../core/day';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
@@ -41,6 +42,7 @@ export function ReviewScreen({ onBack, onClosed }: Props) {
 
   const close = () => {
     A.saveReview(today, mood, note);
+    vibrateSuccess();
     onClosed();
   };
 

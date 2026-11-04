@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { vibrateImpact } from '../../services/haptics';
 import { addDays } from '../../core/dates';
 import { live, type Task } from '../../core/model';
 import { useDataStore } from '../../core/store';
@@ -175,7 +176,10 @@ export function TasksScreen() {
                         phase={task.doneOn ? 1 : 0}
                         done={task.doneOn !== null}
                         debt={g.key === 'debts'}
-                        onToggle={guard(() => A.toggleTask(task.id))}
+                        onToggle={guard(() => {
+                          if (!task.doneOn) vibrateImpact();
+                          A.toggleTask(task.id);
+                        })}
                         onPress={guard(() => editTask(task.id))}
                         right={task.priority > 0 ? <PriorityMarks level={task.priority} /> : null}
                         last={i === g.tasks.length - 1}

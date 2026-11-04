@@ -4,7 +4,6 @@ import { addDays, daysBetween, diffDays, startOfWeek, weekday } from '../dates';
 import { closedStreak, dayNumber, dayView, firstReminder, moodPhase } from '../day';
 import { goalCounts, goalViews } from '../goals';
 import { habitDay, habitDays, habitStats, indexHabits, dataOf } from '../habits';
-import { toLegacyState } from '../legacy';
 import { cleanCheck, cleanSettings, fromExportV5, toExportV5 } from '../migrate';
 import {
   checkId,
@@ -448,7 +447,9 @@ describe('настройки и новые операции', () => {
     const c = checkId(id, TODAY);
     A.toggleSlip(id, TODAY);
     expect(data().checks[c]).toMatchObject({ value: 0, slip: true, deletedAt: null });
-    expect(toLegacyState(data()).habits[0].dates).toEqual([]); // старые экраны слив не видят
+    expect(habitDay(data().habits[id], dataOf(indexHabits(data()), id), TODAY, TODAY).mark).toBe(
+      'slip'
+    );
     A.toggleCheck(id, TODAY);
     expect(data().checks[c]).toMatchObject({ value: 1, deletedAt: null });
     expect(data().checks[c].slip).toBeUndefined();

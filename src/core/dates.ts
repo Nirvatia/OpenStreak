@@ -46,3 +46,14 @@ export function clockOf(ms: number): string {
   const t = new Date(ms);
   return `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
 }
+
+/** Локальная дата `YYYY-MM-DD` момента `d`. */
+export function dstr(d: Date): ISODate {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+/** Сегодня по локальному времени. */
+export function todayStr(): ISODate {
+  return dstr(new Date());
+}

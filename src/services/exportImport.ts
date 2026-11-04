@@ -5,7 +5,7 @@
 import { Platform } from 'react-native';
 import { parseBackup, toExportV5, type ParsedBackup } from '../core/migrate';
 import { now, useDataStore } from '../core/store';
-import { todayStr } from '../utils/dates';
+import { todayStr } from '../core/dates';
 
 type Theme = 'light' | 'dark';
 
@@ -44,11 +44,6 @@ export async function exportData(theme: Theme): Promise<void> {
     dialogTitle: 'Сохранить бэкап',
     UTI: 'public.json',
   });
-}
-
-export async function copyToClipboard(theme: Theme): Promise<void> {
-  const Clipboard = await import('expo-clipboard');
-  await Clipboard.setStringAsync(backupJson(theme));
 }
 
 /** В браузере: своё поле выбора файла — открывается сразу по нажатию, без ожиданий до него. */

@@ -1,4 +1,5 @@
-// Вибрация через expo-haptics, загрузка ленивая.
+// Вибрация через expo-haptics, загрузка ленивая: отметка — короткий толчок, закрытый договор
+// и закрытый день — «успех».
 
 export function vibrateImpact(): void {
   import('expo-haptics').then((H) => H.impactAsync(H.ImpactFeedbackStyle.Medium)).catch(() => {});

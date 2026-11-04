@@ -2,7 +2,7 @@
  * Операции над данными в терминах модели v2. Никаких побочных эффектов кроме записи данных:
  * вибро, тосты и запросы разрешений — забота слоя интерфейса.
  */
-import { todayStr } from '../utils/dates';
+import { todayStr } from './dates';
 import { fullValue } from './habits';
 import { newId } from './ids';
 import {

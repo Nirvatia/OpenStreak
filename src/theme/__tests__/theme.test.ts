@@ -68,7 +68,6 @@ describe('themeStore', () => {
     mockStore.set('theme', 'light');
     const s = (await load()).getState();
     expect(s.scheme).toBe('light');
-    expect(s.currentTheme.isDark).toBe(false);
     expect(s.palette.bg).toBe(palettes.themes.light.bg);
   });
 
@@ -82,7 +81,8 @@ describe('themeStore', () => {
     await st.getState().setMode('dark');
     expect(mockStore.get('theme')).toBe('dark');
     expect(st.getState().palette.text).toBe(palettes.themes.dark.text);
-    await st.getState().toggleTheme();
+    await st.getState().setMode('light');
     expect(st.getState().scheme).toBe('light');
+    expect(st.getState().palette.bg).toBe(palettes.themes.light.bg);
   });
 });

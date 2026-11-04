@@ -14,8 +14,8 @@ so versions match `expo/bundledNativeModules.json`; never bump `expo` to another
   into model v2. Treat all imported data as untrusted.
 - Reminders are planned by `core/reminders.ts` (pure) and synced to the OS by
   `services/notifications.ts`; never fire reminders from timers in JS.
-- `store/appStore.ts` + `core/legacy.ts` are a compatibility facade for the old screens. New code
-  must not depend on `types/models.ts`; both go away with the redesign.
+- Screens live in `src/features`, navigation in `src/navigation`. Derived values (day, streaks,
+  points, task groups, goals) are pure functions in `src/core` with tests — screens only render them.
 
 # Rules for this repo
 
@@ -28,7 +28,7 @@ so versions match `expo/bundledNativeModules.json`; never bump `expo` to another
   with meaning (sun — moon and main action, teal — done/on, red — only slips and debts). Screens use
   only `src/ui` components, tokens from `src/theme` and string keys from `src/i18n`.
 - Before committing run `npm run check` (typecheck + lint + tests + contrast) and `npm run format:check`.
-- Known bugs are pinned by `test.failing` in `src/utils/__tests__`. When you fix one, turn it into a
+- Pin a known bug with `test.failing` next to the code it concerns (`__tests__`). When you fix one, turn it into a
   normal `test`.
 - UI copy is Russian for now; ru/en/es localisation is planned — don't add new hard-coded strings to
   logic modules.
