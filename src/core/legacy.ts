@@ -17,6 +17,8 @@ function legacyHabit(h: Habit, checks: HabitCheck[]): LegacyHabit {
   const progress: Record<string, number> = {};
   const full = h.measure === 'numeric' ? h.target : 1;
   for (const c of checks) {
+    // «Слил» у полезной привычки старые экраны не умеют показывать — для них это пустой день.
+    if (c.slip && h.kind === 'good') continue;
     progress[c.date] = c.value;
     // Для numeric день засчитан, только если достигнута цель.
     if (c.value >= full) dates.push(c.date);

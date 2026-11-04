@@ -9,8 +9,10 @@
  * пропущенные поля получают значения по умолчанию.
  */
 import { newId } from './ids';
+import { DEFAULT_SETTINGS } from './settings';
 import {
   COLLECTIONS,
+  SETTINGS_ID,
   checkId,
   emptySnapshot,
   type Area,
@@ -23,6 +25,7 @@ import {
   type Priority,
   type RecordMeta,
   type RestPeriod,
+  type Settings,
   type Snapshot,
   type Task,
 } from './model';
@@ -93,6 +96,7 @@ export function cleanTask(x: unknown, now: number): Task | null {
     date: date(x.date),
     priority: (p !== null && p >= 0 && p <= 3 ? Math.round(p) : 0) as Priority,
     doneOn: date(x.doneOn),
+    doneAt: date(x.doneOn) ? num(x.doneAt) : null,
     areaId: idOrNull(x.areaId),
     remindAt: time(x.remindAt),
     placeId: idOrNull(x.placeId),
@@ -137,9 +141,10 @@ export function cleanCheck(x: unknown, now: number): HabitCheck | null {
   const habitId = idOrNull(x.habitId);
   const d = date(x.date);
   const value = num(x.value);
-  if (!habitId || !d || value === null || value <= 0) return null;
+  const slip = x.slip === true;
+  if (!habitId || !d || value === null || value < 0 || (value === 0 && !slip)) return null;
   const m = meta({ ...x, id: checkId(habitId, d) }, now)!;
-  return { ...m, habitId, date: d, value };
+  return slip ? { ...m, habitId, date: d, value: 0, slip } : { ...m, habitId, date: d, value };
 }
 
 export function cleanRest(x: unknown, now: number): RestPeriod | null {
@@ -199,6 +204,22 @@ export function cleanPlace(x: unknown, now: number): Place | null {
   return { ...m, name, latitude: lat, longitude: lng, radius: radius && radius > 0 ? radius : 150 };
 }
 
+export function cleanSettings(x: unknown, now: number): Settings | null {
+  if (!isObj(x)) return null;
+  const m = meta({ ...x, id: SETTINGS_ID }, now)!;
+  const d = DEFAULT_SETTINGS;
+  return {
+    ...m,
+    theme: x.theme === 'dark' || x.theme === 'light' || x.theme === 'system' ? x.theme : d.theme,
+    tone: x.tone === 'plain' || x.tone === 'bro' ? x.tone : d.tone,
+    quotes: typeof x.quotes === 'boolean' ? x.quotes : d.quotes,
+    ranks: typeof x.ranks === 'boolean' ? x.ranks : d.ranks,
+    locale: x.locale === 'ru' || x.locale === 'en' || x.locale === 'es' ? x.locale : d.locale,
+    weekStart: x.weekStart === 0 ? 0 : x.weekStart === 1 ? 1 : d.weekStart,
+    reviewAt: typeof x.reviewAt === 'string' ? time(x.reviewAt) : d.reviewAt,
+  };
+}
+
 // ── Старый формат v4 ─────────────────────────────────────────────────────────
 
 /**
@@ -217,7 +238,15 @@ export function fromLegacyV4(raw: unknown, now: number, today: ISODate): Snapsho
     if (!isObj(t)) continue;
     const doneOn = t.done ? (date(t.doneAt) ?? date(t.date) ?? today) : null;
     const task = cleanTask(
-      { ...t, doneOn, areaId: t.area, remindAt: t.remind, createdAt: t.createdAt, updatedAt: now },
+      {
+        ...t,
+        doneOn,
+        doneAt: null,
+        areaId: t.area,
+        remindAt: t.remind,
+        createdAt: t.createdAt,
+        updatedAt: now,
+      },
       now
     );
     if (task) snap.tasks[task.id] = task;
@@ -355,6 +384,7 @@ export function fromExportV5(raw: unknown, now: number, today: ISODate): Snapsho
   for (const x of list('goals')) put(snap.goals, cleanGoal(x, now));
   for (const x of list('reviews')) put(snap.reviews, cleanReview(x, now));
   for (const x of list('places')) put(snap.places, cleanPlace(x, now));
+  for (const x of list('settings')) put(snap.settings, cleanSettings(x, now));
   return snap;
 }
 

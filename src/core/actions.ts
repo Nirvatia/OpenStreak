@@ -3,18 +3,29 @@
  * вибро, тосты и запросы разрешений — забота слоя интерфейса.
  */
 import { todayStr } from '../utils/dates';
+import { fullValue } from './habits';
 import { newId } from './ids';
 import {
+  SETTINGS_ID,
   checkId,
   live,
-  type Habit,
   type HabitKind,
   type HabitMeasure,
   type HabitUnit,
   type ISODate,
   type Priority,
 } from './model';
-import { commit, compact, draftCreate, draftDelete, draftPatch, get, useDataStore } from './store';
+import { DEFAULT_SETTINGS, type SettingsFields } from './settings';
+import {
+  commit,
+  compact,
+  draftCreate,
+  draftDelete,
+  draftPatch,
+  get,
+  now,
+  useDataStore,
+} from './store';
 
 const data = () => useDataStore.getState().data;
 
@@ -38,6 +49,7 @@ export function createTask(input: TaskInput): string {
       date: input.date === undefined ? todayStr() : input.date,
       priority: input.priority ?? 0,
       doneOn: null,
+      doneAt: null,
       areaId: input.areaId ?? null,
       remindAt: input.remindAt ?? '',
       placeId: null,
@@ -65,7 +77,15 @@ export function updateTask(id: string, input: TaskInput): void {
 export function toggleTask(id: string): void {
   const t = get('tasks', id);
   if (!t) return;
-  commit(compact([draftPatch('tasks', id, { doneOn: t.doneOn ? null : todayStr() })]));
+  commit(
+    compact([
+      draftPatch(
+        'tasks',
+        id,
+        t.doneOn ? { doneOn: null, doneAt: null } : { doneOn: todayStr(), doneAt: now() }
+      ),
+    ])
+  );
 }
 
 export function deleteTask(id: string): void {
@@ -234,16 +254,15 @@ export function deleteHabit(id: string): void {
 }
 
 /** Значение «выполнено полностью» для привычки: цель для numeric, 1 для остальных. */
-export function fullValue(h: Habit): number {
-  return h.measure === 'numeric' ? h.target : 1;
-}
+export { fullValue };
 
-/** Отметить/снять отметку за день (для вредной — срыв). */
+/** Отметить/снять отметку за день (для вредной — срыв). Отметка поверх «слил» заменяет слив. */
 export function toggleCheck(habitId: string, date: ISODate): void {
   const h = get('habits', habitId);
   if (!h) return;
   const id = checkId(habitId, date);
-  if (get('checks', id)) {
+  const prev = get('checks', id);
+  if (prev && !prev.slip) {
     commit(compact([draftDelete('checks', id)]));
   } else {
     commit([draftCreate('checks', id, { habitId, date, value: fullValue(h) })]);
@@ -259,6 +278,28 @@ export function setCheckValue(habitId: string, date: ISODate, value: number): vo
   } else {
     commit([draftCreate('checks', id, { habitId, date, value })]);
   }
+}
+
+/** «Слил сегодня» у полезной привычки (снимает выполнение за день). Повтор — снимает слив. */
+export function toggleSlip(habitId: string, date: ISODate): void {
+  const h = get('habits', habitId);
+  if (!h || h.kind !== 'good') return;
+  const id = checkId(habitId, date);
+  if (get('checks', id)?.slip) {
+    commit(compact([draftDelete('checks', id)]));
+  } else {
+    commit([draftCreate('checks', id, { habitId, date, value: 0, slip: true })]);
+  }
+}
+
+/** Выходной на один день: включить или выключить. Период из нескольких дней не дробится. */
+export function toggleRestDay(habitId: string, date: ISODate): void {
+  if (!get('habits', habitId)) return;
+  const single = live(data().rests).find(
+    (r) => r.habitId === habitId && r.from === date && r.to === date
+  );
+  if (single) commit(compact([draftDelete('rests', single.id)]));
+  else addRest(habitId, date, date);
 }
 
 export function addRest(habitId: string, from: ISODate, to: ISODate): void {
@@ -287,4 +328,16 @@ export function saveReview(date: ISODate, mood: number, note: string): void {
       note: note.trim(),
     }),
   ]);
+}
+
+// ── Настройки ────────────────────────────────────────────────────────────────
+
+/** Изменить настройки; запись создаётся при первом изменении. */
+export function updateSettings(changes: Partial<SettingsFields>): void {
+  const prev = get('settings', SETTINGS_ID);
+  if (prev) {
+    commit(compact([draftPatch('settings', SETTINGS_ID, changes)]));
+  } else {
+    commit([draftCreate('settings', SETTINGS_ID, { ...DEFAULT_SETTINGS, ...changes })]);
+  }
 }

@@ -34,6 +34,8 @@ export type Task = RecordMeta & {
   priority: Priority;
   /** день выполнения; null — не выполнено */
   doneOn: ISODate | null;
+  /** момент выполнения (мс) — для журнала «Сделано»; null — не выполнено или неизвестно */
+  doneAt: number | null;
   areaId: string | null;
   remindAt: ClockTime;
   placeId: string | null;
@@ -69,13 +71,15 @@ export type Habit = RecordMeta & {
 
 /**
  * Отметка привычки за день. Для полезной — сделано (или сколько сделано для numeric),
- * для вредной — срыв. `id` детерминированный: `${habitId}|${date}`, чтобы отметки
+ * для вредной — срыв. `slip` — «слил сегодня» у полезной (value тогда 0). `id` детерминированный: `${habitId}|${date}`, чтобы отметки
  * с разных устройств за один день сливались, а не дублировались.
  */
 export type HabitCheck = RecordMeta & {
   habitId: string;
   date: ISODate;
   value: number;
+  /** полезная привычка слита за этот день; у записей до этапа 4 поля нет — значит false */
+  slip?: boolean;
 };
 
 export type RestPeriod = RecordMeta & {
@@ -118,6 +122,31 @@ export type Place = RecordMeta & {
   radius: number;
 };
 
+export type ThemeChoice = 'dark' | 'light' | 'system';
+export type ToneChoice = 'plain' | 'bro';
+export type LocaleChoice = 'ru' | 'en' | 'es';
+
+/**
+ * Настройки пользователя — одна запись с id `SETTINGS_ID`. Это обычная запись с метаданными,
+ * поэтому синхронизируется вместе с данными (побеждает последнее изменение).
+ */
+export type Settings = RecordMeta & {
+  /** «Ночь» = dark, «Рассвет» = light */
+  theme: ThemeChoice;
+  tone: ToneChoice;
+  /** цитата волка (одна в день, только в пацанском тоне) */
+  quotes: boolean;
+  /** звания и очки */
+  ranks: boolean;
+  locale: LocaleChoice;
+  /** 1 — неделя с понедельника, 0 — с воскресенья */
+  weekStart: 0 | 1;
+  /** время напоминания об итоге дня; '' — не напоминать */
+  reviewAt: ClockTime;
+};
+
+export const SETTINGS_ID = 'me';
+
 export type Collections = {
   tasks: Task;
   habits: Habit;
@@ -127,6 +156,7 @@ export type Collections = {
   goals: Goal;
   reviews: DayReview;
   places: Place;
+  settings: Settings;
 };
 
 export type CollectionName = keyof Collections;
@@ -141,6 +171,7 @@ export const COLLECTIONS: readonly CollectionName[] = [
   'goals',
   'reviews',
   'places',
+  'settings',
 ] as const;
 
 export type Profile = {
@@ -163,6 +194,7 @@ export function emptySnapshot(startedAt: ISODate): Snapshot {
     goals: {},
     reviews: {},
     places: {},
+    settings: {},
     profile: { startedAt },
   };
 }
