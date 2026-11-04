@@ -17,9 +17,7 @@ export const ru = {
   'mark.done': 'зачёт',
   'mark.slip': { plain: 'срыв', bro: 'слив' },
   'mark.clean': { plain: 'чисто', bro: 'держусь' },
-  'mark.rest': 'выходной',
   'mark.debt': { plain: 'просрочено', bro: 'долг' },
-  'mark.closed': 'закрыт',
 
   'wolf.smirk': 'Волк в деле',
   'wolf.proud': 'Волк доволен',
@@ -28,7 +26,6 @@ export const ru = {
   'common.undo': 'Отменить',
   'common.back': 'Назад',
   'common.close': 'Закрыть',
-  'common.add': 'Добавить',
   'common.addPrompt': 'Запиши дело или привычку',
 
   'theme.dark': 'Вечер',
@@ -47,7 +44,6 @@ export const ru = {
 
   'a11y.check': 'Отметить: {title}',
   'a11y.uncheck': 'Снять отметку: {title}',
-  'a11y.progress': '{done} из {total}',
   'a11y.notches': {
     one: '{count} зарубка',
     few: '{count} зарубки',
@@ -56,19 +52,9 @@ export const ru = {
   },
   'a11y.priority': 'Важность {count} из 3',
 
-  'unit.days': {
-    one: '{count} день',
-    few: '{count} дня',
-    many: '{count} дней',
-    other: '{count} дня',
-  },
-
   'toast.taskDeleted': { plain: 'Задача удалена', bro: 'Вычеркнул.' },
   'toast.dayClosed': { plain: 'Все привычки выполнены', bro: 'День закрыт. Красава.' },
-  'toast.confirmDelete': { plain: 'Нажмите ещё раз для удаления', bro: 'Точно? Жми ещё раз.' },
-  'toast.restDay': { plain: 'Сегодня у привычек выходной', bro: 'Выходной. Серия не горит.' },
   'toast.streakLost': { plain: 'Серия прервана', bro: 'Слил — бывает. Встал и пошёл.' },
-  'toast.goalCreated': { plain: 'Цель создана', bro: 'Слово дано. Печать стоит.' },
   'tasks.overdue': { plain: 'Просроченные', bro: 'Долги' },
   // Даты
   'date.weekdayTitle.0': 'Воскресенье',
@@ -195,6 +181,11 @@ export const ru = {
   'settings.quotesHint': 'одна в день, без фанатизма',
   'settings.ranks': 'Звания и очки',
   'settings.days': 'Дни',
+  'settings.language': 'Язык',
+  // Названия языков — на самих языках, одинаково во всех словарях
+  'lang.ru': 'Русский',
+  'lang.en': 'English',
+  'lang.es': 'Español',
   'settings.weekStart': 'Неделя с',
   'week.from.1': 'понедельника',
   'week.from.0': 'воскресенья',

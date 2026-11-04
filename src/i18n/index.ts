@@ -3,13 +3,18 @@
  * `const t = useT(); t('tab.today')`, вне React — `translate(...)`.
  */
 import { pickForm } from './plural';
+import { en } from './en';
+import { es } from './es';
 import { ru, type MessageKey } from './ru';
 import type { Locale, Message, Tone, Variant } from './types';
 
 export type { Locale, MessageKey, Tone };
 export { pluralCategory } from './plural';
 
-const DICTS: Record<Locale, Record<MessageKey, Message>> = { ru };
+const DICTS: Record<Locale, Record<MessageKey, Message>> = { ru, en, es };
+
+/** Языки в порядке выбора в настройках. */
+export const LOCALES: readonly Locale[] = ['ru', 'en', 'es'];
 
 export type Params = Record<string, string | number> & { count?: number };
 

@@ -32,8 +32,7 @@ export function followSettings(): void {
     if (key === last) return;
     last = key;
     useThemeStore.getState().applyMode(s.theme);
-    // Пока есть только русские строки; en/es подключатся вместе со словарями.
-    usePrefsStore.getState().apply({ tone: s.tone, locale: 'ru' });
+    usePrefsStore.getState().apply({ tone: s.tone, locale: s.locale });
   };
   apply();
   useDataStore.subscribe((st, prev) => {

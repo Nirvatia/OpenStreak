@@ -14,6 +14,9 @@ export function pluralCategory(locale: Locale, n: number): Category {
       if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'few';
       return 'many';
     }
+    case 'en':
+    case 'es':
+      return abs === 1 ? 'one' : 'other';
   }
 }
 

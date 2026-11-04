@@ -1,7 +1,7 @@
 /**
  * Настройки (design/mult/M-Settings): тема, характер (тон, цитаты, звания), дни.
  * Всё хранится в настройках в данных и синхронизируется. Итог дня — время и напоминание;
- * данные — бэкап в файл и восстановление. Язык появится вместе с en/es, места — на этапе 5.
+ * язык — русский, английский, испанский; данные — бэкап в файл и восстановление. Места — на этапе 5.
  */
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
@@ -12,6 +12,7 @@ import { settingsOf } from '../../core/settings';
 import { replaceAll, useDataStore } from '../../core/store';
 import { exportData, importData } from '../../services/exportImport';
 import { askNotificationPermission } from '../../services/notifications';
+import { LOCALES, type MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
 import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Scheme, type ThemeMode } from '../../theme/palette';
@@ -126,6 +127,15 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
             hint={t('settings.quotesHint')}
             value={s.quotes}
             onChange={(quotes) => A.updateSettings({ quotes })}
+          />
+          <SettingRow
+            label={t('settings.language')}
+            value={t(`lang.${s.locale}` as MessageKey)}
+            onPress={() =>
+              A.updateSettings({
+                locale: LOCALES[(LOCALES.indexOf(s.locale) + 1) % LOCALES.length],
+              })
+            }
           />
           <SettingRow
             label={t('settings.ranks')}
