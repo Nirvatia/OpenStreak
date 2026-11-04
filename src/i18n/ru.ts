@@ -29,6 +29,25 @@ export const ru = {
   'common.close': 'Закрыть',
   'common.add': 'Добавить',
 
+  'day.short.0': 'Вс',
+  'day.short.1': 'Пн',
+  'day.short.2': 'Вт',
+  'day.short.3': 'Ср',
+  'day.short.4': 'Чт',
+  'day.short.5': 'Пт',
+  'day.short.6': 'Сб',
+
+  'a11y.check': 'Отметить: {title}',
+  'a11y.uncheck': 'Снять отметку: {title}',
+  'a11y.progress': '{done} из {total}',
+  'a11y.tally': {
+    one: '{count} палочка',
+    few: '{count} палочки',
+    many: '{count} палочек',
+    other: '{count} палочки',
+  },
+  'week.clean': 'Чисто',
+
   'unit.days': {
     one: '{count} день',
     few: '{count} дня',

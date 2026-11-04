@@ -10,6 +10,7 @@ import { usePalette, useThemeStore } from '../../store/themeStore';
 import { INK_NAMES, THEME_MODES, type Palette } from '../../theme/palette';
 import { LINE, SPACE } from '../../theme/stamp';
 import { TYPE, type TypeVariant } from '../../theme/type';
+import { CatalogRows } from './CatalogRows';
 import { HABIT_ICONS, HabitGlyph, Icon, UI_ICONS, WolfSeal, type UiIconName } from '../icons';
 
 const SWATCHES: (keyof Palette)[] = [
@@ -154,15 +155,7 @@ export function CatalogScreen() {
         </View>
       </Section>
 
-      <Section title="Печати (тексты)">
-        <View style={styles.row}>
-          {(['done', 'debt', 'slip', 'rest', 'closed', 'clean'] as const).map((k) => (
-            <Text key={k} style={[TYPE.stamp, { color: p.stamp }]}>
-              {t(`stamp.${k}`)}
-            </Text>
-          ))}
-        </View>
-      </Section>
+      <CatalogRows Section={Section} />
     </ScrollView>
   );
 }

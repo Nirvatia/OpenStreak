@@ -64,12 +64,18 @@ export const TYPE = {
   label: golos(11, 'bold', 1.3, 0.16, true),
   /** название в строке списка */
   rowTitle: golos(17, 'bold', 1.25),
+  /** дело / привычка в строке с чекбоксом */
+  item: golos(16, 'semibold', 1.3),
   /** основной текст, поля ввода */
   body: golos(15, 'regular', 1.5),
   /** выделенный текст, значения */
   bodyStrong: golos(15, 'semibold', 1.4),
   /** подпись под строкой: «вчера · Личное» */
   meta: golos(12, 'regular', 1.35),
+  /** подпись дня недели над клеткой */
+  dayLabel: golos(10, 'bold', 1.2, 0.06, true),
+  /** надпись в клетке недели: «СЛИВ», «ВЫХ» */
+  cell: oswald(12, 1.1, 0.03),
   /** вкладка таб-бара, кнопки сегментов */
   tab: golos(11, 'bold', 1.2, 0.08, true),
 } as const satisfies Record<string, Variant>;
