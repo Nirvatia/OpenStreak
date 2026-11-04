@@ -4,6 +4,7 @@
  * даже если приложение закрыто.
  */
 import * as Notifications from 'expo-notifications';
+import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 import { REMINDER_ID_PREFIX, type PlannedReminder } from '../core/reminders';
 
@@ -28,7 +29,7 @@ function ensureChannel(): Promise<void> {
   if (!channelReady) {
     channelReady = Notifications.setNotificationChannelAsync(CHANNEL_ID, {
       name: 'Напоминания',
-      importance: Notifications.AndroidImportance.HIGH,
+      importance: AndroidImportance.HIGH,
     })
       .then(() => undefined)
       .catch((e) => {

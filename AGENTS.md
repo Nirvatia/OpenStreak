@@ -1,7 +1,7 @@
 # Expo HAS CHANGED
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
-The project is on **Expo SDK 57** (React Native 0.86). Install native modules with `npx expo install`
+Read the exact versioned docs at https://docs.expo.dev/versions/v58.0.0/ before writing any code.
+The project is on **Expo SDK 58** (React Native 0.88). Install native modules with `npx expo install`
 so versions match `expo/bundledNativeModules.json`; never bump `expo` to another major by hand.
 
 # Architecture
