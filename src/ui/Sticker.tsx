@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import type { Palette } from '../theme/palette';
 import { hardShadow, tilt as tiltStyle, type ShadowSize } from '../theme/sticker';
@@ -46,6 +46,28 @@ export function Card({
   style,
 }: CardProps) {
   const p = usePalette();
+  const plain = usePlain();
+  if (plain) {
+    // «Обычный»: списки без рамки (у строк свои разделители), карточка — тонкая рамка.
+    return (
+      <View
+        style={[
+          padded
+            ? {
+                backgroundColor: tone === 'surface' ? 'transparent' : p[tone],
+                borderWidth: STROKE.outline,
+                borderColor: p.line,
+                borderRadius: radius,
+              }
+            : null,
+          padded && styles.padded,
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    );
+  }
   return (
     <View
       style={[
@@ -96,6 +118,26 @@ export function Tag({
   alert = false,
 }: TagProps) {
   const p = usePalette();
+  const plain = usePlain();
+  if (plain) {
+    // «Обычный»: плашки нет — подпись раздела или даты обычным текстом.
+    const text = count !== undefined ? `${label} · ${count}` : label;
+    return (
+      <Text
+        accessibilityRole={header ? 'header' : undefined}
+        style={[
+          font === 'date' ? TYPE.meta : TYPE.label,
+          {
+            color: alert ? p.red : p.muted,
+            textTransform: font === 'label' ? 'uppercase' : 'none',
+            letterSpacing: font === 'label' ? 0.5 : 0,
+          },
+        ]}
+      >
+        {text}
+      </Text>
+    );
+  }
   return (
     <View
       accessibilityRole={header ? 'header' : undefined}

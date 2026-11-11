@@ -13,6 +13,7 @@ import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
 import { HabitsScreen } from '../features/habits/HabitsScreen';
 import { PackScreen } from '../features/pack/PackScreen';
+import { StatsScreen } from '../features/stats/StatsScreen';
 import { PlacesScreen } from '../features/places/PlacesScreen';
 import { ClosedScreen } from '../features/review/ClosedScreen';
 import { ReviewScreen } from '../features/review/ReviewScreen';
@@ -20,7 +21,7 @@ import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { TasksScreen } from '../features/tasks/TasksScreen';
 import { TodayScreen } from '../features/today/TodayScreen';
 import { useT } from '../store/prefsStore';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { TabBar, type TabItem } from '../ui/TabBar';
 
 export type TabKey = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
@@ -39,8 +40,13 @@ const Stack = createNativeStackNavigator<RootStack>();
 
 function LunaTabBar({ state, navigation }: BottomTabBarProps) {
   const t = useT();
+  const plain = usePlain();
   const items: TabItem<TabKey>[] = (['today', 'tasks', 'habits', 'goals', 'pack'] as const).map(
-    (key) => ({ key, label: t(`tab.${key}`), icon: key })
+    (key) =>
+      // «Обычный»: вместо «Стаи» — «Итоги» (обычная статистика, без рейтинга).
+      key === 'pack' && plain
+        ? { key, label: t('tab.stats'), icon: 'stats' }
+        : { key, label: t(`tab.${key}`), icon: key }
   );
   return (
     <TabBar
@@ -49,6 +55,11 @@ function LunaTabBar({ state, navigation }: BottomTabBarProps) {
       onSelect={(key) => navigation.navigate(key)}
     />
   );
+}
+
+/** «Обычный» — «Итоги» (статистика), «АУФ» — «Стая» (звания и волк). */
+function PackOrStats() {
+  return usePlain() ? <StatsScreen /> : <PackScreen />;
 }
 
 function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
@@ -71,7 +82,7 @@ function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
         {() => <HabitsScreen onOpen={(id) => navigation.navigate('habit', { id })} />}
       </Tab.Screen>
       <Tab.Screen name="goals" component={GoalsScreen} />
-      <Tab.Screen name="pack" component={PackScreen} />
+      <Tab.Screen name="pack" component={PackOrStats} />
     </Tab.Navigator>
   );
 }

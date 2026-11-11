@@ -5,7 +5,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { SIZE, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
@@ -27,7 +27,59 @@ type Props<K extends string> = {
 
 export function TabBar<K extends string>({ items, active, onSelect, label }: Props<K>) {
   const p = usePalette();
+  const plain = usePlain();
   const insets = useSafeAreaInsets();
+  if (plain) {
+    // «Обычный»: плоская панель с линией сверху; активная вкладка — полоска над значком.
+    return (
+      <View
+        accessibilityRole="tablist"
+        accessibilityLabel={label}
+        style={{
+          flexDirection: 'row',
+          backgroundColor: p.bg,
+          borderTopWidth: 1,
+          borderTopColor: p.divider,
+          paddingBottom: insets.bottom + 6,
+        }}
+      >
+        {items.map((it) => {
+          const on = it.key === active;
+          return (
+            <Pressable
+              key={it.key}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}
+              onPress={() => onSelect(it.key)}
+              style={{ flex: 1, alignItems: 'center', gap: 4, paddingTop: 12, paddingBottom: 4 }}
+            >
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -1,
+                  left: '22%',
+                  right: '22%',
+                  height: 2,
+                  backgroundColor: on ? p.line : 'transparent',
+                }}
+              />
+              <Icon name={it.icon} size={22} tone={on ? 'text' : 'muted'} />
+              <Text
+                style={[
+                  TYPE.tab,
+                  on && { fontFamily: TYPE.label.fontFamily },
+                  { color: on ? p.text : p.muted },
+                ]}
+                numberOfLines={1}
+              >
+                {it.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    );
+  }
   return (
     <View
       style={[

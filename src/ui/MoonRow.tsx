@@ -5,10 +5,11 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useT } from '../store/prefsStore';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { SIZE, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Moon } from './Moon';
+import { PlainMark } from './PlainMark';
 import { Pill } from './Sticker';
 
 type Props = {
@@ -16,6 +17,8 @@ type Props = {
   sub?: string;
   /** 0…1: 0 — не сделано, 1 — сделано, между — числовая привычка в процессе */
   phase: number;
+  /** «Обычный»: круг для дела, квадрат для привычки */
+  shape?: 'circle' | 'square';
   /** красное кольцо — долг, просрочено */
   debt?: boolean;
   /** выполнено: название приглушено и зачёркнуто */
@@ -34,18 +37,24 @@ type Props = {
 
 export function MoonRow(props: Props) {
   const p = usePalette();
+  const plain = usePlain();
   const t = useT();
   const { title, done = false } = props;
   return (
     <View
       style={[
         styles.row,
-        { backgroundColor: p.surface },
-        !props.last && {
-          borderBottomWidth: STROKE.thin,
-          borderBottomColor: p.divider,
-          borderStyle: 'dashed',
-        },
+        plain
+          ? { backgroundColor: 'transparent', paddingLeft: 0, paddingRight: 0 }
+          : { backgroundColor: p.surface },
+        !props.last &&
+          (plain
+            ? { borderBottomWidth: 1, borderBottomColor: p.divider }
+            : {
+                borderBottomWidth: STROKE.thin,
+                borderBottomColor: p.divider,
+                borderStyle: 'dashed',
+              }),
       ]}
     >
       <Pressable
@@ -57,11 +66,19 @@ export function MoonRow(props: Props) {
       >
         {({ pressed }) => (
           <View style={pressed && styles.pressed}>
-            <Moon
-              phase={props.phase}
-              size={SIZE.moonRow}
-              ring={props.debt && !done ? 'red' : 'ring'}
-            />
+            {plain ? (
+              <PlainMark
+                shape={props.shape}
+                fill={done ? 1 : props.phase}
+                debt={props.debt && !done}
+              />
+            ) : (
+              <Moon
+                phase={props.phase}
+                size={SIZE.moonRow}
+                ring={props.debt && !done ? 'red' : 'ring'}
+              />
+            )}
           </View>
         )}
       </Pressable>

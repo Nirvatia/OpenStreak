@@ -6,26 +6,29 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as A from '../../core/actions';
 import { addDays } from '../../core/dates';
 import {
   activeHabits,
   dataOf,
+  fullValue,
   habitDay,
   habitDays,
   habitStats,
   indexHabits,
 } from '../../core/habits';
-import { checkId } from '../../core/model';
+import { checkId, type Snapshot } from '../../core/model';
 import { settingsOf } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
 import { SHADOW, SPACE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { AddRow, IconButton } from '../../ui/Button';
 import { IconTile } from '../../ui/icons';
 import { ScreenHeader } from '../../ui/ScreenHeader';
 import { Segmented } from '../../ui/Segmented';
+import { PlainMark } from '../../ui/PlainMark';
 import { Badge, Card, Tag } from '../../ui/Sticker';
 import { WeekMoons } from '../../ui/WeekMoons';
 import { useNewSheet } from '../new/newSheetStore';
@@ -33,6 +36,11 @@ import { habitMeta, moonDays, streakLabel } from './habitText';
 import { designStyles } from '../../theme/design';
 
 type Filter = 'all' | 'good' | 'bad';
+
+/** Вредная привычка: сегодня срыв отмечен. */
+function slippedToday(data: Snapshot, habitId: string, today: string): boolean {
+  return !!data.checks[checkId(habitId, today)];
+}
 
 /** Наклон бейджей серий по очереди — как наклейки, налепленные от руки. */
 const BADGE_TILT = [8, -6, 5, -4];
@@ -44,6 +52,7 @@ export function HabitsScreen({ onOpen }: { onOpen: (habitId: string) => void }) 
   const data = useDataStore((s) => s.data);
   const today = useDataStore((s) => s.today);
   const show = useNewSheet((s) => s.show);
+  const plain = usePlain();
   const [filter, setFilter] = useState<Filter>('all');
   const { weekStart } = settingsOf(data);
 
@@ -109,46 +118,102 @@ export function HabitsScreen({ onOpen }: { onOpen: (habitId: string) => void }) 
         </View>
       )}
 
-      {shown.map(({ habit: h, stats, week, value, slippedYesterday }, i) => (
-        <Pressable
-          key={h.id}
-          accessibilityRole="button"
-          accessibilityLabel={h.name}
-          onPress={() => onOpen(h.id)}
-        >
-          {({ pressed }) => (
-            <Card shadow={pressed ? 'none' : 'lg'} style={[styles.card, pressed && styles.pressed]}>
-              <View style={styles.head}>
-                <IconTile icon={h.icon} />
-                <View style={styles.titles}>
-                  <Text style={[TYPE.itemStrong, { color: p.text }]}>{h.name}</Text>
-                  <Text style={[TYPE.meta, { color: p.muted }]}>
-                    {habitMeta(t, h, value, weekStart)}
-                  </Text>
-                </View>
-                <Badge
-                  value={stats.streak}
-                  label={streakLabel(t, h, stats.streak)}
-                  tone={stats.streak === 0 ? 'tag' : h.kind === 'bad' ? 'teal' : 'sun'}
-                  tilt={BADGE_TILT[i % BADGE_TILT.length]}
-                />
+      {plain && (
+        <View>
+          {shown.map(({ habit: h, stats, week, value, slippedYesterday }) => {
+            const full = fullValue(h);
+            const done = h.kind === 'bad' ? !slippedToday(data, h.id, today) : value >= full;
+            return (
+              <View key={h.id} style={[styles.plainRow, { borderTopColor: p.divider }]}>
+                <Pressable
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: done }}
+                  accessibilityLabel={t(done ? 'a11y.uncheck' : 'a11y.check', { title: h.name })}
+                  disabled={h.kind === 'bad'}
+                  onPress={() => A.setCheckValue(h.id, today, done ? 0 : full)}
+                  style={styles.plainMark}
+                >
+                  <PlainMark
+                    shape="square"
+                    fill={done ? 1 : Math.min(1, value / full)}
+                    debt={h.kind === 'bad' && !done}
+                  />
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={h.name}
+                  onPress={() => onOpen(h.id)}
+                  style={styles.plainBody}
+                >
+                  <View style={styles.plainHead}>
+                    <View style={styles.titles}>
+                      <Text style={[TYPE.item, { color: p.text }]}>{h.name}</Text>
+                      <Text style={[TYPE.meta, { color: p.muted }]}>
+                        {habitMeta(t, h, value, weekStart)}
+                      </Text>
+                    </View>
+                    <View style={styles.plainStreak}>
+                      <Text style={[TYPE.numberL, { color: p.text }]}>{stats.streak}</Text>
+                      <Text style={[TYPE.tiny, { color: p.muted }]}>
+                        {streakLabel(t, h, stats.streak)}
+                      </Text>
+                    </View>
+                  </View>
+                  <WeekMoons days={week} />
+                  {slippedYesterday && (
+                    <Text style={[TYPE.meta, { color: p.red }]}>{t('habits.slipNote')}</Text>
+                  )}
+                </Pressable>
               </View>
-              <WeekMoons days={week} />
-              {slippedYesterday && (
-                <View style={styles.note}>
-                  <Tag
-                    label={t('habits.slipNote')}
-                    tone="tag"
-                    tilt={TILT.slightLeft}
-                    header={false}
-                    alert
+            );
+          })}
+        </View>
+      )}
+
+      {!plain &&
+        shown.map(({ habit: h, stats, week, value, slippedYesterday }, i) => (
+          <Pressable
+            key={h.id}
+            accessibilityRole="button"
+            accessibilityLabel={h.name}
+            onPress={() => onOpen(h.id)}
+          >
+            {({ pressed }) => (
+              <Card
+                shadow={pressed ? 'none' : 'lg'}
+                style={[styles.card, pressed && styles.pressed]}
+              >
+                <View style={styles.head}>
+                  <IconTile icon={h.icon} />
+                  <View style={styles.titles}>
+                    <Text style={[TYPE.itemStrong, { color: p.text }]}>{h.name}</Text>
+                    <Text style={[TYPE.meta, { color: p.muted }]}>
+                      {habitMeta(t, h, value, weekStart)}
+                    </Text>
+                  </View>
+                  <Badge
+                    value={stats.streak}
+                    label={streakLabel(t, h, stats.streak)}
+                    tone={stats.streak === 0 ? 'tag' : h.kind === 'bad' ? 'teal' : 'sun'}
+                    tilt={BADGE_TILT[i % BADGE_TILT.length]}
                   />
                 </View>
-              )}
-            </Card>
-          )}
-        </Pressable>
-      ))}
+                <WeekMoons days={week} />
+                {slippedYesterday && (
+                  <View style={styles.note}>
+                    <Tag
+                      label={t('habits.slipNote')}
+                      tone="tag"
+                      tilt={TILT.slightLeft}
+                      header={false}
+                      alert
+                    />
+                  </View>
+                )}
+              </Card>
+            )}
+          </Pressable>
+        ))}
     </ScrollView>
   );
 }
@@ -162,5 +227,21 @@ const styles = designStyles(() =>
     titles: { flex: 1, minWidth: 0 },
     note: { alignItems: 'flex-start' },
     empty: { gap: SPACE.md },
+    plainRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      borderTopWidth: 1,
+      paddingBottom: 14,
+    },
+    plainMark: {
+      width: 44,
+      height: 44,
+      marginLeft: -10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    plainBody: { flex: 1, gap: 10, paddingTop: 2 },
+    plainHead: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACE.md },
+    plainStreak: { alignItems: 'flex-end', paddingTop: 2 },
   })
 );

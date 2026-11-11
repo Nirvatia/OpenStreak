@@ -21,6 +21,7 @@ export const UI_ICONS = {
     dots: ring(6.5, 10, 1.8) + ring(10, 6.5, 1.8) + ring(14, 6.5, 1.8) + ring(17.5, 10, 1.8),
   },
   settings: line(`M4 7h9M17 7h3M4 17h3M11 17h9 ${ring(15, 7, 2.2)} ${ring(9, 17, 2.2)}`),
+  stats: line('M5 20v-8M12 20V5M19 20V9'),
   plus: line('M12 5v14M5 12h14'),
   back: line('M19 12H5M11 6l-6 6 6 6'),
   arrow: line('M5 12h14M13 6l6 6-6 6'),

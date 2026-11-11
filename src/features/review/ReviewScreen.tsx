@@ -11,7 +11,7 @@ import { dayView, moodPhase } from '../../core/day';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
 import { RADIUS, SPACE, STROKE } from '../../theme/metrics';
 import { hardShadow, tilt } from '../../theme/sticker';
 import { TYPE } from '../../theme/type';
@@ -36,7 +36,9 @@ export function ReviewScreen({ onBack, onClosed }: Props) {
   const today = useDataStore((s) => s.today);
   const existing = data.reviews[today];
   const saved = existing && existing.deletedAt === null ? existing : undefined;
-  const [mood, setMood] = useState<number>(saved?.mood ?? 4);
+  const plain = usePlain();
+  // В «Обычном» оценки дня нет: сохраняем нейтральную, чтобы запись осталась совместимой.
+  const [mood, setMood] = useState<number>(saved?.mood ?? (plain ? 3 : 4));
   const [note, setNote] = useState(saved?.note ?? '');
 
   const day = useMemo(() => dayView(data, today, today), [data, today]);
@@ -63,50 +65,77 @@ export function ReviewScreen({ onBack, onClosed }: Props) {
           title={t('review.title')}
         />
 
-        <View accessibilityLiveRegion="polite">
-          <WolfQuote
-            text={t(`review.verdict.${mood}` as MessageKey)}
-            sign={t('wolf.signature')}
-            mood={mood === 1 ? 'meh' : mood >= 4 ? 'proud' : 'smirk'}
-          />
-        </View>
-
-        <View style={styles.section}>
-          <Text accessibilityRole="header" style={[TYPE.control, { color: p.text }]}>
-            {t('review.question')}
-          </Text>
-          <View
-            style={styles.moods}
-            accessibilityRole="radiogroup"
-            accessibilityLabel={t('review.mood')}
-          >
-            {MOODS.map((m, i) => {
-              const on = m === mood;
-              return (
-                <Pressable
-                  key={m}
-                  accessibilityRole="radio"
-                  accessibilityState={{ checked: on }}
-                  onPress={() => setMood(m)}
-                  style={[
-                    styles.mood,
-                    { backgroundColor: on ? p.tag : p.surface, borderColor: p.line },
-                    on && hardShadow(p, 'md'),
-                    on && tilt(TILTS[i]),
-                  ]}
-                >
-                  <Moon phase={moodPhase(m)} size={36} />
-                  <Text
-                    numberOfLines={1}
-                    style={[on ? TYPE.mark : TYPE.caption, { color: p.text }]}
-                  >
-                    {t(`review.mood.${m}` as MessageKey)}
-                  </Text>
-                </Pressable>
-              );
-            })}
+        {plain && (
+          <View>
+            {[
+              {
+                name: t('review.rowDone'),
+                value: t('review.of', { done: day.done, total: day.total }),
+                red: false,
+              },
+              { name: t('review.rowLeft'), value: String(day.left.length), red: false },
+              {
+                name: t('review.rowDebt'),
+                value: String(day.left.filter((i) => i.kind === 'task' && i.debt).length),
+                red: day.left.some((i) => i.kind === 'task' && i.debt),
+              },
+            ].map((r) => (
+              <View key={r.name} style={[styles.plainRow, { borderTopColor: p.divider }]}>
+                <Text style={[TYPE.item, { color: p.text }]}>{r.name}</Text>
+                <Text style={[TYPE.numberM, { color: r.red ? p.red : p.text }]}>{r.value}</Text>
+              </View>
+            ))}
           </View>
-        </View>
+        )}
+
+        {!plain && (
+          <View accessibilityLiveRegion="polite">
+            <WolfQuote
+              text={t(`review.verdict.${mood}` as MessageKey)}
+              sign={t('wolf.signature')}
+              mood={mood === 1 ? 'meh' : mood >= 4 ? 'proud' : 'smirk'}
+            />
+          </View>
+        )}
+
+        {!plain && (
+          <View style={styles.section}>
+            <Text accessibilityRole="header" style={[TYPE.control, { color: p.text }]}>
+              {t('review.question')}
+            </Text>
+            <View
+              style={styles.moods}
+              accessibilityRole="radiogroup"
+              accessibilityLabel={t('review.mood')}
+            >
+              {MOODS.map((m, i) => {
+                const on = m === mood;
+                return (
+                  <Pressable
+                    key={m}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: on }}
+                    onPress={() => setMood(m)}
+                    style={[
+                      styles.mood,
+                      { backgroundColor: on ? p.tag : p.surface, borderColor: p.line },
+                      on && hardShadow(p, 'md'),
+                      on && tilt(TILTS[i]),
+                    ]}
+                  >
+                    <Moon phase={moodPhase(m)} size={36} />
+                    <Text
+                      numberOfLines={1}
+                      style={[on ? TYPE.mark : TYPE.caption, { color: p.text }]}
+                    >
+                      {t(`review.mood.${m}` as MessageKey)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        )}
 
         <TextField
           variant="note"
@@ -128,6 +157,13 @@ const styles = designStyles(() =>
     fill: { flex: 1 },
     content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
     section: { gap: 10 },
+    plainRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: 54,
+      borderTopWidth: 1,
+    },
     moods: { flexDirection: 'row', gap: SPACE.sm },
     mood: {
       flex: 1,

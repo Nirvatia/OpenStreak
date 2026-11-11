@@ -89,3 +89,6 @@ Appearance.addChangeListener(({ colorScheme }) => {
 
 /** Палитра «Мульта» текущей темы. */
 export const usePalette = (): Palette => useThemeStore((s) => s.palette);
+
+/** «Обычное» оформление включено? */
+export const usePlain = (): boolean => useThemeStore((s) => s.design === 'plain');

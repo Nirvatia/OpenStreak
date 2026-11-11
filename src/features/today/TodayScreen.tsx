@@ -16,11 +16,12 @@ import { effectiveSettings } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { quoteCount, type MessageKey } from '../../i18n';
 import { useT, type Translate } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
 import { RADIUS, SIZE, SPACE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { AddRow, IconButton, LinkRow } from '../../ui/Button';
 import { Moon } from '../../ui/Moon';
+import { DayRail, type RailState } from '../../ui/DayRail';
 import { LogRow, MoonRow } from '../../ui/MoonRow';
 import { PriorityMarks } from '../../ui/Priority';
 import { SectionTitle } from '../../ui/ScreenHeader';
@@ -57,6 +58,11 @@ export function TodayScreen({ onOpenSettings, onOpenReview }: Props) {
   const streak = closedStreak(data, today);
   const number = dayNumber(data.profile.startedAt, today);
   const rest = day.total - day.done;
+  const plain = usePlain();
+  const rail: RailState[] = [
+    ...Array.from({ length: day.done }, (): RailState => 'done'),
+    ...day.left.map((i): RailState => (i.kind === 'task' && i.debt ? 'debt' : 'open')),
+  ];
 
   const phaseText =
     day.total === 0
@@ -73,45 +79,74 @@ export function TodayScreen({ onOpenSettings, onOpenReview }: Props) {
       <View style={styles.header}>
         <View style={styles.titles}>
           <Tag label={fullDate(t, today)} font="date" tilt={TILT.slightLeft} shadow="sm" />
-          <Text style={[TYPE.meta, { color: p.muted }]}>
-            {streak > 0
-              ? t('today.meta', { day: number, streak })
-              : t('today.metaFirst', { day: number })}
-          </Text>
+          {plain ? (
+            <Text accessibilityRole="header" style={[TYPE.title, { color: p.text }]}>
+              {t('tab.today')}
+            </Text>
+          ) : (
+            <Text style={[TYPE.meta, { color: p.muted }]}>
+              {streak > 0
+                ? t('today.meta', { day: number, streak })
+                : t('today.metaFirst', { day: number })}
+            </Text>
+          )}
         </View>
         <IconButton icon="settings" label={t('settings.title')} onPress={onOpenSettings} />
       </View>
 
-      <Card radius={RADIUS.xl} style={styles.hero}>
-        <View
-          style={styles.heroRow}
-          accessible
-          accessibilityLabel={t('today.progress', { done: day.done, total: day.total })}
-        >
-          <Moon phase={day.phase} size={SIZE.moonDay} />
-          <View style={styles.score}>
-            <Text style={[TYPE.numberXL, { color: p.text }]}>
-              {day.done}
-              <Text style={[TYPE.numberXLLight, { color: p.muted }]}>
-                {' / '}
-                {day.total}
-              </Text>
+      {plain ? (
+        <View style={styles.summary}>
+          <View style={styles.summaryRow}>
+            <Text style={[TYPE.item, { color: p.text }]}>
+              {day.total === 0
+                ? t('today.empty')
+                : t('today.doneOf', { done: day.done, total: day.total })}
             </Text>
-            <Text style={[TYPE.note, { color: p.muted }]}>{phaseText}</Text>
+            {rest > 0 && (
+              <Text style={[TYPE.meta, { color: p.muted }]}>
+                {t('today.restCount', { count: rest })}
+              </Text>
+            )}
           </View>
-        </View>
-        {settings.ranks && view.points > 0 && (
-          <View style={styles.points}>
-            <Tag
-              label={t('today.points', { count: view.points })}
-              tone="sun"
-              font="badge"
-              tilt={6}
-              header={false}
+          {day.total > 0 && (
+            <DayRail
+              items={rail}
+              label={t('today.progress', { done: day.done, total: day.total })}
             />
+          )}
+        </View>
+      ) : (
+        <Card radius={RADIUS.xl} style={styles.hero}>
+          <View
+            style={styles.heroRow}
+            accessible
+            accessibilityLabel={t('today.progress', { done: day.done, total: day.total })}
+          >
+            <Moon phase={day.phase} size={SIZE.moonDay} />
+            <View style={styles.score}>
+              <Text style={[TYPE.numberXL, { color: p.text }]}>
+                {day.done}
+                <Text style={[TYPE.numberXLLight, { color: p.muted }]}>
+                  {' / '}
+                  {day.total}
+                </Text>
+              </Text>
+              <Text style={[TYPE.note, { color: p.muted }]}>{phaseText}</Text>
+            </View>
           </View>
-        )}
-      </Card>
+          {settings.ranks && view.points > 0 && (
+            <View style={styles.points}>
+              <Tag
+                label={t('today.points', { count: view.points })}
+                tone="sun"
+                font="badge"
+                tilt={6}
+                header={false}
+              />
+            </View>
+          )}
+        </Card>
+      )}
 
       {quote !== null && (
         <WolfQuote
@@ -252,6 +287,7 @@ function LeftRow({ item, today, view, t, last }: RowProps) {
       title={item.title}
       sub={sub}
       phase={item.fraction}
+      shape="square"
       last={last}
       right={meta ? <Text style={[TYPE.badge, { color: p.text }]}>{meta}</Text> : null}
       onToggle={() => {
@@ -275,4 +311,6 @@ const styles = StyleSheet.create({
   score: { flex: 1, gap: SPACE.xs },
   points: { position: 'absolute', top: -16, right: 14 },
   section: { gap: SPACE.md },
+  summary: { gap: SPACE.sm },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
 });

@@ -12,6 +12,7 @@ export const ru = {
   'tab.habits': 'Привычки',
   'tab.goals': 'Цели',
   'tab.pack': 'Стая',
+  'tab.stats': 'Итоги',
 
   // Пометки в журнале дня и на карточках
   'mark.done': 'зачёт',
@@ -86,6 +87,8 @@ export const ru = {
   'today.fullMoon': 'полнолуние',
   'today.closed': 'полнолуние. День закрыт.',
   'today.empty': { plain: 'на сегодня пусто', bro: 'пусто. запиши, что делаем' },
+  'today.doneOf': 'Сделано {done} из {total}',
+  'today.restCount': 'осталось {count}',
   'today.points': {
     one: '+{count} очко',
     few: '+{count} очка',
@@ -464,6 +467,12 @@ export const ru = {
   'rank.leader': 'Вожак',
   'rank.alpha': 'Альфа',
   // Итог дня
+  'review.rowDone': 'Сделано',
+  'review.rowLeft': 'Осталось',
+  'review.rowDebt': 'Просрочено',
+  'review.of': '{done} из {total}',
+  'closed.rowDone': 'сделано за день',
+  'closed.rowStreak': 'дней закрыто подряд',
   'review.title': 'Итог дня',
   'review.kicker': '{date} · {done} из {total}',
   'review.question': 'Как прошёл день?',

@@ -16,11 +16,12 @@ import { effectiveSettings } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { quoteCount, type MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
-import { usePalette, useThemeStore } from '../../store/themeStore';
+import { usePalette, usePlain, useThemeStore } from '../../store/themeStore';
 import { SPACE, STROKE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { Button } from '../../ui/Button';
-import { Wolf } from '../../ui/icons';
+import { Icon, Wolf } from '../../ui/icons';
+import { fullDate } from '../format';
 import { Moon } from '../../ui/Moon';
 import { Tag, WolfQuote } from '../../ui/Sticker';
 
@@ -46,6 +47,7 @@ export function ClosedScreen({ onDone }: { onDone: () => void }) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const night = useThemeStore((s) => s.scheme === 'dark');
+  const plain = usePlain();
   const data = useDataStore((s) => s.data);
   const today = useDataStore((s) => s.today);
   const settings = effectiveSettings(data);
@@ -64,6 +66,51 @@ export function ClosedScreen({ onDone }: { onDone: () => void }) {
   const count = quoteCount('ru');
   const morning = quoteOfDay(settings, today, count);
   const quote = morning === null ? null : (morning + 1) % count;
+  if (plain) {
+    // «Обычный»: без волка, луны и цитаты — галочка, числа дня и что будет завтра.
+    const numbers = [
+      { value: `${info.day.done}/${info.day.total}`, label: t('closed.rowDone') },
+      ...(info.streak > 0 ? [{ value: String(info.streak), label: t('closed.rowStreak') }] : []),
+    ];
+    return (
+      <View style={[styles.plainFill, { backgroundColor: p.bg }]}>
+        <View style={styles.plainBody}>
+          <View style={[styles.plainCheck, { backgroundColor: p.line }]}>
+            <Icon name="check" size={36} tone="onSun" />
+          </View>
+          <View>
+            <Text style={[TYPE.meta, { color: p.muted }]}>{fullDate(t, today)}</Text>
+            <Text accessibilityRole="header" style={[TYPE.display, { color: p.text }]}>
+              {t('closed.title')}
+            </Text>
+          </View>
+          <View style={[styles.plainNumbers, { borderColor: p.divider }]}>
+            {numbers.map((n, i) => (
+              <View
+                key={n.label}
+                style={[
+                  styles.plainNumber,
+                  i > 0 && { borderLeftWidth: 1, borderLeftColor: p.divider, paddingLeft: 14 },
+                ]}
+              >
+                <Text style={[TYPE.numberL, { color: p.text }]}>{n.value}</Text>
+                <Text style={[TYPE.caption, { color: p.muted }]}>{n.label}</Text>
+              </View>
+            ))}
+          </View>
+          {info.next && (
+            <Text style={[TYPE.body, { color: p.muted }]}>
+              {t('closed.tomorrow', { time: info.next.time, title: info.next.title })}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.plainFooter, { paddingBottom: insets.bottom + SPACE.lg }]}>
+          <Button label={t('closed.ok')} onPress={onDone} />
+        </View>
+      </View>
+    );
+  }
+
   const sky = night ? p.bg : p.sky;
   // Земля под волком продолжается под текстом — экран «стоит» на холме.
   const ground = night ? p.surface : p.tag;
@@ -170,6 +217,23 @@ export function ClosedScreen({ onDone }: { onDone: () => void }) {
 }
 
 const styles = StyleSheet.create({
+  plainFill: { flex: 1 },
+  plainBody: { flex: 1, justifyContent: 'center', paddingHorizontal: SPACE.screenX, gap: 32 },
+  plainCheck: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plainNumbers: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    paddingVertical: 18,
+  },
+  plainNumber: { flex: 1, gap: 4 },
+  plainFooter: { paddingHorizontal: SPACE.screenX },
   content: { flexGrow: 1 },
   stage: { height: STAGE, alignItems: 'center' },
   star: { position: 'absolute', borderRadius: 3 },
