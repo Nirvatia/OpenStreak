@@ -1,14 +1,14 @@
 /**
  * Запуск приложения: загрузка данных (с переносом из старой версии), сверка напоминаний,
- * отслеживание смены суток и запись на диск при уходе в фон.
+ * геозоны, отслеживание смены суток и запись на диск при уходе в фон.
  */
 import { AppState as RNAppState } from 'react-native';
 import { planReminders } from '../core/reminders';
-import { createPlatformStorage } from '../core/storage';
-import { flush, initData, setToday, useDataStore } from '../core/store';
+import { flush, setToday, useDataStore } from '../core/store';
+import { syncGeofences } from '../services/geofence';
 import { syncReminders } from '../services/notifications';
-import { storage as kv, STATE_KEY } from '../services/storage';
 import { todayStr } from '../core/dates';
+import { loadData } from './loadData';
 import { followSettings, seedSettingsFromDevice } from './settingsSync';
 
 const REMINDER_SYNC_DELAY_MS = 1500;
@@ -22,18 +22,7 @@ export function bootstrap(): Promise<void> {
 }
 
 async function start(): Promise<void> {
-  try {
-    const res = await initData({
-      storage: createPlatformStorage(),
-      // Ключ старой версии только читаем: он остаётся как резервная копия.
-      legacy: { read: async () => (await kv.getString(STATE_KEY)) ?? null },
-    });
-    if (res.legacyError) console.warn('Old data was not migrated:', res.legacyError);
-  } catch (e) {
-    console.error('Failed to load data', e);
-    // Пустой стор лучше вечной заставки; данные на диске не тронуты.
-    useDataStore.setState({ ready: true });
-  }
+  await loadData();
 
   try {
     await seedSettingsFromDevice();
@@ -48,6 +37,7 @@ async function start(): Promise<void> {
     timer = setTimeout(() => {
       timer = null;
       void syncReminders(planReminders(useDataStore.getState().data, new Date()));
+      void syncGeofences();
     }, REMINDER_SYNC_DELAY_MS);
   };
   useDataStore.subscribe((s, prev) => {

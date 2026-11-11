@@ -24,7 +24,9 @@ import { Sheet } from '../../ui/Sheet';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { dayMonth } from '../format';
+import { usePlaceAccess } from '../places/placeAccessStore';
 import { PlaceSheet } from '../places/PlaceSheet';
+import { geofenceAccess } from '../../services/geofence';
 import { useNewSheet, type NewKind } from './newSheetStore';
 
 /** Системный выбор даты и времени есть только на телефонах. */
@@ -138,6 +140,12 @@ function NewSheetForm() {
     }
     hide();
     toast(t('toast.saved'));
+    // Напоминание по месту работает только с доступом «Всегда» — объясняем и просим.
+    if (placeId && kind !== 'goal' && !(kind === 'habit' && bad)) {
+      void geofenceAccess().then((a) => {
+        if (a === 'foreground' || a === 'denied') usePlaceAccess.getState().show();
+      });
+    }
   };
 
   const removeGoal = () => {

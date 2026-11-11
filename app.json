@@ -31,7 +31,10 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "OpenStreak использует местоположение, чтобы запомнить место для напоминания, когда ты нажимаешь «Я здесь»."
+          "locationWhenInUsePermission": "OpenStreak использует местоположение, чтобы запомнить место для напоминания, когда ты нажимаешь «Я здесь».",
+          "locationAlwaysAndWhenInUsePermission": "OpenStreak следит за выбранными тобой местами, чтобы напомнить о деле у магазина или в зале, даже когда приложение закрыто. Координаты остаются на телефоне.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true
         }
       ],
       [

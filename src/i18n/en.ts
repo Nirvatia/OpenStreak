@@ -153,6 +153,23 @@ export const en: Record<MessageKey, Message> = {
   'place.exit': 'On leaving',
   'place.manage': 'My places',
   'place.trigger': 'when',
+  'notify.placeEnter': 'You’re at “{place}”',
+  'notify.placeExit': 'You left “{place}”',
+  'access.title': 'Location access',
+  'access.why':
+    'For a reminder to arrive at a shop or the gym, the phone has to watch the place even when the app is closed. That needs “Always” location access.',
+  'access.privacy':
+    'Place coordinates stay on your phone. The app sends them nowhere and doesn’t record where you go: the system only reports entering and leaving a circle.',
+  'access.how':
+    'Next the phone will ask for permission. Choose “Allow always” (on Android: “Allow all the time” in the app’s location settings).',
+  'access.allow': 'Allow',
+  'access.later': 'Not now',
+  'access.on': 'Access granted, place reminders work',
+  'access.foreground':
+    'Access only while the app is open — place reminders won’t arrive in the background',
+  'access.denied': 'No access. Allow location in the phone settings',
+  'access.bannerOff': 'Place reminders won’t arrive until “Always” access is allowed',
+  'access.unsupported': 'Place reminders work on a phone only',
 
   'new.title': 'New',
   'new.kind': 'What is it',

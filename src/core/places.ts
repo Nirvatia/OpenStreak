@@ -100,16 +100,25 @@ export function distanceMeters(a: Coords, b: Coords): number {
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
+export type ZoneTriggers = { enter: boolean; exit: boolean };
+
+/** Для каждого места — на что ловить: вход, выход. Только живые невыполненные дела и привычки в ведении. */
+export function neededTriggers(d: Pick<Snapshot, 'tasks' | 'habits'>): Map<string, ZoneTriggers> {
+  const out = new Map<string, ZoneTriggers>();
+  const add = (placeId: string | null, trigger: 'enter' | 'exit' | null) => {
+    if (!placeId || !trigger) return;
+    const z = out.get(placeId) ?? { enter: false, exit: false };
+    z[trigger] = true;
+    out.set(placeId, z);
+  };
+  for (const t of live(d.tasks)) if (t.doneOn === null) add(t.placeId, t.placeTrigger);
+  for (const h of live(d.habits)) if (h.archivedAt === null) add(h.placeId, h.placeTrigger);
+  return out;
+}
+
 /** Id мест, на которые есть живое невыполненное дело или живая привычка с триггером. */
 export function neededPlaceIds(d: Pick<Snapshot, 'tasks' | 'habits'>): Set<string> {
-  const ids = new Set<string>();
-  for (const t of live(d.tasks)) {
-    if (t.placeId && t.placeTrigger && t.doneOn === null) ids.add(t.placeId);
-  }
-  for (const h of live(d.habits)) {
-    if (h.placeId && h.placeTrigger && h.archivedAt === null) ids.add(h.placeId);
-  }
-  return ids;
+  return new Set(neededTriggers(d).keys());
 }
 
 /**

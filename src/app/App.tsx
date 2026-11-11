@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useDataStore } from '../core/store';
 import { NewSheet } from '../features/new/NewSheet';
+import { PlaceAccessSheet } from '../features/places/PlaceAccessSheet';
 import { useAppFonts } from '../hooks/useFonts';
 import { RootNavigator } from '../navigation/RootNavigator';
 import { usePrefsStore } from '../store/prefsStore';
@@ -73,6 +74,7 @@ export const App: React.FC = () => {
             <RootNavigator />
           </NavigationContainer>
           <NewSheet />
+          <PlaceAccessSheet />
           <ToastHost bottom={TAB_BAR_SPACE} />
         </SafeAreaProvider>
       </GestureHandlerRootView>

@@ -137,6 +137,20 @@ describe('места в данных', () => {
     expect(data().tasks[task]).toMatchObject({ placeId: null, placeTrigger: null });
   });
 
+  test('привычка при создании сохраняет место', () => {
+    const place = A.createPlace({ name: 'Зал', ...MSK, radius: 150 });
+    const id = A.createQuickHabit({
+      name: 'Тренировка',
+      kind: 'good',
+      remindAt: '',
+      placeId: place,
+      placeTrigger: 'exit',
+    });
+    expect(data().habits[id]).toMatchObject({ placeId: place, placeTrigger: 'exit' });
+    const plain = A.createQuickHabit({ name: 'Вода', kind: 'good', remindAt: '' });
+    expect(data().habits[plain]).toMatchObject({ placeId: null, placeTrigger: null });
+  });
+
   test('нужные места и выбор под лимит', () => {
     const a = A.createPlace({ name: 'A', ...MSK, radius: 150 });
     const b = A.createPlace({ name: 'B', ...MSK, latitude: 56.5, radius: 150 });

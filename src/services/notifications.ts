@@ -112,3 +112,19 @@ export async function syncReminders(plan: PlannedReminder[]): Promise<void> {
     console.warn('Reminder sync failed', e);
   }
 }
+
+/** Показать уведомление сразу (напоминание по месту). Без разрешения ничего не делает. */
+export async function notifyNow(input: Notifications.NotificationContentInput): Promise<void> {
+  if (!supported) return;
+  try {
+    const perm = await Notifications.getPermissionsAsync();
+    if (!perm.granted) return;
+    await ensureChannel();
+    await Notifications.scheduleNotificationAsync({
+      content: input,
+      trigger: Platform.OS === 'android' ? { channelId: CHANNEL_ID } : null,
+    });
+  } catch (e) {
+    console.warn('Immediate notification failed', e);
+  }
+}

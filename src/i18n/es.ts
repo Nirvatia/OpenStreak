@@ -153,6 +153,23 @@ export const es: Record<MessageKey, Message> = {
   'place.exit': 'Al salir',
   'place.manage': 'Mis lugares',
   'place.trigger': 'cuándo',
+  'notify.placeEnter': 'Estás en «{place}»',
+  'notify.placeExit': 'Saliste de «{place}»',
+  'access.title': 'Acceso a la ubicación',
+  'access.why':
+    'Para que el aviso llegue en una tienda o en el gimnasio, el teléfono debe vigilar el lugar aunque la app esté cerrada. Para eso hace falta el acceso a la ubicación «Siempre».',
+  'access.privacy':
+    'Las coordenadas de los lugares se quedan en tu teléfono. La app no las envía a ninguna parte ni registra dónde vas: el sistema solo avisa al entrar y salir de un círculo.',
+  'access.how':
+    'Luego el teléfono pedirá permiso. Elige «Permitir siempre» (en Android: «Permitir todo el tiempo» en los ajustes de ubicación de la app).',
+  'access.allow': 'Permitir',
+  'access.later': 'Ahora no',
+  'access.on': 'Acceso concedido, los avisos por lugar funcionan',
+  'access.foreground':
+    'Acceso solo con la app abierta: los avisos por lugar no llegarán en segundo plano',
+  'access.denied': 'Sin acceso. Permite la ubicación en los ajustes del teléfono',
+  'access.bannerOff': 'Los avisos por lugar no llegarán hasta que se permita el acceso «Siempre»',
+  'access.unsupported': 'Los avisos por lugar solo funcionan en un teléfono',
 
   'new.title': 'Nuevo',
   'new.kind': 'Qué es',

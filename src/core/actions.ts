@@ -307,10 +307,10 @@ export function createHabit(input: HabitInput): string {
   const id = newId();
   commit([
     draftCreate('habits', id, {
-      ...habitFields(input),
-      startDate: todayStr(),
       placeId: null,
       placeTrigger: null,
+      ...habitFields(input),
+      startDate: todayStr(),
       archivedAt: null,
     }),
   ]);
