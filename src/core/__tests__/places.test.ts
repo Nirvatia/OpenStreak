@@ -6,6 +6,7 @@ import {
   RADIUS_MIN,
   clampRadius,
   distanceMeters,
+  formatCoords,
   neededPlaceIds,
   parseCoordinates,
   pickZones,
@@ -63,6 +64,14 @@ describe('parseCoordinates', () => {
 
   test('очень длинный текст не ломает разбор', () => {
     expect(parseCoordinates('9'.repeat(100000))).toBeNull();
+  });
+});
+
+describe('формат координат', () => {
+  test('показ и обратный разбор совпадают', () => {
+    const text = formatCoords(MSK);
+    expect(text).toBe('55.75580, 37.61730');
+    expect(parseCoordinates(text)).toEqual(MSK);
   });
 });
 

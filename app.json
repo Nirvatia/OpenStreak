@@ -29,6 +29,12 @@
       "expo-sqlite",
       "expo-notifications",
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "OpenStreak использует местоположение, чтобы запомнить место для напоминания, когда ты нажимаешь «Я здесь»."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/splash-icon.png",

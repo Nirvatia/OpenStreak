@@ -322,6 +322,8 @@ export function createQuickHabit(input: {
   name: string;
   kind: HabitKind;
   remindAt: string;
+  placeId?: string | null;
+  placeTrigger?: PlaceTrigger;
 }): string {
   return createHabit({
     name: input.name,
@@ -336,13 +338,21 @@ export function createQuickHabit(input: {
     measure: 'boolean',
     unit: 'count',
     target: 1,
+    placeId: input.kind === 'bad' ? null : input.placeId,
+    placeTrigger: input.placeTrigger,
   });
 }
 
 /** Правка из шторки: название, вид и напоминание; остальные поля привычки не трогаем. */
 export function editHabitBasics(
   id: string,
-  input: { name: string; kind: HabitKind; remindAt: string }
+  input: {
+    name: string;
+    kind: HabitKind;
+    remindAt: string;
+    placeId?: string | null;
+    placeTrigger?: PlaceTrigger;
+  }
 ): void {
   const name = input.name.trim();
   if (!name) return;
@@ -352,6 +362,7 @@ export function editHabitBasics(
         name,
         kind: input.kind,
         remindAt: input.kind === 'bad' ? '' : input.remindAt,
+        ...placePair(input.kind === 'bad' ? { placeId: null } : input),
       }),
     ])
   );

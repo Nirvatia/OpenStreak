@@ -83,6 +83,11 @@ export function parseCoordinates(input: string): Coords | null {
   return null;
 }
 
+/** «55.75580, 37.61730» — в таком виде координаты показываем и вставляем в поле. */
+export function formatCoords(c: Coords): string {
+  return `${c.latitude.toFixed(5)}, ${c.longitude.toFixed(5)}`;
+}
+
 /** Расстояние между точками по дуге большого круга, метры. */
 export function distanceMeters(a: Coords, b: Coords): number {
   const R = 6371008.8;

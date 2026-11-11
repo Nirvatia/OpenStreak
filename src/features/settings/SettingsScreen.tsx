@@ -1,13 +1,14 @@
 /**
  * Настройки (design/mult/M-Settings): тема, характер (тон, цитаты, звания), дни.
  * Всё хранится в настройках в данных и синхронизируется. Итог дня — время и напоминание;
- * язык — русский, английский, испанский; данные — бэкап в файл и восстановление. Места — на этапе 5.
+ * язык — русский, английский, испанский; места; данные — бэкап в файл и восстановление.
  */
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { live } from '../../core/model';
 import { settingsOf } from '../../core/settings';
 import { replaceAll, useDataStore } from '../../core/store';
 import { exportData, importData } from '../../services/exportImport';
@@ -40,12 +41,19 @@ const PREVIEW: Record<(typeof THEME_MODES)[number], Scheme[]> = {
   system: ['dark', 'light'],
 };
 
-export function SettingsScreen({ onBack }: { onBack: () => void }) {
+export function SettingsScreen({
+  onBack,
+  onOpenPlaces,
+}: {
+  onBack: () => void;
+  onOpenPlaces: () => void;
+}) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
   const data = useDataStore((st) => st.data);
   const s = settingsOf(data);
+  const placeCount = live(data.places).length;
   const scheme = useThemeStore((st) => st.scheme);
   const toast = useToast((st) => st.show);
   const [picker, setPicker] = useState(false);
@@ -169,6 +177,18 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
               last
             />
           )}
+        </Card>
+      </View>
+
+      <View style={styles.group}>
+        <Card padded={false}>
+          <SettingRow
+            label={t('settings.places')}
+            hint={t('settings.placesHint')}
+            value={String(placeCount)}
+            onPress={onOpenPlaces}
+            last
+          />
         </Card>
       </View>
 

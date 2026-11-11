@@ -12,6 +12,7 @@ import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
 import { HabitsScreen } from '../features/habits/HabitsScreen';
 import { PackScreen } from '../features/pack/PackScreen';
+import { PlacesScreen } from '../features/places/PlacesScreen';
 import { ClosedScreen } from '../features/review/ClosedScreen';
 import { ReviewScreen } from '../features/review/ReviewScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
@@ -25,6 +26,7 @@ export type TabKey = 'today' | 'tasks' | 'habits' | 'goals' | 'pack';
 export type RootStack = {
   tabs: undefined;
   settings: undefined;
+  places: undefined;
   habit: { id: string };
   review: undefined;
   closed: undefined;
@@ -96,7 +98,15 @@ export function RootNavigator() {
         {({ navigation }) => <ClosedScreen onDone={() => navigation.popToTop()} />}
       </Stack.Screen>
       <Stack.Screen name="settings">
-        {({ navigation }) => <SettingsScreen onBack={() => navigation.goBack()} />}
+        {({ navigation }) => (
+          <SettingsScreen
+            onBack={() => navigation.goBack()}
+            onOpenPlaces={() => navigation.navigate('places')}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="places">
+        {({ navigation }) => <PlacesScreen onBack={() => navigation.goBack()} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

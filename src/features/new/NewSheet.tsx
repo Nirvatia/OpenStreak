@@ -1,14 +1,14 @@
 /**
  * Шторка «Новое» (design/mult/M-New): дело, привычка или цель.
  * Дело — когда, важность, напоминание по времени. Привычка — полезная/вредная, напоминание.
- * Цель — срок, зачёт, награда, «если слил». Напоминание по месту появится с геозонами (этап 5).
+ * Цель — срок, зачёт, награда, «если слил». Дело и полезная привычка — ещё и напоминание по месту.
  */
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React, { useMemo, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import * as A from '../../core/actions';
 import { addDays } from '../../core/dates';
-import { live, type ISODate, type Priority } from '../../core/model';
+import { live, type ISODate, type PlaceTrigger, type Priority } from '../../core/model';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
@@ -24,6 +24,7 @@ import { Sheet } from '../../ui/Sheet';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { dayMonth } from '../format';
+import { PlaceSheet } from '../places/PlaceSheet';
 import { useNewSheet, type NewKind } from './newSheetStore';
 
 /** Системный выбор даты и времени есть только на телефонах. */
@@ -89,6 +90,15 @@ function NewSheetForm() {
   const [reward, setReward] = useState(editingGoal?.reward ?? '');
   const [penalty, setPenalty] = useState(editingGoal?.penalty ?? '');
   const [picker, setPicker] = useState<'date' | 'time' | null>(null);
+  const places = useDataStore((s) => s.data.places);
+  const placeList = useMemo(() => live(places).sort((a, b) => a.createdAt - b.createdAt), [places]);
+  const [placeId, setPlaceId] = useState<string | null>(
+    editing?.placeId ?? editingHabit?.placeId ?? null
+  );
+  const [placeTrigger, setPlaceTrigger] = useState<PlaceTrigger>(
+    editing?.placeTrigger ?? editingHabit?.placeTrigger ?? 'enter'
+  );
+  const [placeSheet, setPlaceSheet] = useState(false);
 
   const changeKind = (k: NewKind) => {
     setKind(k);
@@ -104,13 +114,25 @@ function NewSheetForm() {
     if (editingGoal) {
       A.editGoal(editingGoal.id, { text: title, criterion, reward, penalty, deadline: date });
     } else if (editingHabit) {
-      A.editHabitBasics(editingHabit.id, { name: title, kind: bad ? 'bad' : 'good', remindAt });
+      A.editHabitBasics(editingHabit.id, {
+        name: title,
+        kind: bad ? 'bad' : 'good',
+        remindAt,
+        placeId,
+        placeTrigger,
+      });
     } else if (editing) {
-      A.updateTask(editing.id, { title, date, priority, remindAt, areaId });
+      A.updateTask(editing.id, { title, date, priority, remindAt, areaId, placeId, placeTrigger });
     } else if (kind === 'task') {
-      A.createTask({ title, date, priority, remindAt, areaId });
+      A.createTask({ title, date, priority, remindAt, areaId, placeId, placeTrigger });
     } else if (kind === 'habit') {
-      A.createQuickHabit({ name: title, kind: bad ? 'bad' : 'good', remindAt });
+      A.createQuickHabit({
+        name: title,
+        kind: bad ? 'bad' : 'good',
+        remindAt,
+        placeId,
+        placeTrigger,
+      });
     } else {
       A.createGoal(null, { text: title, criterion, reward, penalty, deadline: date });
     }
@@ -313,6 +335,58 @@ function NewSheetForm() {
             />
           </View>
         </Group>
+      )}
+
+      {kind !== 'goal' && !(kind === 'habit' && bad) && (
+        <Group title={t('new.place')}>
+          <View style={styles.chips} accessibilityRole="radiogroup">
+            <Chip
+              size="md"
+              role="radio"
+              label={t('place.none')}
+              selected={placeId === null}
+              onPress={() => setPlaceId(null)}
+            />
+            {placeList.map((pl) => (
+              <Chip
+                key={pl.id}
+                size="md"
+                role="radio"
+                label={pl.name}
+                selected={placeId === pl.id}
+                onPress={() => setPlaceId(pl.id)}
+              />
+            ))}
+            <Chip size="md" dashed label={t('places.add')} onPress={() => setPlaceSheet(true)} />
+          </View>
+          {placeId !== null && (
+            <View style={styles.chips} accessibilityRole="radiogroup">
+              <Chip
+                size="md"
+                role="radio"
+                label={t('place.enter')}
+                selected={placeTrigger === 'enter'}
+                onPress={() => setPlaceTrigger('enter')}
+              />
+              <Chip
+                size="md"
+                role="radio"
+                label={t('place.exit')}
+                selected={placeTrigger === 'exit'}
+                onPress={() => setPlaceTrigger('exit')}
+              />
+            </View>
+          )}
+        </Group>
+      )}
+
+      {placeSheet && (
+        <PlaceSheet
+          visible
+          editId={null}
+          onClose={() => setPlaceSheet(false)}
+          onSaved={(id) => setPlaceId(id)}
+        />
       )}
 
       {picker && (
