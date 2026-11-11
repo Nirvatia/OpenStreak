@@ -5,6 +5,7 @@
 import { todayStr } from './dates';
 import { fullValue } from './habits';
 import { newId } from './ids';
+import { clampRadius, isValidCoords } from './places';
 import {
   SETTINGS_ID,
   checkId,
@@ -13,6 +14,7 @@ import {
   type HabitMeasure,
   type HabitUnit,
   type ISODate,
+  type PlaceTrigger,
   type Priority,
 } from './model';
 import { DEFAULT_SETTINGS, type SettingsFields } from './settings';
@@ -39,7 +41,18 @@ export type TaskInput = {
   priority?: Priority;
   remindAt?: string;
   areaId?: string | null;
+  /** привязка к месту; placeId null — без места (триггер тогда тоже сбрасывается) */
+  placeId?: string | null;
+  placeTrigger?: PlaceTrigger;
 };
+
+/** Согласованная пара «место + вход/выход»: без места триггера нет, с местом по умолчанию — вход. */
+function placePair(input: { placeId?: string | null; placeTrigger?: PlaceTrigger }) {
+  if (input.placeId === undefined) return {};
+  return input.placeId
+    ? { placeId: input.placeId, placeTrigger: input.placeTrigger ?? ('enter' as const) }
+    : { placeId: null, placeTrigger: null };
+}
 
 export function createTask(input: TaskInput): string {
   const id = newId();
@@ -55,6 +68,7 @@ export function createTask(input: TaskInput): string {
       remindAt: input.remindAt ?? '',
       placeId: null,
       placeTrigger: null,
+      ...placePair(input),
     }),
   ]);
   return id;
@@ -70,6 +84,7 @@ export function updateTask(id: string, input: TaskInput): void {
         ...(input.priority !== undefined && { priority: input.priority }),
         ...(input.remindAt !== undefined && { remindAt: input.remindAt }),
         ...(input.areaId !== undefined && { areaId: input.areaId }),
+        ...placePair(input),
       }),
     ])
   );
@@ -96,6 +111,44 @@ export function deleteTask(id: string): void {
 /** Отменить удаление задачи: запись возвращается с теми же полями и датой создания. */
 export function restoreTask(id: string): void {
   commit(compact([draftRestore('tasks', id)]));
+}
+
+// ── Места ────────────────────────────────────────────────────────────────────
+
+export type PlaceInput = { name: string; latitude: number; longitude: number; radius: number };
+
+function placeFields(input: PlaceInput): PlaceInput {
+  if (!isValidCoords(input)) throw new Error('Некорректные координаты места');
+  return { ...input, name: input.name.trim(), radius: clampRadius(input.radius) };
+}
+
+export function createPlace(input: PlaceInput, id: string = newId()): string {
+  commit([draftCreate('places', id, placeFields(input))]);
+  return id;
+}
+
+export function updatePlace(id: string, input: PlaceInput): void {
+  commit(compact([draftPatch('places', id, placeFields(input))]));
+}
+
+/** Удалить место; дела и привычки остаются, но без привязки к месту. */
+export function deletePlace(id: string): void {
+  const d = data();
+  commit(
+    compact([
+      draftDelete('places', id),
+      ...live(d.tasks)
+        .filter((t) => t.placeId === id)
+        .map((t) => draftPatch('tasks', t.id, { placeId: null, placeTrigger: null })),
+      ...live(d.habits)
+        .filter((h) => h.placeId === id)
+        .map((h) => draftPatch('habits', h.id, { placeId: null, placeTrigger: null })),
+    ])
+  );
+}
+
+export function restorePlace(id: string): void {
+  commit(compact([draftRestore('places', id)]));
 }
 
 // ── Сферы и цели ─────────────────────────────────────────────────────────────
@@ -228,6 +281,8 @@ export type HabitInput = {
   measure: HabitMeasure;
   unit: HabitUnit;
   target: number;
+  placeId?: string | null;
+  placeTrigger?: PlaceTrigger;
 };
 
 function habitFields(input: HabitInput) {
@@ -244,6 +299,7 @@ function habitFields(input: HabitInput) {
     measure: input.measure,
     unit: numeric ? input.unit : ('count' as const),
     target: numeric && input.target > 0 ? input.target : 1,
+    ...placePair(input),
   };
 }
 
