@@ -202,6 +202,7 @@ export const en: Record<MessageKey, Message> = {
   'area.deleteConfirm': 'The area’s goals will be deleted too. Tap again to confirm',
   'area.deleteSure': 'Delete for sure',
   'area.deleted': 'Area deleted',
+  'settings.structure': 'Structure',
   'settings.areas': 'Life areas',
   'settings.areasHint': 'Health, work, home — for grouping',
   'edit.save': 'Save',
@@ -322,11 +323,14 @@ export const en: Record<MessageKey, Message> = {
   'toast.habitRest': { plain: 'Day off: the streak stays', bro: 'Day off. Streak’s safe.' },
   'edit.habit': 'Habit',
 
-  'goals.count': { one: '{count} contract', other: '{count} contracts' },
+  'goals.count': {
+    plain: { one: '{count} goal', other: '{count} goals' },
+    bro: { one: '{count} contract', other: '{count} contracts' },
+  },
   'goals.closed': { one: '{count} closed', other: '{count} closed' },
   'goals.add': 'New goal',
   'goals.empty': { plain: 'No goals yet', bro: 'No contracts. Give your word.' },
-  'goals.number': 'Contract No. {number}',
+  'goals.number': { plain: 'Goal No. {number}', bro: 'Contract No. {number}' },
   'goals.daysLeft': { one: 'day left', other: 'days left' },
   'goals.overdueBy': { one: 'overdue by {count} day', other: 'overdue by {count} days' },
   'goals.dueToday': 'due today',
@@ -345,7 +349,7 @@ export const en: Record<MessageKey, Message> = {
   'goals.closedMark': 'closed',
   'toast.goalDone': { plain: 'Goal done', bro: 'Kept your word. Legend.' },
   'toast.goalDeleted': { plain: 'Goal deleted', bro: 'Contract torn up.' },
-  'edit.goal': 'Contract',
+  'edit.goal': { plain: 'Goal', bro: 'Contract' },
   'edit.delete': 'Delete',
 
   'pack.with': { one: 'with you {count} day', other: 'with you {count} days' },

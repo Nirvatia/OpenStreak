@@ -218,6 +218,7 @@ export function SettingsScreen({
       </View>
 
       <View style={styles.group}>
+        <SectionTitle title={t('settings.structure')} tilt={-1} />
         <Card padded={false}>
           <SettingRow
             label={t('settings.areas')}

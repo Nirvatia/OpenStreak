@@ -202,6 +202,7 @@ export const es: Record<MessageKey, Message> = {
   'area.deleteConfirm': 'Las metas del área también se eliminarán. Pulsa otra vez para confirmar',
   'area.deleteSure': 'Eliminar de verdad',
   'area.deleted': 'Área eliminada',
+  'settings.structure': 'Estructura',
   'settings.areas': 'Áreas de vida',
   'settings.areasHint': 'Salud, trabajo, casa: para agrupar',
   'edit.save': 'Guardar',
@@ -325,11 +326,14 @@ export const es: Record<MessageKey, Message> = {
   },
   'edit.habit': 'Hábito',
 
-  'goals.count': { one: '{count} contrato', other: '{count} contratos' },
+  'goals.count': {
+    plain: { one: '{count} meta', other: '{count} metas' },
+    bro: { one: '{count} contrato', other: '{count} contratos' },
+  },
   'goals.closed': { one: '{count} cerrado', other: '{count} cerrados' },
   'goals.add': 'Nueva meta',
   'goals.empty': { plain: 'Aún no hay metas', bro: 'Sin contratos. Da tu palabra.' },
-  'goals.number': 'Contrato n.º {number}',
+  'goals.number': { plain: 'Meta n.º {number}', bro: 'Contrato n.º {number}' },
   'goals.daysLeft': { one: 'día queda', other: 'días quedan' },
   'goals.overdueBy': { one: 'vencida hace {count} día', other: 'vencida hace {count} días' },
   'goals.dueToday': 'vence hoy',
@@ -348,7 +352,7 @@ export const es: Record<MessageKey, Message> = {
   'goals.closedMark': 'cerrada',
   'toast.goalDone': { plain: 'Meta cumplida', bro: 'Cumpliste tu palabra. Crack.' },
   'toast.goalDeleted': { plain: 'Meta eliminada', bro: 'Contrato roto.' },
-  'edit.goal': 'Contrato',
+  'edit.goal': { plain: 'Meta', bro: 'Contrato' },
   'edit.delete': 'Eliminar',
 
   'pack.with': { one: 'contigo {count} día', other: 'contigo {count} días' },

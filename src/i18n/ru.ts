@@ -227,6 +227,7 @@ export const ru = {
   'area.deleteConfirm': 'Удалятся и цели этой сферы. Нажми ещё раз, чтобы подтвердить',
   'area.deleteSure': 'Точно удалить',
   'area.deleted': 'Сфера удалена',
+  'settings.structure': 'Структура',
   'settings.areas': 'Сферы жизни',
   'settings.areasHint': 'Здоровье, работа, дом — для группировки',
   'edit.save': 'Сохранить',
@@ -365,10 +366,18 @@ export const ru = {
   'edit.habit': 'Привычка',
   // Цели
   'goals.count': {
-    one: '{count} договор',
-    few: '{count} договора',
-    many: '{count} договоров',
-    other: '{count} договора',
+    plain: {
+      one: '{count} цель',
+      few: '{count} цели',
+      many: '{count} целей',
+      other: '{count} цели',
+    },
+    bro: {
+      one: '{count} договор',
+      few: '{count} договора',
+      many: '{count} договоров',
+      other: '{count} договора',
+    },
   },
   'goals.closed': {
     one: '{count} закрыт',
@@ -378,7 +387,7 @@ export const ru = {
   },
   'goals.add': 'Новая цель',
   'goals.empty': { plain: 'Целей пока нет', bro: 'Договоров нет. Дай слово.' },
-  'goals.number': 'Договор № {number}',
+  'goals.number': { plain: 'Цель № {number}', bro: 'Договор № {number}' },
   'goals.daysLeft': {
     one: 'день остался',
     few: 'дня осталось',
@@ -407,7 +416,7 @@ export const ru = {
   'goals.closedMark': 'закрыт',
   'toast.goalDone': { plain: 'Цель выполнена', bro: 'Слово сдержал. Красава.' },
   'toast.goalDeleted': { plain: 'Цель удалена', bro: 'Договор порван.' },
-  'edit.goal': 'Договор',
+  'edit.goal': { plain: 'Цель', bro: 'Договор' },
   'edit.delete': 'Удалить',
 
   // Стая

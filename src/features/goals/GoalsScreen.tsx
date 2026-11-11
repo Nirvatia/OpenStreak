@@ -11,7 +11,7 @@ import { vibrateSuccess } from '../../services/haptics';
 import { goalCounts, goalViews, type GoalView } from '../../core/goals';
 import { useDataStore } from '../../core/store';
 import { useT, type Translate } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
 import { RADIUS, SPACE, STROKE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { AddRow, Button, IconButton } from '../../ui/Button';
@@ -127,6 +127,7 @@ function Contract({
   onEdit: () => void;
 }) {
   const p = usePalette();
+  const plain = usePlain();
   const { goal, state, daysLeft } = view;
   const done = state === 'done';
   const number = t('goals.number', { number: String(view.number).padStart(3, '0') });
@@ -137,7 +138,7 @@ function Contract({
   ];
   return (
     <Card radius={RADIUS.xl} style={styles.contract}>
-      <View style={styles.number}>
+      <View style={plain ? styles.numberPlain : styles.number}>
         <Tag label={area ? `${number} · ${area}` : number} tilt={-3} header={false} />
       </View>
       <Text
@@ -183,18 +184,20 @@ function Contract({
           </View>
         ))}
 
-      <View style={styles.word}>
-        <Tag
-          label={
-            done && goal.doneOn
-              ? t('goals.closedOn', { date: shortDate(goal.doneOn) })
-              : t('goals.word', { date: shortDate(isoOfMs(goal.createdAt)) })
-          }
-          tone="teal"
-          tilt={4}
-          header={false}
-        />
-      </View>
+      {(!plain || (done && goal.doneOn)) && (
+        <View style={styles.word}>
+          <Tag
+            label={
+              done && goal.doneOn
+                ? t('goals.closedOn', { date: shortDate(goal.doneOn) })
+                : t('goals.word', { date: shortDate(isoOfMs(goal.createdAt)) })
+            }
+            tone="teal"
+            tilt={4}
+            header={false}
+          />
+        </View>
+      )}
 
       <View style={styles.actions}>
         <Button
@@ -279,6 +282,7 @@ const styles = designStyles(() =>
     empty: { gap: SPACE.md },
     contract: { gap: 14, marginTop: SPACE.sm, paddingTop: 22 },
     number: { position: 'absolute', top: -16, left: 14 },
+    numberPlain: { marginBottom: 2 },
     deadline: { flexDirection: 'row', alignItems: 'center', gap: 14 },
     days: {
       flexDirection: 'row',

@@ -14,7 +14,8 @@ import { settingsOf } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
+import { PlainMark } from '../../ui/PlainMark';
 import { RADIUS, SPACE } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
 import { Button, IconButton } from '../../ui/Button';
@@ -39,6 +40,7 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
   const insets = useSafeAreaInsets();
   const data = useDataStore((s) => s.data);
   const today = useDataStore((s) => s.today);
+  const plain = usePlain();
   const toast = useToast((s) => s.show);
   const editHabit = useNewSheet((s) => s.editHabit);
   const { weekStart } = settingsOf(data);
@@ -121,7 +123,7 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
       </View>
 
       <View style={styles.title}>
-        <IconTile icon={h.icon} size={52} tilt={-4} />
+        {!plain && <IconTile icon={h.icon} size={52} tilt={-4} />}
         <View style={styles.titles}>
           <Text accessibilityRole="header" style={[TYPE.heading, { color: p.text }]}>
             {h.name}
@@ -132,13 +134,22 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
 
       <Card radius={RADIUS.xl} style={styles.progress}>
         <View style={styles.progressRow}>
-          <Moon
-            phase={slip ? 1 : bad ? (rest ? 0 : 1) : day.fraction}
-            tone={slip ? 'red' : 'sun'}
-            ring={slip ? 'red' : rest ? 'muted' : 'ring'}
-            dashed={rest && !slip}
-            size={84}
-          />
+          {plain ? (
+            <PlainMark
+              shape="square"
+              size={56}
+              fill={slip ? 0 : bad ? (rest ? 0 : 1) : day.fraction}
+              debt={slip}
+            />
+          ) : (
+            <Moon
+              phase={slip ? 1 : bad ? (rest ? 0 : 1) : day.fraction}
+              tone={slip ? 'red' : 'sun'}
+              ring={slip ? 'red' : rest ? 'muted' : 'ring'}
+              dashed={rest && !slip}
+              size={84}
+            />
+          )}
           <View style={styles.score}>
             {numeric ? (
               <Text
@@ -206,9 +217,11 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
             {t('habit.best', { count: stats.best })}
           </Text>
         </View>
-        <View style={styles.notches}>
-          <Notches count={stats.streak} height={32} />
-        </View>
+        {!plain && (
+          <View style={styles.notches}>
+            <Notches count={stats.streak} height={32} />
+          </View>
+        )}
       </Card>
 
       <Card style={styles.month}>
@@ -229,9 +242,11 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
           ))}
         </View>
         <MoonGrid days={view.month} size={26} />
-        <Text style={[TYPE.caption, { color: p.muted }]}>
-          {t(bad ? 'habit.legendBad' : 'habit.legend')}
-        </Text>
+        {!plain && (
+          <Text style={[TYPE.caption, { color: p.muted }]}>
+            {t(bad ? 'habit.legendBad' : 'habit.legend')}
+          </Text>
+        )}
       </Card>
 
       <View style={styles.actions}>
