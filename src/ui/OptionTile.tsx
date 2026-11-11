@@ -6,6 +6,7 @@ import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
+import { designStyles } from '../theme/design';
 
 type Props = {
   icon: UiIconName;
@@ -42,14 +43,16 @@ export function OptionTile({ icon, label, hint, selected = false, onPress }: Pro
   );
 }
 
-const styles = StyleSheet.create({
-  tile: {
-    flex: 1,
-    minHeight: 56,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: SPACE.md,
-    borderRadius: RADIUS.md,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    tile: {
+      flex: 1,
+      minHeight: 56,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingHorizontal: SPACE.md,
+      borderRadius: RADIUS.md,
+    },
+  })
+);

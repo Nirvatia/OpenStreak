@@ -10,6 +10,7 @@ import type { Palette } from '../theme/palette';
 import { hardShadow, tilt as tiltStyle, type ShadowSize } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Wolf, type WolfMood } from './icons';
+import { designStyles } from '../theme/design';
 
 /** Подложка с подходящим к ней цветом текста — пары проверены в palettes.json. */
 export type Tone = 'surface' | 'tag' | 'sun' | 'teal' | 'red';
@@ -204,40 +205,42 @@ export function WolfQuote({
   );
 }
 
-const styles = StyleSheet.create({
-  padded: { padding: SPACE.lg },
-  tag: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: SPACE.md,
-    paddingVertical: SPACE.xs,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.tag,
-  },
-  pill: {
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    borderWidth: STROKE.thin,
-    borderRadius: RADIUS.pill,
-  },
-  badge: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.pill,
-  },
-  badgeValue: { lineHeight: 22 },
-  quote: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.tight },
-  bubbleAlone: { marginBottom: 0, borderBottomLeftRadius: 18 },
-  bubble: {
-    flex: 1,
-    marginBottom: 10,
-    paddingHorizontal: 14,
-    paddingVertical: SPACE.md,
-    gap: SPACE.xs,
-    borderWidth: STROKE.outline,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
-    borderBottomRightRadius: 18,
-    borderBottomLeftRadius: 4,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    padded: { padding: SPACE.lg },
+    tag: {
+      alignSelf: 'flex-start',
+      paddingHorizontal: SPACE.md,
+      paddingVertical: SPACE.xs,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.tag,
+    },
+    pill: {
+      paddingHorizontal: 10,
+      paddingVertical: 2,
+      borderWidth: STROKE.thin,
+      borderRadius: RADIUS.pill,
+    },
+    badge: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.pill,
+    },
+    badgeValue: { lineHeight: 22 },
+    quote: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.tight },
+    bubbleAlone: { marginBottom: 0, borderBottomLeftRadius: 18 },
+    bubble: {
+      flex: 1,
+      marginBottom: 10,
+      paddingHorizontal: 14,
+      paddingVertical: SPACE.md,
+      gap: SPACE.xs,
+      borderWidth: STROKE.outline,
+      borderTopLeftRadius: 18,
+      borderTopRightRadius: 18,
+      borderBottomRightRadius: 18,
+      borderBottomLeftRadius: 4,
+    },
+  })
+);

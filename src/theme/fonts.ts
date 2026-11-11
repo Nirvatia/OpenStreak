@@ -13,4 +13,11 @@ export const FONT = {
     bold: 'Unbounded_700Bold',
     extrabold: 'Unbounded_800ExtraBold',
   },
+  /** «Обычный»: единый нейтральный шрифт */
+  inter: {
+    regular: 'Inter_400Regular',
+    medium: 'Inter_500Medium',
+    semibold: 'Inter_600SemiBold',
+    bold: 'Inter_700Bold',
+  },
 } as const;

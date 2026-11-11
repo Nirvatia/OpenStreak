@@ -10,6 +10,7 @@ import { SIZE, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
+import { designStyles } from '../theme/design';
 
 export type TabItem<K extends string> = { key: K; label: string; icon: UiIconName };
 
@@ -77,22 +78,24 @@ export function TabBar<K extends string>({ items, active, onSelect, label }: Pro
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { paddingTop: SPACE.tight, paddingHorizontal: 14 },
-  bar: {
-    height: SIZE.tabBar,
-    flexDirection: 'row',
-    gap: 2,
-    padding: 5,
-    borderWidth: STROKE.outline,
-    borderRadius: 22,
-  },
-  item: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 2,
-    borderWidth: STROKE.thin,
-    borderRadius: 15,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    wrap: { paddingTop: SPACE.tight, paddingHorizontal: 14 },
+    bar: {
+      height: SIZE.tabBar,
+      flexDirection: 'row',
+      gap: 2,
+      padding: 5,
+      borderWidth: STROKE.outline,
+      borderRadius: 22,
+    },
+    item: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 2,
+      borderWidth: STROKE.thin,
+      borderRadius: 15,
+    },
+  })
+);

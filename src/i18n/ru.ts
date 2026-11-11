@@ -249,6 +249,11 @@ export const ru = {
   // Настройки
   'settings.title': 'Настройки',
   'settings.theme': 'Тема',
+  'settings.general': 'Общие',
+  'settings.design': 'Оформление',
+  'design.plain': 'Обычный',
+  'design.auf': 'АУФ',
+  'settings.designHint': '«Обычный» — строгий вид. «АУФ» — с волком, цитатами и званиями.',
   'settings.character': 'Характер',
   'settings.tone': 'Пацанский тон',
   'settings.toneHint': 'выкл — обычные формулировки',

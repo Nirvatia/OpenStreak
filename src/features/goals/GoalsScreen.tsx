@@ -21,6 +21,7 @@ import { Card, Pill, Tag } from '../../ui/Sticker';
 import { useToast } from '../../ui/toast';
 import { dayMonth, isoOfMs, shortDate } from '../format';
 import { useNewSheet } from '../new/newSheetStore';
+import { designStyles } from '../../theme/design';
 
 export function GoalsScreen() {
   const p = usePalette();
@@ -272,33 +273,35 @@ function OtherRow({
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
-  empty: { gap: SPACE.md },
-  contract: { gap: 14, marginTop: SPACE.sm, paddingTop: 22 },
-  number: { position: 'absolute', top: -16, left: 14 },
-  deadline: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  days: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: SPACE.tight,
-    paddingHorizontal: 14,
-    paddingVertical: SPACE.sm,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.md,
-  },
-  when: { flex: 1 },
-  field: { gap: 2 },
-  word: { alignItems: 'flex-end' },
-  actions: { flexDirection: 'row', gap: SPACE.md },
-  action: { flex: 1 },
-  section: { gap: SPACE.md },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACE.md,
-    minHeight: 64,
-    paddingHorizontal: 14,
-  },
-  rowText: { flex: 1, minWidth: 0, paddingVertical: SPACE.sm },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
+    empty: { gap: SPACE.md },
+    contract: { gap: 14, marginTop: SPACE.sm, paddingTop: 22 },
+    number: { position: 'absolute', top: -16, left: 14 },
+    deadline: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+    days: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: SPACE.tight,
+      paddingHorizontal: 14,
+      paddingVertical: SPACE.sm,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.md,
+    },
+    when: { flex: 1 },
+    field: { gap: 2 },
+    word: { alignItems: 'flex-end' },
+    actions: { flexDirection: 'row', gap: SPACE.md },
+    action: { flex: 1 },
+    section: { gap: SPACE.md },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACE.md,
+      minHeight: 64,
+      paddingHorizontal: 14,
+    },
+    rowText: { flex: 1, minWidth: 0, paddingVertical: SPACE.sm },
+  })
+);

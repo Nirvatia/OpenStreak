@@ -10,6 +10,7 @@ import { RADIUS, SHADOW, SIZE, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow, type ShadowSize } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
+import { designStyles } from '../theme/design';
 
 /** Смещение «вдавленной» наклейки: тень исчезает, кнопка садится на её место. */
 function pressed(size: Exclude<ShadowSize, 'none'>): ViewStyle {
@@ -159,47 +160,49 @@ export function LinkRow({
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 22,
-    borderWidth: STROKE.outline,
-  },
-  bare: { width: SIZE.touch, height: SIZE.touch, alignItems: 'center', justifyContent: 'center' },
-  round: {
-    width: SIZE.roundButton,
-    height: SIZE.roundButton,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.pill,
-  },
-  add: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACE.md,
-    minHeight: 54,
-    paddingHorizontal: 14,
-    borderWidth: STROKE.outline,
-    borderStyle: 'dashed',
-    borderRadius: RADIUS.md,
-  },
-  plus: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.pill,
-  },
-  link: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACE.md,
-    minHeight: SIZE.row,
-    paddingHorizontal: SPACE.lg,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.lg,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 22,
+      borderWidth: STROKE.outline,
+    },
+    bare: { width: SIZE.touch, height: SIZE.touch, alignItems: 'center', justifyContent: 'center' },
+    round: {
+      width: SIZE.roundButton,
+      height: SIZE.roundButton,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.pill,
+    },
+    add: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACE.md,
+      minHeight: 54,
+      paddingHorizontal: 14,
+      borderWidth: STROKE.outline,
+      borderStyle: 'dashed',
+      borderRadius: RADIUS.md,
+    },
+    plus: {
+      width: 30,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.pill,
+    },
+    link: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACE.md,
+      minHeight: SIZE.row,
+      paddingHorizontal: SPACE.lg,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.lg,
+    },
+  })
+);

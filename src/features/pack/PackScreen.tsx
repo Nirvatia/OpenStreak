@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { weekday } from '../../core/dates';
 import { dayNumber } from '../../core/day';
 import { packWeek, RANKS, rankOf, totalPoints } from '../../core/points';
-import { settingsOf } from '../../core/settings';
+import { effectiveSettings } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import type { MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
@@ -20,6 +20,7 @@ import { Wolf } from '../../ui/icons';
 import { ScreenHeader } from '../../ui/ScreenHeader';
 import { Card, Tag, type Tone } from '../../ui/Sticker';
 import { groupDigits } from '../format';
+import { designStyles } from '../../theme/design';
 
 const BAR_MAX = 72;
 const RANK_TILT = [-3, 2, -2, 3, -1];
@@ -30,7 +31,7 @@ export function PackScreen() {
   const insets = useSafeAreaInsets();
   const data = useDataStore((s) => s.data);
   const today = useDataStore((s) => s.today);
-  const settings = settingsOf(data);
+  const settings = effectiveSettings(data);
 
   const { week, rank } = useMemo(
     () => ({ week: packWeek(data, today), rank: rankOf(totalPoints(data, today)) }),
@@ -193,27 +194,34 @@ function NumText({ value, label, tone }: { value: string; label: string; tone: T
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
-  rank: { gap: SPACE.md },
-  rankHead: { flexDirection: 'row', alignItems: 'center', gap: SPACE.md },
-  rankText: { flex: 1, gap: 2 },
-  track: { height: 18, borderWidth: STROKE.outline, borderRadius: RADIUS.pill, overflow: 'hidden' },
-  fill: { height: '100%', borderRightWidth: STROKE.outline },
-  ladder: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
-  week: { gap: SPACE.md },
-  weekHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
-  bars: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.sm, height: 118 },
-  barCol: { flex: 1, alignItems: 'center', gap: SPACE.xs },
-  bar: {
-    alignSelf: 'stretch',
-    borderWidth: STROKE.outline,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-  },
-  nums: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md },
-  num: { width: '47%', flexGrow: 1 },
-  numCard: { gap: 2, paddingVertical: SPACE.md },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
+    rank: { gap: SPACE.md },
+    rankHead: { flexDirection: 'row', alignItems: 'center', gap: SPACE.md },
+    rankText: { flex: 1, gap: 2 },
+    track: {
+      height: 18,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.pill,
+      overflow: 'hidden',
+    },
+    fill: { height: '100%', borderRightWidth: STROKE.outline },
+    ladder: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
+    week: { gap: SPACE.md },
+    weekHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+    bars: { flexDirection: 'row', alignItems: 'flex-end', gap: SPACE.sm, height: 118 },
+    barCol: { flex: 1, alignItems: 'center', gap: SPACE.xs },
+    bar: {
+      alignSelf: 'stretch',
+      borderWidth: STROKE.outline,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+      borderBottomLeftRadius: 4,
+      borderBottomRightRadius: 4,
+    },
+    nums: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.md },
+    num: { width: '47%', flexGrow: 1 },
+    numCard: { gap: 2, paddingVertical: SPACE.md },
+  })
+);

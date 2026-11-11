@@ -223,6 +223,11 @@ export const en: Record<MessageKey, Message> = {
 
   'settings.title': 'Settings',
   'settings.theme': 'Theme',
+  'settings.general': 'General',
+  'settings.design': 'Look',
+  'design.plain': 'Plain',
+  'design.auf': 'AUF',
+  'settings.designHint': '“Plain” is the strict look. “AUF” has the wolf, quotes and ranks.',
   'settings.character': 'Character',
   'settings.tone': 'Street talk',
   'settings.toneHint': 'off — plain wording',

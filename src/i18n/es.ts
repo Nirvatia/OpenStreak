@@ -223,6 +223,11 @@ export const es: Record<MessageKey, Message> = {
 
   'settings.title': 'Ajustes',
   'settings.theme': 'Tema',
+  'settings.general': 'General',
+  'settings.design': 'Aspecto',
+  'design.plain': 'Sencillo',
+  'design.auf': 'AUF',
+  'settings.designHint': '«Sencillo» es el aspecto serio. «AUF» trae el lobo, citas y rangos.',
   'settings.character': 'Carácter',
   'settings.tone': 'Modo calle',
   'settings.toneHint': 'desactivado — lenguaje neutro',

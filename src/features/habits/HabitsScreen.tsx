@@ -30,6 +30,7 @@ import { Badge, Card, Tag } from '../../ui/Sticker';
 import { WeekMoons } from '../../ui/WeekMoons';
 import { useNewSheet } from '../new/newSheetStore';
 import { habitMeta, moonDays, streakLabel } from './habitText';
+import { designStyles } from '../../theme/design';
 
 type Filter = 'all' | 'good' | 'bad';
 
@@ -152,12 +153,14 @@ export function HabitsScreen({ onOpen }: { onOpen: (habitId: string) => void }) 
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
-  card: { gap: 14 },
-  pressed: { transform: [{ translateX: SHADOW.lg }, { translateY: SHADOW.lg }] },
-  head: { flexDirection: 'row', alignItems: 'center', gap: SPACE.md },
-  titles: { flex: 1, minWidth: 0 },
-  note: { alignItems: 'flex-start' },
-  empty: { gap: SPACE.md },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
+    card: { gap: 14 },
+    pressed: { transform: [{ translateX: SHADOW.lg }, { translateY: SHADOW.lg }] },
+    head: { flexDirection: 'row', alignItems: 'center', gap: SPACE.md },
+    titles: { flex: 1, minWidth: 0 },
+    note: { alignItems: 'flex-start' },
+    empty: { gap: SPACE.md },
+  })
+);

@@ -5,6 +5,7 @@ import { useT } from '../store/prefsStore';
 import { usePalette } from '../store/themeStore';
 import { RADIUS, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
+import { designStyles } from '../theme/design';
 
 export type PriorityLevel = 0 | 1 | 2 | 3;
 
@@ -78,13 +79,15 @@ export function PriorityPicker({ value, onChange, labels, label }: PickerProps) 
   );
 }
 
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: 8 },
-  cell: {
-    flex: 1,
-    height: 46,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: RADIUS.sm,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    row: { flexDirection: 'row', gap: 8 },
+    cell: {
+      flex: 1,
+      height: 46,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: RADIUS.sm,
+    },
+  })
+);

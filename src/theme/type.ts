@@ -3,6 +3,7 @@
  * Подписи обычным регистром, цифры табличные. Цвет не задаётся: его берут из палитры.
  */
 import type { TextStyle } from 'react-native';
+import { currentDesign } from './design';
 import { FONT } from './fonts';
 
 type Variant = Pick<
@@ -28,7 +29,7 @@ const display = (size: number, weight: keyof typeof FONT.unbounded, lh = 1.15, t
 const text = (size: number, weight: keyof typeof FONT.rubik, lh = 1.3) =>
   make(FONT.rubik[weight], size, lh, 0);
 
-export const TYPE = {
+const TYPE_AUF = {
   /** «День закрыт.» */
   display: display(40, 'extrabold', 1.05, -0.02),
   /** счёт дня: «3 / 8» */
@@ -84,4 +85,39 @@ export const TYPE = {
   tiny: text(11, 'regular', 1.2),
 } as const satisfies Record<string, Variant>;
 
-export type TypeVariant = keyof typeof TYPE;
+export type TypeVariant = keyof typeof TYPE_AUF;
+
+/** Вес Inter для варианта «Мульта»: Unbounded шире и жирнее, поэтому веса на ступень мягче. */
+function plainFamily(family: string): string {
+  if (family.startsWith('Unbounded')) {
+    return family.includes('SemiBold') ? FONT.inter.medium : FONT.inter.semibold;
+  }
+  if (family.includes('Regular')) return FONT.inter.regular;
+  if (family.includes('Medium')) return FONT.inter.medium;
+  return FONT.inter.semibold;
+}
+
+/** Шкала «Обычного» (design/serious): тот же набор вариантов, но Inter и плотный трекинг у крупных. */
+function plainVariant(v: Variant): Variant {
+  const size = v.fontSize ?? 15;
+  const big = size >= 28;
+  return {
+    ...v,
+    fontFamily: plainFamily(v.fontFamily ?? ''),
+    fontSize: v.fontSize === 30 ? 34 : v.fontSize,
+    lineHeight: v.fontSize === 30 ? 38 : v.lineHeight,
+    letterSpacing: big ? Math.round(size * -0.03 * 100) / 100 : 0,
+  };
+}
+
+const TYPE_PLAIN = Object.fromEntries(
+  Object.entries(TYPE_AUF).map(([k, v]) => [k, plainVariant(v)])
+) as Record<TypeVariant, Variant>;
+
+/** Шкала текста текущего оформления (читается в момент отрисовки). */
+export const TYPE: Record<TypeVariant, Variant> = new Proxy(
+  TYPE_AUF as Record<TypeVariant, Variant>,
+  {
+    get: (_t, key) => (currentDesign() === 'auf' ? TYPE_AUF : TYPE_PLAIN)[key as TypeVariant],
+  }
+);

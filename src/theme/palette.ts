@@ -5,6 +5,13 @@
 import palettes from './palettes.json';
 
 export type Scheme = 'light' | 'dark';
+/** Оформление: «Обычный» (строгий) или «АУФ» (мульт с волком). */
+export type Design = 'plain' | 'auf';
+export const DESIGNS: readonly Design[] = ['plain', 'auf'];
+
+export function isDesign(v: unknown): v is Design {
+  return v === 'plain' || v === 'auf';
+}
 /** Что выбрал пользователь: конкретная тема или «как в системе». */
 export type ThemeMode = Scheme | 'system';
 
@@ -62,10 +69,16 @@ export type Palette = {
   star: string;
 };
 
-const themes = palettes.themes as Record<Scheme, Palette>;
+type ThemeKey = Scheme | 'plainLight' | 'plainDark';
+const themes = palettes.themes as Record<ThemeKey, Palette>;
 
-export function resolvePalette(scheme: Scheme): Palette {
-  return themes[scheme];
+export function themeKey(scheme: Scheme, design: Design): ThemeKey {
+  if (design === 'auf') return scheme;
+  return scheme === 'dark' ? 'plainDark' : 'plainLight';
+}
+
+export function resolvePalette(scheme: Scheme, design: Design = 'auf'): Palette {
+  return themes[themeKey(scheme, design)];
 }
 
 /** Тема, которая реально показывается. `system` — null, если система не сообщила свою. */

@@ -37,6 +37,7 @@ import { usePalette, useThemeStore } from '../store/themeStore';
 import { RADIUS, SCRIM_OPACITY, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { IconButton } from './Button';
+import { designStyles } from '../theme/design';
 
 /** Сдвиг или скорость жеста вниз, после которых шторка закрывается. */
 const CLOSE_DISTANCE = 120;
@@ -169,27 +170,29 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  fill: { flex: 1 },
-  bottom: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    justifyContent: 'flex-end',
-  },
-  panel: {
-    borderTopWidth: STROKE.outline,
-    borderLeftWidth: STROKE.outline,
-    borderRightWidth: STROKE.outline,
-    borderTopLeftRadius: RADIUS.sheet,
-    borderTopRightRadius: RADIUS.sheet,
-  },
-  top: { paddingTop: 10, paddingHorizontal: SPACE.screenX, gap: SPACE.sm },
-  grabber: { alignSelf: 'center', width: 44, height: 6, borderRadius: 3 },
-  title: { flex: 1 },
-  head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  content: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md, gap: SPACE.lg },
-  footer: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    fill: { flex: 1 },
+    bottom: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      justifyContent: 'flex-end',
+    },
+    panel: {
+      borderTopWidth: STROKE.outline,
+      borderLeftWidth: STROKE.outline,
+      borderRightWidth: STROKE.outline,
+      borderTopLeftRadius: RADIUS.sheet,
+      borderTopRightRadius: RADIUS.sheet,
+    },
+    top: { paddingTop: 10, paddingHorizontal: SPACE.screenX, gap: SPACE.sm },
+    grabber: { alignSelf: 'center', width: 44, height: 6, borderRadius: 3 },
+    title: { flex: 1 },
+    head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    content: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md, gap: SPACE.lg },
+    footer: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.md },
+  })
+);

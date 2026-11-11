@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { usePalette } from '../store/themeStore';
 import { RADIUS, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
+import { designStyles } from '../theme/design';
 
 export type SegmentItem<T extends string> = { value: T; label: string };
 
@@ -61,20 +62,22 @@ export function Segmented<T extends string>({
   );
 }
 
-const styles = StyleSheet.create({
-  frame: {
-    flexDirection: 'row',
-    padding: 4,
-    gap: 4,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.pill,
-  },
-  item: {
-    flex: 1,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: STROKE.thin,
-    borderRadius: RADIUS.pill,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    frame: {
+      flexDirection: 'row',
+      padding: 4,
+      gap: 4,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.pill,
+    },
+    item: {
+      flex: 1,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: STROKE.thin,
+      borderRadius: RADIUS.pill,
+    },
+  })
+);

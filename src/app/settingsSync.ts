@@ -4,7 +4,7 @@
  */
 import { updateSettings } from '../core/actions';
 import { SETTINGS_ID } from '../core/model';
-import { settingsOf } from '../core/settings';
+import { effectiveSettings } from '../core/settings';
 import { get, useDataStore } from '../core/store';
 import { storage, THEME_KEY, TONE_KEY } from '../services/storage';
 import { usePrefsStore } from '../store/prefsStore';
@@ -27,10 +27,11 @@ export async function seedSettingsFromDevice(): Promise<void> {
 export function followSettings(): void {
   let last = '';
   const apply = () => {
-    const s = settingsOf(useDataStore.getState().data);
-    const key = `${s.theme}|${s.tone}|${s.locale}`;
+    const s = effectiveSettings(useDataStore.getState().data);
+    const key = `${s.theme}|${s.design}|${s.tone}|${s.locale}`;
     if (key === last) return;
     last = key;
+    useThemeStore.getState().applyDesign(s.design);
     useThemeStore.getState().applyMode(s.theme);
     usePrefsStore.getState().apply({ tone: s.tone, locale: s.locale });
   };

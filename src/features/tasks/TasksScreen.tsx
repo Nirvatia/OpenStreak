@@ -29,6 +29,7 @@ import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { dayMonth } from '../format';
 import { useNewSheet } from '../new/newSheetStore';
+import { designStyles } from '../../theme/design';
 
 /** Цвет и наклон плашки группы: долги — красные, сегодня — жёлтая, дальше — бумажные. */
 const GROUP_TONE: Record<TaskGroupKey, [Tone, number]> = {
@@ -227,10 +228,12 @@ function metaOf(task: Task, today: string, areas: Map<string, string>, t: Transl
   return [when, area].filter(Boolean).join(' · ');
 }
 
-const styles = StyleSheet.create({
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
-  group: { marginTop: SPACE.xs, gap: SPACE.md },
-  clip: { overflow: 'hidden', borderRadius: RADIUS.lg - STROKE.outline },
-  empty: { gap: SPACE.md, paddingTop: SPACE.sm },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
+    chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
+    group: { marginTop: SPACE.xs, gap: SPACE.md },
+    clip: { overflow: 'hidden', borderRadius: RADIUS.lg - STROKE.outline },
+    empty: { gap: SPACE.md, paddingTop: SPACE.sm },
+  })
+);

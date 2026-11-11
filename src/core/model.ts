@@ -125,6 +125,8 @@ export type Place = RecordMeta & {
 
 export type ThemeChoice = 'dark' | 'light' | 'system';
 export type ToneChoice = 'plain' | 'bro';
+/** Оформление: «Обычный» (строгий) или «АУФ» (мульт с волком). */
+export type DesignChoice = 'plain' | 'auf';
 export type LocaleChoice = 'ru' | 'en' | 'es';
 
 /**
@@ -134,6 +136,8 @@ export type LocaleChoice = 'ru' | 'en' | 'es';
 export type Settings = RecordMeta & {
   /** «Ночь» = dark, «Рассвет» = light */
   theme: ThemeChoice;
+  /** оформление; в «Обычном» тон, цитаты и звания не действуют */
+  design: DesignChoice;
   tone: ToneChoice;
   /** цитата волка (одна в день, только в пацанском тоне) */
   quotes: boolean;

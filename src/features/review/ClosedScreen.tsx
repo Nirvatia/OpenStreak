@@ -12,7 +12,7 @@ import { closedStreak, dayView, firstReminder } from '../../core/day';
 import { indexHabits } from '../../core/habits';
 import { dayPoints } from '../../core/points';
 import { quoteOfDay } from '../../core/quotes';
-import { settingsOf } from '../../core/settings';
+import { effectiveSettings } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { quoteCount, type MessageKey } from '../../i18n';
 import { useT } from '../../store/prefsStore';
@@ -48,7 +48,7 @@ export function ClosedScreen({ onDone }: { onDone: () => void }) {
   const night = useThemeStore((s) => s.scheme === 'dark');
   const data = useDataStore((s) => s.data);
   const today = useDataStore((s) => s.today);
-  const settings = settingsOf(data);
+  const settings = effectiveSettings(data);
 
   const info = useMemo(() => {
     const idx = indexHabits(data);

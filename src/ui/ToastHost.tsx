@@ -17,6 +17,7 @@ import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
 import { useToast } from './toast';
+import { designStyles } from '../theme/design';
 
 const HIDDEN_Y = 160;
 
@@ -73,24 +74,26 @@ export function ToastHost({ bottom = 0 }: { bottom?: number }) {
   );
 }
 
-const styles = StyleSheet.create({
-  layer: { justifyContent: 'flex-end', paddingHorizontal: SPACE.screenX },
-  toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 56,
-    padding: SPACE.sm,
-    paddingLeft: SPACE.lg,
-    gap: SPACE.md,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.md,
-  },
-  text: { flex: 1 },
-  action: {
-    height: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-    borderWidth: STROKE.thin,
-    borderRadius: 12,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    layer: { justifyContent: 'flex-end', paddingHorizontal: SPACE.screenX },
+    toast: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      minHeight: 56,
+      padding: SPACE.sm,
+      paddingLeft: SPACE.lg,
+      gap: SPACE.md,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.md,
+    },
+    text: { flex: 1 },
+    action: {
+      height: 40,
+      justifyContent: 'center',
+      paddingHorizontal: 14,
+      borderWidth: STROKE.thin,
+      borderRadius: 12,
+    },
+  })
+);

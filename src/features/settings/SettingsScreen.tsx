@@ -5,10 +5,10 @@
  */
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
-import { live } from '../../core/model';
+import { live, type DesignChoice } from '../../core/model';
 import { settingsOf } from '../../core/settings';
 import { replaceAll, useDataStore } from '../../core/store';
 import { exportData, importData } from '../../services/exportImport';
@@ -18,6 +18,8 @@ import { useT } from '../../store/prefsStore';
 import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Scheme, type ThemeMode } from '../../theme/palette';
 import { SPACE, TILT } from '../../theme/metrics';
+import { TYPE } from '../../theme/type';
+import { Segmented } from '../../ui/Segmented';
 import { ScreenHeader, SectionTitle } from '../../ui/ScreenHeader';
 import { SettingRow } from '../../ui/SettingRow';
 import { Card } from '../../ui/Sticker';
@@ -104,55 +106,88 @@ export function SettingsScreen({
       <ScreenHeader title={t('settings.title')} onBack={onBack} />
 
       <View style={styles.group}>
-        <SectionTitle title={t('settings.theme')} tone="sun" tilt={TILT.slightLeft} />
-        <View
-          style={styles.tiles}
-          accessibilityRole="radiogroup"
-          accessibilityLabel={t('settings.theme')}
-        >
-          {ORDER.map((m, i) => (
-            <ThemeTile
-              key={m}
-              lean={i % 2 ? 2 : -2}
-              label={t(`theme.${m}`)}
-              schemes={PREVIEW[m]}
-              selected={s.theme === m}
-              onPress={() => A.updateSettings({ theme: m })}
-            />
-          ))}
-        </View>
+        <SectionTitle title={t('settings.design')} tone="sun" tilt={TILT.slightLeft} />
+        <Segmented<DesignChoice>
+          label={t('settings.design')}
+          value={s.design}
+          onChange={(design) => A.updateSettings({ design })}
+          items={[
+            { value: 'plain', label: t('design.plain') },
+            { value: 'auf', label: t('design.auf') },
+          ]}
+        />
+        <Text style={[TYPE.meta, { color: p.muted }]}>{t('settings.designHint')}</Text>
       </View>
 
       <View style={styles.group}>
-        <SectionTitle title={t('settings.character')} tilt={TILT.slightRight} />
+        <SectionTitle title={t('settings.theme')} tone="sun" tilt={TILT.slightLeft} />
+        {s.design === 'plain' ? (
+          <Segmented<ThemeMode>
+            label={t('settings.theme')}
+            value={s.theme}
+            onChange={(theme) => A.updateSettings({ theme })}
+            items={ORDER.map((m) => ({ value: m, label: t(`theme.${m}`) }))}
+          />
+        ) : (
+          <View
+            style={styles.tiles}
+            accessibilityRole="radiogroup"
+            accessibilityLabel={t('settings.theme')}
+          >
+            {ORDER.map((m, i) => (
+              <ThemeTile
+                key={m}
+                lean={i % 2 ? 2 : -2}
+                label={t(`theme.${m}`)}
+                schemes={PREVIEW[m]}
+                selected={s.theme === m}
+                onPress={() => A.updateSettings({ theme: m })}
+              />
+            ))}
+          </View>
+        )}
+      </View>
+
+      <View style={styles.group}>
+        <SectionTitle
+          title={t(s.design === 'auf' ? 'settings.character' : 'settings.general')}
+          tilt={TILT.slightRight}
+        />
         <Card padded={false}>
-          <SettingRow
-            label={t('settings.tone')}
-            hint={t('settings.toneHint')}
-            value={s.tone === 'bro'}
-            onChange={(on) => A.updateSettings({ tone: on ? 'bro' : 'plain' })}
-          />
-          <SettingRow
-            label={t('settings.quotes')}
-            hint={t('settings.quotesHint')}
-            value={s.quotes}
-            onChange={(quotes) => A.updateSettings({ quotes })}
-          />
+          {s.design === 'auf' && (
+            <>
+              <SettingRow
+                label={t('settings.tone')}
+                hint={t('settings.toneHint')}
+                value={s.tone === 'bro'}
+                onChange={(on) => A.updateSettings({ tone: on ? 'bro' : 'plain' })}
+              />
+              <SettingRow
+                label={t('settings.quotes')}
+                hint={t('settings.quotesHint')}
+                value={s.quotes}
+                onChange={(quotes) => A.updateSettings({ quotes })}
+              />
+            </>
+          )}
           <SettingRow
             label={t('settings.language')}
             value={t(`lang.${s.locale}` as MessageKey)}
+            last={s.design !== 'auf'}
             onPress={() =>
               A.updateSettings({
                 locale: LOCALES[(LOCALES.indexOf(s.locale) + 1) % LOCALES.length],
               })
             }
           />
-          <SettingRow
-            label={t('settings.ranks')}
-            value={s.ranks}
-            onChange={(ranks) => A.updateSettings({ ranks })}
-            last
-          />
+          {s.design === 'auf' && (
+            <SettingRow
+              label={t('settings.ranks')}
+              value={s.ranks}
+              onChange={(ranks) => A.updateSettings({ ranks })}
+              last
+            />
+          )}
         </Card>
       </View>
 

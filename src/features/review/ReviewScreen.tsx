@@ -21,6 +21,7 @@ import { ScreenHeader } from '../../ui/ScreenHeader';
 import { WolfQuote } from '../../ui/Sticker';
 import { TextField } from '../../ui/TextField';
 import { fullDate } from '../format';
+import { designStyles } from '../../theme/design';
 
 const MOODS = [1, 2, 3, 4, 5] as const;
 const TILTS = [-2, 1.5, -1, 2, -1.5];
@@ -122,20 +123,22 @@ export function ReviewScreen({ onBack, onClosed }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  fill: { flex: 1 },
-  content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
-  section: { gap: 10 },
-  moods: { flexDirection: 'row', gap: SPACE.sm },
-  mood: {
-    flex: 1,
-    height: 96,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACE.sm,
-    paddingHorizontal: 2,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.md,
-  },
-  footer: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.sm },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    fill: { flex: 1 },
+    content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.block },
+    section: { gap: 10 },
+    moods: { flexDirection: 'row', gap: SPACE.sm },
+    mood: {
+      flex: 1,
+      height: 96,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: SPACE.sm,
+      paddingHorizontal: 2,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.md,
+    },
+    footer: { paddingHorizontal: SPACE.screenX, paddingTop: SPACE.sm },
+  })
+);

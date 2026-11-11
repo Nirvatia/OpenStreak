@@ -11,6 +11,7 @@ export type ShadowSize = keyof typeof SHADOW | 'none';
 export function hardShadow(p: Palette, size: ShadowSize = 'lg'): ViewStyle {
   if (size === 'none') return {};
   const o = SHADOW[size];
+  if (o === 0) return {};
   return { boxShadow: `${o}px ${o}px 0px 0px ${p.shadow}` };
 }
 

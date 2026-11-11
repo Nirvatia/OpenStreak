@@ -16,6 +16,7 @@ import { Sheet } from '../../ui/Sheet';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { AREA_COLOR, AREA_ICONS } from './areaIcons';
+import { designStyles } from '../../theme/design';
 
 type Props = {
   visible: boolean;
@@ -116,14 +117,16 @@ export function AreaSheet({ visible, editId, onClose, onSaved }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  footer: { flexDirection: 'row', gap: SPACE.md },
-  grow: { flex: 1 },
-  group: { gap: SPACE.sm },
-  icons: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
-  pick: {
-    padding: 3,
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.sm + 4,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    footer: { flexDirection: 'row', gap: SPACE.md },
+    grow: { flex: 1 },
+    group: { gap: SPACE.sm },
+    icons: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
+    pick: {
+      padding: 3,
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.sm + 4,
+    },
+  })
+);

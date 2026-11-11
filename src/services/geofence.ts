@@ -13,7 +13,7 @@ import { loadData } from '../app/loadData';
 import { todayStr } from '../core/dates';
 import { placeAlerts, shouldFire, type PlaceEvent } from '../core/placeAlerts';
 import { ZONE_LIMIT, neededTriggers, pickZones } from '../core/places';
-import { settingsOf } from '../core/settings';
+import { effectiveSettings } from '../core/settings';
 import { useDataStore } from '../core/store';
 import { translate } from '../i18n';
 import { notifyNow } from './notifications';
@@ -48,7 +48,7 @@ async function onPlaceEvent(event: PlaceEvent, placeId: string): Promise<void> {
   const alerts = placeAlerts(data, placeId, event, todayStr());
   if (alerts.length === 0) return;
 
-  const { locale, tone } = settingsOf(data);
+  const { locale, tone } = effectiveSettings(data);
   const sent = await readSent();
   const nowMs = Date.now();
   for (const k of Object.keys(sent)) if (nowMs - sent[k]! > DAY_MS) delete sent[k];

@@ -12,7 +12,7 @@ import { closedStreak, dayNumber, dayView, isClosed, type DayItem } from '../../
 import { dataOf, fullValue, habitStats, indexHabits } from '../../core/habits';
 import { dayPoints } from '../../core/points';
 import { quoteOfDay } from '../../core/quotes';
-import { settingsOf } from '../../core/settings';
+import { effectiveSettings } from '../../core/settings';
 import { useDataStore } from '../../core/store';
 import { quoteCount, type MessageKey } from '../../i18n';
 import { useT, type Translate } from '../../store/prefsStore';
@@ -50,7 +50,7 @@ export function TodayScreen({ onOpenSettings, onOpenReview }: Props) {
     return { day, points, streakOf };
   }, [data, today]);
 
-  const settings = settingsOf(data);
+  const settings = effectiveSettings(data);
   const quote = quoteOfDay(settings, today, quoteCount('ru'));
   const { day } = view;
   const closed = isClosed(data, today);

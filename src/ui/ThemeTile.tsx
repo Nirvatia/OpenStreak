@@ -9,6 +9,7 @@ import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { resolvePalette, type Scheme } from '../theme/palette';
 import { hardShadow, tilt } from '../theme/sticker';
 import { TYPE } from '../theme/type';
+import { designStyles } from '../theme/design';
 
 type Props = {
   label: string;
@@ -65,27 +66,29 @@ export function ThemeTile({ label, schemes, selected, onPress, lean = -2 }: Prop
   );
 }
 
-const styles = StyleSheet.create({
-  tile: {
-    flex: 1,
-    height: TILE_HEIGHT,
-    overflow: 'hidden',
-    borderWidth: STROKE.outline,
-    borderRadius: RADIUS.md,
-  },
-  preview: { flex: 1, flexDirection: 'row' },
-  half: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACE.tight,
-  },
-  moon: { width: 18, height: 18, borderRadius: 9, borderWidth: STROKE.thin },
-  card: { width: 22, height: 12, borderRadius: 4, borderWidth: STROKE.thin },
-  label: {
-    paddingVertical: SPACE.tight,
-    paddingHorizontal: SPACE.xs,
-    borderTopWidth: STROKE.outline,
-  },
-});
+const styles = designStyles(() =>
+  StyleSheet.create({
+    tile: {
+      flex: 1,
+      height: TILE_HEIGHT,
+      overflow: 'hidden',
+      borderWidth: STROKE.outline,
+      borderRadius: RADIUS.md,
+    },
+    preview: { flex: 1, flexDirection: 'row' },
+    half: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: SPACE.tight,
+    },
+    moon: { width: 18, height: 18, borderRadius: 9, borderWidth: STROKE.thin },
+    card: { width: 22, height: 12, borderRadius: 4, borderWidth: STROKE.thin },
+    label: {
+      paddingVertical: SPACE.tight,
+      paddingHorizontal: SPACE.xs,
+      borderTopWidth: STROKE.outline,
+    },
+  })
+);
