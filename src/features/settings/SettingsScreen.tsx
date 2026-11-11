@@ -44,9 +44,11 @@ const PREVIEW: Record<(typeof THEME_MODES)[number], Scheme[]> = {
 export function SettingsScreen({
   onBack,
   onOpenPlaces,
+  onOpenAreas,
 }: {
   onBack: () => void;
   onOpenPlaces: () => void;
+  onOpenAreas: () => void;
 }) {
   const p = usePalette();
   const t = useT();
@@ -182,6 +184,12 @@ export function SettingsScreen({
 
       <View style={styles.group}>
         <Card padded={false}>
+          <SettingRow
+            label={t('settings.areas')}
+            hint={t('settings.areasHint')}
+            value={String(live(data.areas).length)}
+            onPress={onOpenAreas}
+          />
           <SettingRow
             label={t('settings.places')}
             hint={t('settings.placesHint')}

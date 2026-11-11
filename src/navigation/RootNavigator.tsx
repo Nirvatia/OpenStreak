@@ -8,6 +8,7 @@ import {
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import React from 'react';
+import { AreasScreen } from '../features/areas/AreasScreen';
 import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
 import { HabitsScreen } from '../features/habits/HabitsScreen';
@@ -27,6 +28,7 @@ export type RootStack = {
   tabs: undefined;
   settings: undefined;
   places: undefined;
+  areas: undefined;
   habit: { id: string };
   review: undefined;
   closed: undefined;
@@ -102,8 +104,12 @@ export function RootNavigator() {
           <SettingsScreen
             onBack={() => navigation.goBack()}
             onOpenPlaces={() => navigation.navigate('places')}
+            onOpenAreas={() => navigation.navigate('areas')}
           />
         )}
+      </Stack.Screen>
+      <Stack.Screen name="areas">
+        {({ navigation }) => <AreasScreen onBack={() => navigation.goBack()} />}
       </Stack.Screen>
       <Stack.Screen name="places">
         {({ navigation }) => <PlacesScreen onBack={() => navigation.goBack()} />}

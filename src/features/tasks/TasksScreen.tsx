@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
+import { AreaSheet } from '../areas/AreaSheet';
 import { vibrateImpact } from '../../services/haptics';
 import { addDays } from '../../core/dates';
 import { live, type Task } from '../../core/model';
@@ -55,6 +56,7 @@ export function TasksScreen() {
   const toast = useToast((s) => s.show);
   const { show, editTask } = useNewSheet();
   const [area, setArea] = useState<string | null>(null);
+  const [areaSheet, setAreaSheet] = useState(0);
   const [query, setQuery] = useState('');
 
   const areas = useMemo(
@@ -118,18 +120,20 @@ export function TasksScreen() {
         returnKeyType="search"
       />
 
-      {areas.length > 0 && (
+      {
         <View
           style={styles.chips}
           accessibilityRole="radiogroup"
           accessibilityLabel={t('tasks.areas')}
         >
-          <Chip
-            role="radio"
-            label={t('tasks.all')}
-            selected={area === null}
-            onPress={() => setArea(null)}
-          />
+          {areas.length > 0 && (
+            <Chip
+              role="radio"
+              label={t('tasks.all')}
+              selected={area === null}
+              onPress={() => setArea(null)}
+            />
+          )}
           {areas.map((a) => {
             const n = perArea.get(a.id) ?? 0;
             return (
@@ -142,7 +146,18 @@ export function TasksScreen() {
               />
             );
           })}
+          <Chip dashed label={t('area.add')} onPress={() => setAreaSheet((n) => n + 1)} />
         </View>
+      }
+
+      {areaSheet > 0 && (
+        <AreaSheet
+          key={areaSheet}
+          visible
+          editId={null}
+          onClose={() => setAreaSheet(0)}
+          onSaved={(id) => setArea(id)}
+        />
       )}
 
       {groups.length === 0 ? (

@@ -24,6 +24,7 @@ import { Sheet } from '../../ui/Sheet';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { dayMonth } from '../format';
+import { AreaSheet } from '../areas/AreaSheet';
 import { usePlaceAccess } from '../places/placeAccessStore';
 import { PlaceSheet } from '../places/PlaceSheet';
 import { geofenceAccess } from '../../services/geofence';
@@ -101,6 +102,7 @@ function NewSheetForm() {
     editing?.placeTrigger ?? editingHabit?.placeTrigger ?? 'enter'
   );
   const [placeSheet, setPlaceSheet] = useState(false);
+  const [areaSheet, setAreaSheet] = useState(false);
 
   const changeKind = (k: NewKind) => {
     setKind(k);
@@ -284,7 +286,7 @@ function NewSheetForm() {
         </Group>
       )}
 
-      {kind === 'task' && areaList.length > 0 && (
+      {kind === 'task' && (
         <Group title={t('new.area')}>
           <View style={styles.chips} accessibilityRole="radiogroup">
             <Chip
@@ -304,6 +306,7 @@ function NewSheetForm() {
                 onPress={() => setAreaId(a.id)}
               />
             ))}
+            <Chip size="md" dashed label={t('area.add')} onPress={() => setAreaSheet(true)} />
           </View>
         </Group>
       )}
@@ -386,6 +389,15 @@ function NewSheetForm() {
             </View>
           )}
         </Group>
+      )}
+
+      {areaSheet && (
+        <AreaSheet
+          visible
+          editId={null}
+          onClose={() => setAreaSheet(false)}
+          onSaved={(id) => setAreaId(id)}
+        />
       )}
 
       {placeSheet && (
