@@ -601,7 +601,7 @@ function NewSheetForm() {
                   selected={date === null}
                   onPress={() => setDate(null)}
                 />
-                {(kind === 'goal' ? date !== null : custom) && (
+                {date !== null && (kind === 'goal' || custom) && (
                   <Chip
                     size="md"
                     role="radio"
