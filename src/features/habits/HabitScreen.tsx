@@ -4,7 +4,7 @@
  * Для вредной привычки вместо «слил» — «Сорвался».
  */
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as A from '../../core/actions';
 import { vibrateImpact } from '../../services/haptics';
@@ -111,6 +111,129 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
   };
 
   const weekdays = Array.from({ length: 7 }, (_, i) => (i + weekStart) % 7);
+
+  if (plain) {
+    // «Обычный»: серия крупно, одно главное действие, месяц, ниже — строки-действия.
+    const rowStyle = [styles.plainRow, { borderTopColor: p.divider }];
+    return (
+      <ScrollView
+        style={{ backgroundColor: p.bg }}
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: insets.top + SPACE.sm, paddingBottom: insets.bottom + SPACE.xl },
+        ]}
+      >
+        <View style={styles.top}>
+          <IconButton icon="back" label={t('common.back')} onPress={onBack} />
+          <Pressable accessibilityRole="button" onPress={() => editHabit(h.id)} style={styles.link}>
+            <Text style={[TYPE.control, { color: p.sun }]}>{t('habit.edit')}</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.titles}>
+          {!!meta && <Text style={[TYPE.meta, { color: p.muted }]}>{meta}</Text>}
+          <Text accessibilityRole="header" style={[TYPE.title, { color: p.text }]}>
+            {h.name}
+          </Text>
+        </View>
+
+        <View style={styles.streakPlain}>
+          <View>
+            <Text style={[TYPE.numberXL, styles.bigStreak, { color: p.sun }]}>{stats.streak}</Text>
+            <Text style={[TYPE.note, { color: p.muted }]}>{t('habit.streak')}</Text>
+          </View>
+          <View style={styles.bestPlain}>
+            <Text style={[TYPE.numberL, { color: p.text }]}>{stats.best}</Text>
+            <Text style={[TYPE.meta, { color: p.muted }]}>{t('habit.bestShort')}</Text>
+          </View>
+        </View>
+
+        <Text style={[TYPE.body, { color: p.muted }]}>{status}</Text>
+
+        {!bad && !slip && (
+          <View style={styles.adds}>
+            {numeric ? (
+              value >= full ? (
+                <Button
+                  label={t('habit.reset')}
+                  variant="secondary"
+                  style={styles.add}
+                  onPress={() => A.setCheckValue(h.id, today, 0)}
+                />
+              ) : (
+                steps(full).map((n, i, all) => (
+                  <Button
+                    key={n}
+                    label={t('habit.add', { step: n })}
+                    variant={i === all.length - 1 ? 'primary' : 'secondary'}
+                    style={styles.add}
+                    onPress={() => {
+                      vibrateImpact();
+                      A.setCheckValue(h.id, today, Math.min(full, value + n));
+                    }}
+                  />
+                ))
+              )
+            ) : (
+              <Button
+                label={t(day.mark === 'full' ? 'habit.unmark' : 'habit.mark')}
+                variant={day.mark === 'full' ? 'secondary' : 'primary'}
+                style={styles.add}
+                onPress={() => {
+                  if (day.mark !== 'full') vibrateImpact();
+                  A.toggleCheck(h.id, today);
+                }}
+              />
+            )}
+          </View>
+        )}
+
+        <View style={styles.plainMonth}>
+          <View style={styles.monthHead}>
+            <Text style={[TYPE.label, { color: p.muted, textTransform: 'uppercase' }]}>
+              {t('habit.month')}
+            </Text>
+            <Text style={[TYPE.meta, { color: p.muted }]}>
+              {bad || !numeric ? stats.doneDays : stats.total} {t('habit.total')}
+            </Text>
+          </View>
+          <View style={styles.weekdays}>
+            {weekdays.map((d) => (
+              <Text key={d} style={[TYPE.tiny, styles.weekday, { color: p.muted }]}>
+                {t(`day.short.${d}` as MessageKey)}
+              </Text>
+            ))}
+          </View>
+          <MoonGrid days={view.month} size={36} />
+        </View>
+
+        <View>
+          <Pressable accessibilityRole="button" onPress={toggleRest} style={rowStyle}>
+            <Text style={[TYPE.item, { color: p.text }]}>
+              {t(rest ? 'habit.restOff' : 'habit.rest')}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={toggleSlip}
+            style={[...rowStyle, { borderBottomWidth: 1, borderBottomColor: p.divider }]}
+          >
+            <Text style={[TYPE.item, { color: p.red }]}>
+              {t(
+                bad
+                  ? slip
+                    ? 'habit.relapseOff'
+                    : 'habit.relapse'
+                  : slip
+                    ? 'habit.slipOff'
+                    : 'habit.slip'
+              )}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView
@@ -296,4 +419,10 @@ const styles = StyleSheet.create({
   weekday: { width: `${100 / 7}%`, textAlign: 'center' },
   actions: { flexDirection: 'row', gap: SPACE.md },
   action: { flex: 1, paddingHorizontal: SPACE.sm },
+  link: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 4 },
+  streakPlain: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
+  bigStreak: { fontSize: 72, lineHeight: 76, letterSpacing: -3 },
+  bestPlain: { alignItems: 'flex-end' },
+  plainMonth: { gap: 10 },
+  plainRow: { minHeight: 52, justifyContent: 'center', borderTopWidth: 1 },
 });

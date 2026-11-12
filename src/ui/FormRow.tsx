@@ -11,7 +11,8 @@ import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
 
 type Props = {
-  icon: UiIconName;
+  /** значок слева; без него строка начинается с названия (настройки) */
+  icon?: UiIconName;
   label: string;
   value: string;
   /** значение задано (не по умолчанию): рисуется акцентом */
@@ -33,7 +34,7 @@ export function FormRow({ icon, label, value, set = false, open, onPress, childr
         onPress={onPress}
         style={styles.row}
       >
-        <Icon name={icon} size={22} tone="muted" />
+        {icon && <Icon name={icon} size={22} tone="muted" />}
         <Text style={[TYPE.item, styles.label, { color: p.text }]}>{label}</Text>
         <Text numberOfLines={1} style={[TYPE.row, styles.value, { color: set ? p.sun : p.muted }]}>
           {value}
@@ -42,7 +43,9 @@ export function FormRow({ icon, label, value, set = false, open, onPress, childr
           <Icon name="chevron" size={16} tone="muted" />
         </View>
       </Pressable>
-      {open && !!children && <View style={styles.body}>{children}</View>}
+      {open && !!children && (
+        <View style={[styles.body, !icon && { paddingLeft: 0 }]}>{children}</View>
+      )}
     </View>
   );
 }

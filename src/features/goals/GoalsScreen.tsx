@@ -136,6 +136,73 @@ function Contract({
     [t('goals.reward'), goal.reward, false],
     [t('goals.penalty'), goal.penalty, true],
   ];
+  if (plain) {
+    // «Обычный»: цель без карточки — заголовок, строки условий, одна главная кнопка и ссылка.
+    const when =
+      state === 'overdue'
+        ? t('goals.overdueBy', { count: -(daysLeft ?? 0) })
+        : daysLeft === 0
+          ? t('goals.dueToday')
+          : goal.deadline
+            ? t('goals.deadline', { date: dayMonth(t, goal.deadline) })
+            : t('goals.noDeadline');
+    return (
+      <View style={styles.plainGoal}>
+        <View style={styles.plainHead}>
+          <Text style={[TYPE.label, { color: p.muted, textTransform: 'uppercase' }]}>
+            {area ? `${number} · ${area}` : number}
+          </Text>
+          {!done && (
+            <Text style={[TYPE.row, { color: state === 'overdue' ? p.red : p.sun }]}>
+              {daysLeft !== null && daysLeft > 0
+                ? `${daysLeft} ${t('goals.daysLeft', { count: daysLeft })}`
+                : when}
+            </Text>
+          )}
+        </View>
+        <Text
+          accessibilityRole="header"
+          style={[
+            TYPE.title,
+            { color: done ? p.muted : p.text, textDecorationLine: done ? 'line-through' : 'none' },
+          ]}
+        >
+          {goal.text}
+        </Text>
+        <View>
+          {!done && (
+            <View style={[styles.plainRow, { borderTopColor: p.divider }]}>
+              <Text style={[TYPE.meta, styles.plainLabel, { color: p.muted }]}>
+                {t('goals.deadlineLabel')}
+              </Text>
+              <Text style={[TYPE.body, styles.plainValue, { color: p.text }]}>{when}</Text>
+            </View>
+          )}
+          {fields
+            .filter(([, value]) => !!value)
+            .map(([label, value, risky]) => (
+              <View key={label} style={[styles.plainRow, { borderTopColor: p.divider }]}>
+                <Text style={[TYPE.meta, styles.plainLabel, { color: risky ? p.red : p.muted }]}>
+                  {label}
+                </Text>
+                <Text style={[TYPE.body, styles.plainValue, { color: p.text }]}>{value}</Text>
+              </View>
+            ))}
+        </View>
+        <View style={styles.plainActions}>
+          <Button
+            label={t(done ? 'goals.reopen' : 'goals.done')}
+            variant={done ? 'secondary' : 'primary'}
+            onPress={onToggle}
+          />
+          <Pressable accessibilityRole="button" onPress={onEdit} style={styles.plainLink}>
+            <Text style={[TYPE.control, { color: p.sun }]}>{t('goals.edit')}</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <Card radius={RADIUS.xl} style={styles.contract}>
       <View style={plain ? styles.numberPlain : styles.number}>
@@ -284,6 +351,13 @@ const styles = designStyles(() =>
     contract: { gap: 14, marginTop: SPACE.sm, paddingTop: 22 },
     number: { position: 'absolute', top: -16, left: 14 },
     numberPlain: { marginBottom: 2 },
+    plainGoal: { gap: SPACE.md },
+    plainHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+    plainRow: { flexDirection: 'row', gap: 14, paddingVertical: 12, borderTopWidth: 1 },
+    plainLabel: { width: 96 },
+    plainValue: { flex: 1 },
+    plainActions: { gap: 4 },
+    plainLink: { minHeight: 44, alignItems: 'center', justifyContent: 'center' },
     deadline: { flexDirection: 'row', alignItems: 'center', gap: 14 },
     days: {
       flexDirection: 'row',

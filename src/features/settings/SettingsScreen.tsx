@@ -19,6 +19,8 @@ import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Scheme, type ThemeMode } from '../../theme/palette';
 import { SPACE, TILT } from '../../theme/metrics';
 import { TYPE } from '../../theme/type';
+import { Chip } from '../../ui/Chip';
+import { FormRow } from '../../ui/FormRow';
 import { Segmented } from '../../ui/Segmented';
 import { ScreenHeader, SectionTitle } from '../../ui/ScreenHeader';
 import { SettingRow } from '../../ui/SettingRow';
@@ -61,6 +63,8 @@ export function SettingsScreen({
   const scheme = useThemeStore((st) => st.scheme);
   const toast = useToast((st) => st.show);
   const [picker, setPicker] = useState(false);
+  const plain = s.design === 'plain';
+  const [openRow, setOpenRow] = useState<string | null>(null);
   const [importArmed, setImportArmed] = useState(false);
 
   const toggleReview = async (on: boolean) => {
@@ -108,48 +112,99 @@ export function SettingsScreen({
     >
       <ScreenHeader title={t('settings.title')} onBack={onBack} />
 
-      <View style={styles.group}>
-        <SectionTitle title={t('settings.design')} tone="sun" tilt={TILT.slightLeft} />
-        <Segmented<DesignChoice>
-          label={t('settings.design')}
-          value={s.design}
-          onChange={(design) => A.updateSettings({ design })}
-          items={[
-            { value: 'plain', label: t('design.plain') },
-            { value: 'auf', label: t('design.auf') },
-          ]}
-        />
-        <Text style={[TYPE.meta, { color: p.muted }]}>{t('settings.designHint')}</Text>
-      </View>
-
-      <View style={styles.group}>
-        <SectionTitle title={t('settings.theme')} tone="sun" tilt={TILT.slightLeft} />
-        {s.design === 'plain' ? (
-          <Segmented<ThemeMode>
-            label={t('settings.theme')}
-            value={s.theme}
-            onChange={(theme) => A.updateSettings({ theme })}
-            items={ORDER.map((m) => ({ value: m, label: t(`theme.${m}`) }))}
-          />
-        ) : (
-          <View
-            style={styles.tiles}
-            accessibilityRole="radiogroup"
-            accessibilityLabel={t('settings.theme')}
-          >
-            {ORDER.map((m, i) => (
-              <ThemeTile
-                key={m}
-                lean={i % 2 ? 2 : -2}
-                label={t(`theme.${m}`)}
-                schemes={PREVIEW[m]}
-                selected={s.theme === m}
-                onPress={() => A.updateSettings({ theme: m })}
-              />
-            ))}
+      {plain ? (
+        <View style={styles.group}>
+          <SectionTitle title={t('settings.view')} />
+          <Card padded={false}>
+            <FormRow
+              label={t('settings.design')}
+              value={t(`design.${s.design}`)}
+              set
+              open={openRow === 'design'}
+              onPress={() => setOpenRow((cur) => (cur === 'design' ? null : 'design'))}
+            >
+              <View style={styles.chipRow} accessibilityRole="radiogroup">
+                {(['plain', 'auf'] as const).map((d) => (
+                  <Chip
+                    key={d}
+                    size="md"
+                    role="radio"
+                    label={t(`design.${d}`)}
+                    selected={s.design === d}
+                    onPress={() => A.updateSettings({ design: d })}
+                  />
+                ))}
+              </View>
+              <Text style={[TYPE.meta, { color: p.muted }]}>{t('settings.designHint')}</Text>
+            </FormRow>
+            <FormRow
+              label={t('settings.theme')}
+              value={t(`theme.${s.theme}`)}
+              set
+              open={openRow === 'theme'}
+              onPress={() => setOpenRow((cur) => (cur === 'theme' ? null : 'theme'))}
+            >
+              <View style={styles.chipRow} accessibilityRole="radiogroup">
+                {ORDER.map((m) => (
+                  <Chip
+                    key={m}
+                    size="md"
+                    role="radio"
+                    label={t(`theme.${m}`)}
+                    selected={s.theme === m}
+                    onPress={() => A.updateSettings({ theme: m })}
+                  />
+                ))}
+              </View>
+            </FormRow>
+          </Card>
+        </View>
+      ) : (
+        <>
+          <View style={styles.group}>
+            <SectionTitle title={t('settings.design')} tone="sun" tilt={TILT.slightLeft} />
+            <Segmented<DesignChoice>
+              label={t('settings.design')}
+              value={s.design}
+              onChange={(design) => A.updateSettings({ design })}
+              items={[
+                { value: 'plain', label: t('design.plain') },
+                { value: 'auf', label: t('design.auf') },
+              ]}
+            />
+            <Text style={[TYPE.meta, { color: p.muted }]}>{t('settings.designHint')}</Text>
           </View>
-        )}
-      </View>
+
+          <View style={styles.group}>
+            <SectionTitle title={t('settings.theme')} tone="sun" tilt={TILT.slightLeft} />
+            {s.design === 'plain' ? (
+              <Segmented<ThemeMode>
+                label={t('settings.theme')}
+                value={s.theme}
+                onChange={(theme) => A.updateSettings({ theme })}
+                items={ORDER.map((m) => ({ value: m, label: t(`theme.${m}`) }))}
+              />
+            ) : (
+              <View
+                style={styles.tiles}
+                accessibilityRole="radiogroup"
+                accessibilityLabel={t('settings.theme')}
+              >
+                {ORDER.map((m, i) => (
+                  <ThemeTile
+                    key={m}
+                    lean={i % 2 ? 2 : -2}
+                    label={t(`theme.${m}`)}
+                    schemes={PREVIEW[m]}
+                    selected={s.theme === m}
+                    onPress={() => A.updateSettings({ theme: m })}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+        </>
+      )}
 
       <View style={styles.group}>
         <SectionTitle
@@ -276,4 +331,5 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: SPACE.screenX, paddingBottom: SPACE.xl, gap: SPACE.lg },
   group: { gap: SPACE.md },
   tiles: { flexDirection: 'row', gap: 10 },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
 });
