@@ -174,6 +174,9 @@ export const en: Record<MessageKey, Message> = {
   'access.bannerOff': 'Place reminders won’t arrive until “Always” access is allowed',
   'access.unsupported': 'Place reminders work on a phone only',
 
+  'form.unset': 'Not set',
+  'form.pickTime': 'Pick a time…',
+  'form.clear': 'Clear',
   'new.title': 'New',
   'new.kind': 'What is it',
   'new.kind.task': 'Task',

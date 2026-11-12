@@ -13,12 +13,16 @@ type Props = Omit<TextInputProps, 'style'> & {
   /** метка над полем; у поиска — только для чтения с экрана */
   label: string;
   variant?: 'title' | 'search' | 'note';
+  /** показывать метку над полем (строка формы уже подписана — тогда false) */
+  showLabel?: boolean;
 };
 
 /** На вебе браузер рисует свою рамку фокуса поверх нашей обводки — убираем её. */
-const NO_WEB_OUTLINE = Platform.OS === 'web' ? { outlineWidth: 0 } : null;
+export const NO_WEB_OUTLINE = (
+  Platform.OS === 'web' ? { outlineWidth: 0, outlineStyle: 'none' } : null
+) as object | null;
 
-export function TextField({ label, variant = 'title', ...input }: Props) {
+export function TextField({ label, variant = 'title', showLabel = true, ...input }: Props) {
   const p = usePalette();
   const plain = usePlain();
   const [focused, setFocused] = useState(false);
@@ -71,7 +75,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
 
   return (
     <View style={{ gap: SPACE.tight }}>
-      <Text style={[TYPE.meta, { color: p.muted }]}>{label}</Text>
+      {showLabel && <Text style={[TYPE.meta, { color: p.muted }]}>{label}</Text>}
       {variant === 'title' ? (
         <TextInput
           {...common}

@@ -174,6 +174,9 @@ export const es: Record<MessageKey, Message> = {
   'access.bannerOff': 'Los avisos por lugar no llegarán hasta que se permita el acceso «Siempre»',
   'access.unsupported': 'Los avisos por lugar solo funcionan en un teléfono',
 
+  'form.unset': 'Sin definir',
+  'form.pickTime': 'Elegir hora…',
+  'form.clear': 'Quitar',
   'new.title': 'Nuevo',
   'new.kind': 'Qué es',
   'new.kind.task': 'Tarea',

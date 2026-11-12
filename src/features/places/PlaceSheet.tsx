@@ -4,19 +4,21 @@
  * координаты оттуда вставляют обратно — разбор в `core/places.ts`.
  */
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as A from '../../core/actions';
 import { RADIUS_DEFAULT, formatCoords, parseCoordinates, type Coords } from '../../core/places';
 import { useDataStore } from '../../core/store';
 import { currentPosition, openMapsApp, readClipboard } from '../../services/location';
 import { useT } from '../../store/prefsStore';
-import { usePalette } from '../../store/themeStore';
+import { usePalette, usePlain } from '../../store/themeStore';
 import { SPACE } from '../../theme/metrics';
+import { FONT } from '../../theme/fonts';
 import { TYPE } from '../../theme/type';
 import { Button } from '../../ui/Button';
 import { Chip } from '../../ui/Chip';
+import { FormRow } from '../../ui/FormRow';
 import { Sheet } from '../../ui/Sheet';
-import { TextField } from '../../ui/TextField';
+import { NO_WEB_OUTLINE, TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 
 const RADII = [100, 150, 300, 500, 1000];
@@ -34,6 +36,8 @@ export function PlaceSheet({ visible, editId, onClose, onSaved }: Props) {
   const t = useT();
   const p = usePalette();
   const toast = useToast((s) => s.show);
+  const plain = usePlain();
+  const [openRow, setOpenRow] = useState<string | null>('coords');
   const editing = useDataStore((s) => {
     const place = editId ? s.data.places[editId] : undefined;
     return place && place.deletedAt === null ? place : undefined;
@@ -123,68 +127,143 @@ export function PlaceSheet({ visible, editId, onClose, onSaved }: Props) {
         </View>
       }
     >
-      <TextField
-        label={t('place.name')}
-        value={name}
-        onChangeText={setName}
-        autoFocus={!editing}
-        returnKeyType="next"
-      />
+      {plain ? (
+        <>
+          <TextInput
+            accessibilityLabel={t('place.name')}
+            placeholder={t('place.name').charAt(0).toUpperCase() + t('place.name').slice(1)}
+            placeholderTextColor={p.muted}
+            value={name}
+            onChangeText={setName}
+            autoFocus={!editing}
+            returnKeyType="next"
+            style={[
+              TYPE.title,
+              styles.titleInput,
+              { color: p.text, borderBottomColor: p.divider },
+              Platform.OS === 'web' ? NO_WEB_OUTLINE : null,
+            ]}
+          />
+          <View>
+            <FormRow
+              icon="place"
+              label={t('place.coords').charAt(0).toUpperCase() + t('place.coords').slice(1)}
+              value={coords ? formatCoords(coords) : t('form.unset')}
+              set={coords !== null}
+              open={openRow === 'coords'}
+              onPress={() => setOpenRow((cur) => (cur === 'coords' ? null : 'coords'))}
+            >
+              <View style={styles.chips}>
+                <Chip size="md" label={t('place.here')} onPress={here} />
+                <Chip size="md" label={t('place.fromMaps')} onPress={maps} />
+                <Chip size="md" label={t('place.paste')} onPress={paste} />
+              </View>
+              <TextField
+                variant="note"
+                label={t('place.coords')}
+                showLabel={false}
+                value={coordsText}
+                onChangeText={changeCoords}
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder="55.75580, 37.61730"
+              />
+              <Text style={[TYPE.meta, { color: p.muted }]}>{t('place.coordsHint')}</Text>
+              {!!error && (
+                <Text accessibilityRole="alert" style={[TYPE.meta, { color: p.red }]}>
+                  {error}
+                </Text>
+              )}
+            </FormRow>
+            <FormRow
+              icon="settings"
+              label={t('place.radius').charAt(0).toUpperCase() + t('place.radius').slice(1)}
+              value={t('place.meters', { m: radius })}
+              set
+              open={openRow === 'radius'}
+              onPress={() => setOpenRow((cur) => (cur === 'radius' ? null : 'radius'))}
+            >
+              <View style={styles.chips} accessibilityRole="radiogroup">
+                {RADII.map((r) => (
+                  <Chip
+                    key={r}
+                    size="md"
+                    role="radio"
+                    label={t('place.meters', { m: r })}
+                    selected={radius === r}
+                    onPress={() => setRadius(r)}
+                  />
+                ))}
+              </View>
+            </FormRow>
+          </View>
+        </>
+      ) : (
+        <>
+          <TextField
+            label={t('place.name')}
+            value={name}
+            onChangeText={setName}
+            autoFocus={!editing}
+            returnKeyType="next"
+          />
 
-      <View style={styles.group}>
-        <TextField
-          variant="note"
-          label={t('place.coords')}
-          value={coordsText}
-          onChangeText={changeCoords}
-          autoCapitalize="none"
-          autoCorrect={false}
-          placeholder="55.75580, 37.61730"
-        />
-        <Text style={[TYPE.meta, { color: p.muted }]}>{t('place.coordsHint')}</Text>
-        <View style={styles.row}>
-          <Button
-            label={t('place.here')}
-            variant="secondary"
-            onPress={here}
-            disabled={busy}
-            style={styles.grow}
-          />
-          <Button
-            label={t('place.fromMaps')}
-            variant="secondary"
-            onPress={maps}
-            style={styles.grow}
-          />
-          <Button
-            label={t('place.paste')}
-            variant="secondary"
-            onPress={paste}
-            style={styles.grow}
-          />
-        </View>
-        {!!error && (
-          <Text accessibilityRole="alert" style={[TYPE.meta, { color: p.red }]}>
-            {error}
-          </Text>
-        )}
-      </View>
-
-      <View style={styles.group}>
-        <Text style={[TYPE.meta, { color: p.muted }]}>{t('place.radius')}</Text>
-        <View style={styles.chips} accessibilityRole="radiogroup">
-          {RADII.map((r) => (
-            <Chip
-              key={r}
-              size="md"
-              role="radio"
-              label={t('place.meters', { m: r })}
-              selected={radius === r}
-              onPress={() => setRadius(r)}
+          <View style={styles.group}>
+            <TextField
+              variant="note"
+              label={t('place.coords')}
+              value={coordsText}
+              onChangeText={changeCoords}
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholder="55.75580, 37.61730"
             />
-          ))}
-        </View>
-      </View>
+            <Text style={[TYPE.meta, { color: p.muted }]}>{t('place.coordsHint')}</Text>
+            <View style={styles.row}>
+              <Button
+                label={t('place.here')}
+                variant="secondary"
+                onPress={here}
+                disabled={busy}
+                style={styles.grow}
+              />
+              <Button
+                label={t('place.fromMaps')}
+                variant="secondary"
+                onPress={maps}
+                style={styles.grow}
+              />
+              <Button
+                label={t('place.paste')}
+                variant="secondary"
+                onPress={paste}
+                style={styles.grow}
+              />
+            </View>
+            {!!error && (
+              <Text accessibilityRole="alert" style={[TYPE.meta, { color: p.red }]}>
+                {error}
+              </Text>
+            )}
+          </View>
+
+          <View style={styles.group}>
+            <Text style={[TYPE.meta, { color: p.muted }]}>{t('place.radius')}</Text>
+            <View style={styles.chips} accessibilityRole="radiogroup">
+              {RADII.map((r) => (
+                <Chip
+                  key={r}
+                  size="md"
+                  role="radio"
+                  label={t('place.meters', { m: r })}
+                  selected={radius === r}
+                  onPress={() => setRadius(r)}
+                />
+              ))}
+            </View>
+          </View>
+        </>
+      )}
     </Sheet>
   );
 }
@@ -194,5 +273,11 @@ const styles = StyleSheet.create({
   grow: { flex: 1 },
   group: { gap: SPACE.sm },
   row: { flexDirection: 'row', gap: SPACE.tight },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight, alignItems: 'center' },
+  titleInput: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    fontSize: 24,
+    fontFamily: FONT.inter.medium,
+  },
 });
