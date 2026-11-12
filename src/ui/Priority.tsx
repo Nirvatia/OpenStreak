@@ -1,4 +1,4 @@
-/** Важность: ромбики с обводкой в «АУФ» (0 — нет, 1–2 — жёлтые, 3 — красные), столбики в «Обычном». */
+/** Важность тремя столбиками: 0 — нет, 1–3 — сколько заполнено. */
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useT } from '../store/prefsStore';
@@ -9,52 +9,35 @@ import { designStyles } from '../theme/design';
 
 export type PriorityLevel = 0 | 1 | 2 | 3;
 
-export function PriorityMarks({ level, size = 10 }: { level: PriorityLevel; size?: number }) {
+export function PriorityMarks({ level }: { level: PriorityLevel; size?: number }) {
   const p = usePalette();
   const plain = usePlain();
   const t = useT();
   if (!level) return null;
-  if (plain) {
-    // «Обычный»: три столбика, как уровень сигнала; заполнено столько, какая важность.
-    return (
-      <View
-        accessible
-        accessibilityLabel={t('a11y.priority', { count: level })}
-        style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 3, height: 16, marginLeft: 8 }}
-      >
-        {[6, 10, 14].map((h, i) => (
-          <View
-            key={i}
-            style={{
-              width: 4,
-              height: h,
-              borderRadius: 1,
-              backgroundColor: i < level ? p.text : p.divider,
-            }}
-          />
-        ))}
-      </View>
-    );
-  }
+  // Три столбика, как уровень сигнала: заполнено столько, какая важность.
+  // «Обычный» — чернилами без обводки; «АУФ» — жёлтые с обводкой, как наклейки.
   return (
     <View
       accessible
       accessibilityLabel={t('a11y.priority', { count: level })}
-      style={{ flexDirection: 'row', gap: size * 0.5, paddingHorizontal: 2 }}
+      style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 3, height: 18, marginLeft: 8 }}
     >
-      {Array.from({ length: level }, (_, i) => (
-        <View
-          key={i}
-          style={{
-            width: size,
-            height: size,
-            backgroundColor: level === 3 ? p.red : p.sun,
-            borderWidth: plain ? 0 : STROKE.thin,
-            borderColor: p.line,
-            transform: [{ rotate: '45deg' }],
-          }}
-        />
-      ))}
+      {[7, 12, 17].map((h, i) => {
+        const on = i < level;
+        return (
+          <View
+            key={i}
+            style={{
+              width: 5,
+              height: h,
+              borderRadius: 2,
+              backgroundColor: on ? (plain ? p.text : p.sun) : plain ? p.divider : p.track,
+              borderWidth: plain ? 0 : 1.5,
+              borderColor: p.line,
+            }}
+          />
+        );
+      })}
     </View>
   );
 }
