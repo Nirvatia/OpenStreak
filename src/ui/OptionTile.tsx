@@ -1,7 +1,7 @@
 /** Плитка выбора с иконкой: «По времени», «У зала · при входе 150 м». Не выбрана — пунктир. */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
@@ -18,6 +18,7 @@ type Props = {
 
 export function OptionTile({ icon, label, hint, selected = false, onPress }: Props) {
   const p = usePalette();
+  const plain = usePlain();
   return (
     <Pressable
       accessibilityRole="togglebutton"
@@ -27,7 +28,7 @@ export function OptionTile({ icon, label, hint, selected = false, onPress }: Pro
         styles.tile,
         {
           borderWidth: selected ? STROKE.outline : STROKE.thin,
-          borderStyle: selected ? 'solid' : 'dashed',
+          borderStyle: selected || plain ? 'solid' : 'dashed',
           borderColor: p.line,
           backgroundColor: selected ? p.tag : pressed ? p.tag : 'transparent',
         },

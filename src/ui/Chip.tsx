@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { Pressable, Text } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { TYPE } from '../theme/type';
@@ -29,6 +29,21 @@ export function Chip({
   role = 'toggle',
 }: Props) {
   const p = usePalette();
+  const plain = usePlain();
+  if (plain && dashed) {
+    // «Обычный»: действие («+ Сфера», «Дата…») — подчёркнутый текст, не рамка.
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={{ height: size === 'sm' ? 38 : 40, paddingHorizontal: 4, justifyContent: 'center' }}
+      >
+        <Text style={[TYPE.control, { color: p.text, textDecorationLine: 'underline' }]}>
+          {label}
+        </Text>
+      </Pressable>
+    );
+  }
   return (
     <Pressable
       accessibilityRole={dashed ? 'button' : role === 'radio' ? 'radio' : 'togglebutton'}

@@ -115,7 +115,10 @@ export function HabitScreen({ habitId, onBack }: { habitId: string; onBack: () =
   return (
     <ScrollView
       style={{ backgroundColor: p.bg }}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.sm }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: insets.top + SPACE.sm, paddingBottom: insets.bottom + SPACE.xl },
+      ]}
     >
       <View style={styles.top}>
         <IconButton icon="back" label={t('common.back')} onPress={onBack} />

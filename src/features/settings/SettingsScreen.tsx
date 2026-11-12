@@ -101,7 +101,10 @@ export function SettingsScreen({
   return (
     <ScrollView
       style={{ backgroundColor: p.bg }}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.md }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: insets.top + SPACE.md, paddingBottom: insets.bottom + SPACE.xl },
+      ]}
     >
       <ScreenHeader title={t('settings.title')} onBack={onBack} />
 

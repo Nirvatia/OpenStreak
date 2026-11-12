@@ -226,6 +226,7 @@ function OtherRow({
   onPress: () => void;
 }) {
   const p = usePalette();
+  const plain = usePlain();
   const { goal, state, daysLeft } = view;
   const done = state === 'done';
   const overdue = state === 'overdue';
@@ -243,7 +244,7 @@ function OtherRow({
         !last && {
           borderBottomWidth: STROKE.thin,
           borderBottomColor: p.divider,
-          borderStyle: 'dashed',
+          borderStyle: plain ? 'solid' : 'dashed',
         },
         pressed && { backgroundColor: p.tag },
       ]}

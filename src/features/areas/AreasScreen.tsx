@@ -33,7 +33,10 @@ export function AreasScreen({ onBack }: { onBack: () => void }) {
   return (
     <ScrollView
       style={{ backgroundColor: p.bg }}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + SPACE.md }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: insets.top + SPACE.md, paddingBottom: insets.bottom + SPACE.xl },
+      ]}
     >
       <ScreenHeader title={t('areas.title')} onBack={onBack} />
       <Text style={[TYPE.body, { color: p.muted }]}>{t('areas.hint')}</Text>

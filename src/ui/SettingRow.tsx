@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon } from './icons';
@@ -16,12 +16,13 @@ type Props = { label: string; hint?: string; last?: boolean } & (
 
 export function SettingRow(props: Props) {
   const p = usePalette();
+  const plain = usePlain();
   const divider = props.last
     ? null
     : {
         borderBottomWidth: STROKE.thin,
         borderBottomColor: p.divider,
-        borderStyle: 'dashed' as const,
+        borderStyle: plain ? ('solid' as const) : ('dashed' as const),
       };
   const text = (
     <View style={styles.text}>

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, SHADOW, SIZE, SPACE, STROKE } from '../theme/metrics';
 import { hardShadow, type ShadowSize } from '../theme/sticker';
 import { TYPE } from '../theme/type';
@@ -28,6 +28,7 @@ type ButtonProps = {
 
 export function Button({ label, onPress, variant = 'primary', disabled, style }: ButtonProps) {
   const p = usePalette();
+  const plain = usePlain();
   const primary = variant === 'primary';
   const danger = variant === 'danger';
   const bg = primary ? (disabled ? p.track : p.sun) : p.surface;
@@ -45,7 +46,7 @@ export function Button({ label, onPress, variant = 'primary', disabled, style }:
           height: primary ? SIZE.action : SIZE.button,
           backgroundColor: bg,
           borderColor: danger ? p.red : p.line,
-          borderRadius: primary ? 18 : RADIUS.md,
+          borderRadius: primary && !plain ? 18 : RADIUS.md,
         },
         !danger && !disabled && (down ? pressed(shadow) : hardShadow(p, shadow)),
         style,
@@ -113,6 +114,33 @@ export function IconButton({
 /** Строка-приглашение: «+ Запиши дело или привычку» — пунктирная рамка, жёлтый кружок с плюсом. */
 export function AddRow({ label, onPress }: { label: string; onPress?: () => void }) {
   const p = usePalette();
+  const plain = usePlain();
+  if (plain) {
+    // «Обычный»: строка списка с плюсом, без рамки.
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={({ pressed: down }) => [
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 14,
+            minHeight: 56,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderColor: p.divider,
+            backgroundColor: down ? p.tag : 'transparent',
+          },
+        ]}
+      >
+        <View style={{ width: 24, alignItems: 'center' }}>
+          <Icon name="plus" size={22} tone="text" />
+        </View>
+        <Text style={[TYPE.item, { color: p.text }]}>{label}</Text>
+      </Pressable>
+    );
+  }
   return (
     <Pressable
       accessibilityRole="button"
@@ -141,6 +169,33 @@ export function LinkRow({
   onPress?: () => void;
 }) {
   const p = usePalette();
+  const plain = usePlain();
+  if (plain) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={({ pressed: down }) => [
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+            minHeight: 60,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderColor: p.divider,
+            backgroundColor: down ? p.tag : 'transparent',
+          },
+        ]}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={[TYPE.itemStrong, { color: p.text }]}>{title}</Text>
+          {!!sub && <Text style={[TYPE.meta, { color: p.muted }]}>{sub}</Text>}
+        </View>
+        <Icon name="arrow" size={20} tone="text" />
+      </Pressable>
+    );
+  }
   return (
     <Pressable
       accessibilityRole="button"

@@ -48,19 +48,21 @@ export function Card({
   const p = usePalette();
   const plain = usePlain();
   if (plain) {
-    // «Обычный»: списки без рамки (у строк свои разделители), карточка — тонкая рамка.
+    // «Обычный»: рамок вокруг блоков нет — иначе внутри них кнопки и поля выглядят как коробка
+    // в коробке. Блок отделяется линией сверху; цветной блок (tag, red…) — заливкой без рамки.
     return (
       <View
         style={[
           padded
-            ? {
-                backgroundColor: tone === 'surface' ? 'transparent' : p[tone],
-                borderWidth: STROKE.outline,
-                borderColor: p.line,
-                borderRadius: radius,
-              }
+            ? tone === 'surface'
+              ? {
+                  borderTopWidth: 1,
+                  borderTopColor: p.divider,
+                  paddingTop: SPACE.lg,
+                  paddingBottom: SPACE.sm,
+                }
+              : { backgroundColor: p[tone], borderRadius: radius, padding: SPACE.lg }
             : null,
-          padded && styles.padded,
           style,
         ]}
       >
