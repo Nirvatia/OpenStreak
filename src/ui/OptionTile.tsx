@@ -27,12 +27,20 @@ export function OptionTile({ icon, label, hint, selected = false, onPress }: Pro
       style={({ pressed }) => [
         styles.tile,
         {
-          borderWidth: selected ? STROKE.outline : STROKE.thin,
+          borderWidth: plain ? (selected ? 1.5 : 0) : selected ? STROKE.outline : STROKE.thin,
           borderStyle: selected || plain ? 'solid' : 'dashed',
           borderColor: p.line,
-          backgroundColor: selected ? p.tag : pressed ? p.tag : 'transparent',
+          backgroundColor: plain
+            ? pressed
+              ? p.track
+              : p.surface
+            : selected
+              ? p.tag
+              : pressed
+                ? p.tag
+                : 'transparent',
         },
-        selected && hardShadow(p, 'sm'),
+        !plain && selected && hardShadow(p, 'sm'),
       ]}
     >
       <Icon name={icon} size={20} tone="text" />

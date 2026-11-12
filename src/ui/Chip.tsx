@@ -56,11 +56,19 @@ export function Chip({
           height: size === 'sm' ? 38 : 40,
           paddingHorizontal: 14,
           justifyContent: 'center',
-          borderWidth: STROKE.thin,
+          borderWidth: plain ? 0 : STROKE.thin,
           borderStyle: dashed ? 'dashed' : 'solid',
           borderColor: p.line,
           borderRadius: RADIUS.pill,
-          backgroundColor: selected ? p.sun : dashed ? 'transparent' : pressed ? p.tag : p.surface,
+          backgroundColor: selected
+            ? p.sun
+            : dashed
+              ? 'transparent'
+              : pressed
+                ? plain
+                  ? p.track
+                  : p.tag
+                : p.surface,
         },
         selected && hardShadow(p, 'sm'),
       ]}

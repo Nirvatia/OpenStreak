@@ -2,7 +2,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useT } from '../store/prefsStore';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, STROKE } from '../theme/metrics';
 import { hardShadow } from '../theme/sticker';
 import { designStyles } from '../theme/design';
@@ -11,6 +11,7 @@ export type PriorityLevel = 0 | 1 | 2 | 3;
 
 export function PriorityMarks({ level, size = 10 }: { level: PriorityLevel; size?: number }) {
   const p = usePalette();
+  const plain = usePlain();
   const t = useT();
   if (!level) return null;
   return (
@@ -26,7 +27,7 @@ export function PriorityMarks({ level, size = 10 }: { level: PriorityLevel; size
             width: size,
             height: size,
             backgroundColor: level === 3 ? p.red : p.sun,
-            borderWidth: STROKE.thin,
+            borderWidth: plain ? 0 : STROKE.thin,
             borderColor: p.line,
             transform: [{ rotate: '45deg' }],
           }}
@@ -46,6 +47,7 @@ type PickerProps = {
 
 export function PriorityPicker({ value, onChange, labels, label }: PickerProps) {
   const p = usePalette();
+  const plain = usePlain();
   return (
     <View accessibilityRole="radiogroup" accessibilityLabel={label} style={styles.row}>
       {([0, 1, 2, 3] as const).map((n) => {
@@ -59,12 +61,19 @@ export function PriorityPicker({ value, onChange, labels, label }: PickerProps) 
             onPress={() => onChange(n)}
             style={[
               styles.cell,
-              {
-                borderWidth: STROKE.outline,
-                borderColor: p.line,
-                backgroundColor: sel ? p.tag : p.surface,
-              },
-              sel && hardShadow(p, 'sm'),
+              plain
+                ? {
+                    // «Обычный»: тихие плитки; выбранная темнее и с чернильной чертой снизу.
+                    backgroundColor: sel ? p.track : p.surface,
+                    borderBottomWidth: 2,
+                    borderBottomColor: sel ? p.line : 'transparent',
+                  }
+                : {
+                    borderWidth: STROKE.outline,
+                    borderColor: p.line,
+                    backgroundColor: sel ? p.tag : p.surface,
+                  },
+              !plain && sel && hardShadow(p, 'sm'),
             ]}
           >
             {n === 0 ? (

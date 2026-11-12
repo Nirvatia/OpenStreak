@@ -33,7 +33,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useT } from '../store/prefsStore';
-import { usePalette, useThemeStore } from '../store/themeStore';
+import { usePalette, usePlain, useThemeStore } from '../store/themeStore';
 import { RADIUS, SCRIM_OPACITY, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { IconButton } from './Button';
@@ -54,6 +54,7 @@ type Props = {
 
 export function Sheet({ visible, onClose, title, children, footer }: Props) {
   const p = usePalette();
+  const plain = usePlain();
   const dark = useThemeStore((s) => s.scheme === 'dark');
   const t = useT();
   const insets = useSafeAreaInsets();
@@ -130,10 +131,11 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
             style={[
               {
                 maxHeight: Math.round(height * 0.86),
-                backgroundColor: p.surface,
-                borderColor: p.line,
+                backgroundColor: plain ? p.bg : p.surface,
+                borderColor: plain ? p.divider : p.line,
               },
               styles.panel,
+              plain && { borderTopWidth: 1, borderLeftWidth: 0, borderRightWidth: 0 },
               panelStyle,
             ]}
           >

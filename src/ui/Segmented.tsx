@@ -35,13 +35,12 @@ export function Segmented<T extends string>({
         accessibilityLabel={label}
         style={{
           flexDirection: 'row',
-          borderWidth: STROKE.outline,
-          borderColor: p.line,
+          padding: 3,
+          backgroundColor: p.surface,
           borderRadius: RADIUS.md,
-          overflow: 'hidden',
         }}
       >
-        {items.map((it, i) => {
+        {items.map((it) => {
           const sel = it.value === value;
           return (
             <Pressable
@@ -51,12 +50,11 @@ export function Segmented<T extends string>({
               onPress={() => onChange(it.value)}
               style={{
                 flex: 1,
-                height: 44,
+                height: 40,
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: sel ? p.sun : 'transparent',
-                borderLeftWidth: i > 0 ? 1 : 0,
-                borderLeftColor: p.line,
+                borderRadius: RADIUS.sm,
               }}
             >
               <Text

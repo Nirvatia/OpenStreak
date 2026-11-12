@@ -2,9 +2,9 @@
  * Поля ввода «Мульта» — наклейки с обводкой. title — главное поле шторки (крупно);
  * search — поиск со значком; note — многострочное. Метка над полем — всегда видимая.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Platform, Text, TextInput, View, type TextInputProps } from 'react-native';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { RADIUS, SPACE, STROKE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon } from './icons';
@@ -20,11 +20,29 @@ const NO_WEB_OUTLINE = Platform.OS === 'web' ? { outlineWidth: 0 } : null;
 
 export function TextField({ label, variant = 'title', ...input }: Props) {
   const p = usePalette();
+  const plain = usePlain();
+  const [focused, setFocused] = useState(false);
+  // «Обычный»: поле — тихая заливка; рамка появляется только в фокусе (так видно, где ввод).
+  const fieldLook = plain
+    ? {
+        backgroundColor: p.surface,
+        borderWidth: focused ? 1.5 : 0,
+        borderColor: p.line,
+      }
+    : { backgroundColor: p.bg, borderWidth: STROKE.outline, borderColor: p.line };
   const common = {
     placeholderTextColor: p.muted,
     selectionColor: p.text,
     accessibilityLabel: label,
     ...input,
+    onFocus: (e: Parameters<NonNullable<TextInputProps['onFocus']>>[0]) => {
+      setFocused(true);
+      input.onFocus?.(e);
+    },
+    onBlur: (e: Parameters<NonNullable<TextInputProps['onBlur']>>[0]) => {
+      setFocused(false);
+      input.onBlur?.(e);
+    },
   };
 
   if (variant === 'search') {
@@ -37,7 +55,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
           height: 50,
           paddingHorizontal: 14,
           backgroundColor: p.surface,
-          borderWidth: STROKE.outline,
+          borderWidth: plain ? (focused ? 1.5 : 0) : STROKE.outline,
           borderColor: p.line,
           borderRadius: RADIUS.md,
         }}
@@ -63,9 +81,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
               height: 56,
               paddingHorizontal: 14,
               color: p.text,
-              backgroundColor: p.bg,
-              borderWidth: STROKE.outline,
-              borderColor: p.line,
+              ...fieldLook,
               borderRadius: RADIUS.md,
             },
             NO_WEB_OUTLINE,
@@ -83,9 +99,7 @@ export function TextField({ label, variant = 'title', ...input }: Props) {
               paddingHorizontal: 14,
               paddingVertical: SPACE.md,
               color: p.text,
-              backgroundColor: p.bg,
-              borderWidth: STROKE.outline,
-              borderColor: p.line,
+              ...fieldLook,
               borderRadius: RADIUS.md,
             },
             NO_WEB_OUTLINE,

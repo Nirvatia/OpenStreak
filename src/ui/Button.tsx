@@ -46,6 +46,7 @@ export function Button({ label, onPress, variant = 'primary', disabled, style }:
           height: primary ? SIZE.action : SIZE.button,
           backgroundColor: bg,
           borderColor: danger ? p.red : p.line,
+          borderWidth: plain && !primary ? 0 : STROKE.outline,
           borderRadius: primary && !plain ? 18 : RADIUS.md,
         },
         !danger && !disabled && (down ? pressed(shadow) : hardShadow(p, shadow)),
@@ -78,6 +79,7 @@ export function IconButton({
   on = 'surface',
 }: IconButtonProps) {
   const p = usePalette();
+  const plain = usePlain();
   if (variant === 'bare') {
     return (
       <Pressable
@@ -103,6 +105,7 @@ export function IconButton({
       style={({ pressed: down }) => [
         styles.round,
         { backgroundColor: sun ? p.sun : p[on], borderColor: p.line },
+        plain && !sun && { borderWidth: 0, backgroundColor: p.surface },
         down ? pressed('sm') : on === 'surface' && hardShadow(p, 'sm'),
       ]}
     >
