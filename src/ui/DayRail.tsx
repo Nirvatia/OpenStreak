@@ -18,8 +18,8 @@ export function DayRail({ items, label }: { items: RailState[]; label: string })
           style={[
             styles.seg,
             state === 'done'
-              ? { backgroundColor: p.line }
-              : { borderWidth: 1.5, borderColor: state === 'debt' ? p.red : p.line },
+              ? { backgroundColor: p.sun }
+              : { borderWidth: 1.5, borderColor: state === 'debt' ? p.red : p.text },
           ]}
         />
       ))}

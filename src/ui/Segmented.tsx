@@ -53,14 +53,14 @@ export function Segmented<T extends string>({
                 height: 40,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: sel ? p.sun : 'transparent',
+                backgroundColor: sel ? p.text : 'transparent',
                 borderRadius: RADIUS.sm,
               }}
             >
               <Text
                 style={[
                   TYPE.control,
-                  sel ? { color: p.onSun } : { color: p.text, fontFamily: TYPE.item.fontFamily },
+                  sel ? { color: p.bg } : { color: p.text, fontFamily: TYPE.item.fontFamily },
                 ]}
               >
                 {it.label}

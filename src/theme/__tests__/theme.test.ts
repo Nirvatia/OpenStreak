@@ -35,11 +35,11 @@ describe('palette', () => {
     }
   });
 
-  test('plain design has no accent: main action and done are the ink colour, no shadow', () => {
+  test('plain design has one accent for action, selection and done; no shadow', () => {
     for (const scheme of SCHEMES) {
       const p = resolvePalette(scheme, 'plain');
-      expect(p.sun).toBe(p.text);
-      expect(p.teal).toBe(p.text);
+      expect(p.sun).toBe(p.teal);
+      expect(p.sun).not.toBe(p.text);
       expect(p.shadow).toBe(p.bg);
     }
   });
@@ -102,12 +102,12 @@ describe('themeStore', () => {
     const st = await load();
     await st.getState().setMode('light');
     expect(st.getState().design).toBe('plain');
-    expect(RADIUS.md).toBe(8);
+    expect(RADIUS.md).toBe(12);
     st.getState().applyDesign('auf');
     expect(st.getState().palette.bg).toBe(palettes.themes.light.bg);
     expect(RADIUS.md).toBe(16);
     st.getState().applyDesign('plain');
     expect(st.getState().palette.bg).toBe(palettes.themes.plainLight.bg);
-    expect(RADIUS.md).toBe(8);
+    expect(RADIUS.md).toBe(12);
   });
 });

@@ -18,8 +18,9 @@ type Props = {
 
 export function PlainMark({ shape = 'circle', fill, size = 24, debt = false }: Props) {
   const p = usePalette();
-  const color = debt ? p.red : p.line;
-  const radius = shape === 'circle' ? size / 2 : 4;
+  const ring = debt ? p.red : p.text;
+  const color = debt ? p.red : p.sun;
+  const radius = shape === 'circle' ? size / 2 : 5;
   const full = fill >= 1;
   return (
     <View
@@ -28,7 +29,7 @@ export function PlainMark({ shape = 'circle', fill, size = 24, debt = false }: P
         height: size,
         borderRadius: radius,
         borderWidth: 1.75,
-        borderColor: color,
+        borderColor: full ? color : ring,
         backgroundColor: full ? color : 'transparent',
         alignItems: 'center',
         justifyContent: 'center',
@@ -70,9 +71,9 @@ export function PlainDay({
   size?: number;
 }) {
   const p = usePalette();
-  const box = { width: size, height: size, borderRadius: 4, overflow: 'hidden' as const };
+  const box = { width: size, height: size, borderRadius: 5, overflow: 'hidden' as const };
   if (state === 'done' || state === 'clean') {
-    return <View style={[box, { backgroundColor: p.line }]} />;
+    return <View style={[box, { backgroundColor: p.sun }]} />;
   }
   if (state === 'slip') {
     return (
@@ -93,9 +94,7 @@ export function PlainDay({
   }
   const heavy = state === 'today' || today;
   return (
-    <View
-      style={[box, { borderWidth: heavy ? 2.5 : 1.5, borderColor: heavy ? p.line : p.divider }]}
-    >
+    <View style={[box, { borderWidth: heavy ? 2.5 : 1.5, borderColor: heavy ? p.sun : p.divider }]}>
       {part > 0 && (
         <View
           style={{
@@ -104,7 +103,7 @@ export function PlainDay({
             right: 0,
             bottom: 0,
             height: `${Math.round(Math.min(1, part) * 100)}%`,
-            backgroundColor: p.line,
+            backgroundColor: p.sun,
           }}
         />
       )}

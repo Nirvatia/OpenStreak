@@ -23,9 +23,7 @@ export function Switch({ value, onChange, label, disabled }: Props) {
           width: 52,
           height: 30,
           borderRadius: 15,
-          borderWidth: 1.75,
-          borderColor: p.line,
-          backgroundColor: value ? p.line : 'transparent',
+          backgroundColor: value ? p.sun : p.track,
           justifyContent: 'center',
           paddingHorizontal: 3,
         }}
@@ -38,10 +36,10 @@ export function Switch({ value, onChange, label, disabled }: Props) {
             alignSelf: value ? 'flex-end' : 'flex-start',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: value ? p.bg : p.line,
+            backgroundColor: value ? p.onSun : p.knobOff,
           }}
         >
-          {value && <Icon name="check" size={12} tone="text" />}
+          {value && <Icon name="check" size={12} tone="onSun" />}
         </View>
       </Pressable>
     );

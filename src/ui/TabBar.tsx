@@ -60,7 +60,7 @@ export function TabBar<K extends string>({ items, active, onSelect, label }: Pro
                   left: '22%',
                   right: '22%',
                   height: 2,
-                  backgroundColor: on ? p.line : 'transparent',
+                  backgroundColor: on ? p.sun : 'transparent',
                 }}
               />
               <Icon name={it.icon} size={22} tone={on ? 'text' : 'muted'} />

@@ -41,7 +41,7 @@ export const RADIUS = live(
     /** чипы, сегменты, кнопки-кружки */
     pill: 999,
   },
-  { tag: 4, sm: 8, md: 8, lg: 8, xl: 8, sheet: 16, pill: 8 }
+  { tag: 4, sm: 10, md: 12, lg: 12, xl: 12, sheet: 20, pill: 10 }
 );
 
 /** Сдвиг жёсткой тени (без размытия) по x и y. */
