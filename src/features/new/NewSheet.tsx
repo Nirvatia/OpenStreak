@@ -601,13 +601,20 @@ function NewSheetForm() {
                   selected={date === null}
                   onPress={() => setDate(null)}
                 />
-                {HAS_PICKER && (
+                {(kind === 'goal' ? date !== null : custom) && (
                   <Chip
                     size="md"
                     role="radio"
-                    dashed={!custom}
-                    selected={custom}
-                    label={custom ? dayMonth(t, date) : t('when.pick')}
+                    label={dayMonth(t, date)}
+                    selected
+                    onPress={() => setPicker('date')}
+                  />
+                )}
+                {HAS_PICKER && (
+                  <Chip
+                    size="md"
+                    icon="calendar"
+                    label={t('form.otherDate')}
                     onPress={() => setPicker('date')}
                   />
                 )}

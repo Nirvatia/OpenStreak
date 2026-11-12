@@ -57,7 +57,7 @@ export function Chip({
       onPress={onPress}
       style={({ pressed }) => [
         {
-          height: size === 'sm' ? 38 : plain ? 44 : 40,
+          height: size === 'sm' ? 38 : 44,
           paddingHorizontal: 14,
           justifyContent: 'center',
           borderWidth: plain ? 0 : STROKE.thin,
