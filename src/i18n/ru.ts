@@ -194,6 +194,7 @@ export const ru = {
   'access.unsupported': 'Напоминания по месту работают только на телефоне',
 
   // Шторка «Новое»
+  'form.otherDate': 'Другая дата',
   'form.unset': 'Не задано',
   'form.pickTime': 'Выбрать время…',
   'form.clear': 'Убрать',

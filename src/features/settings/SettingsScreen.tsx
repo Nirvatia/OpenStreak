@@ -13,7 +13,7 @@ import { settingsOf } from '../../core/settings';
 import { replaceAll, useDataStore } from '../../core/store';
 import { exportData, importData } from '../../services/exportImport';
 import { askNotificationPermission } from '../../services/notifications';
-import { LOCALES, type MessageKey } from '../../i18n';
+import { LOCALES } from '../../i18n';
 import { useT } from '../../store/prefsStore';
 import { usePalette, useThemeStore } from '../../store/themeStore';
 import { THEME_MODES, type Scheme, type ThemeMode } from '../../theme/palette';
@@ -27,6 +27,9 @@ import { SettingRow } from '../../ui/SettingRow';
 import { Card } from '../../ui/Sticker';
 import { ThemeTile } from '../../ui/ThemeTile';
 import { UNDO_MS, useToast } from '../../ui/toast';
+
+/** Названия языков всегда на самом языке — чтобы найти свой при любом текущем. */
+const LANG_NAMES = { ru: 'Русский', en: 'English', es: 'Español' } as const;
 
 /** Системный выбор времени есть только на телефонах. */
 const HAS_PICKER = Platform.OS !== 'web';
@@ -228,16 +231,26 @@ export function SettingsScreen({
               />
             </>
           )}
-          <SettingRow
+          <FormRow
             label={t('settings.language')}
-            value={t(`lang.${s.locale}` as MessageKey)}
-            last={s.design !== 'auf'}
-            onPress={() =>
-              A.updateSettings({
-                locale: LOCALES[(LOCALES.indexOf(s.locale) + 1) % LOCALES.length],
-              })
-            }
-          />
+            value={LANG_NAMES[s.locale]}
+            set
+            open={openRow === 'language'}
+            onPress={() => setOpenRow((cur) => (cur === 'language' ? null : 'language'))}
+          >
+            <View style={styles.chipRow} accessibilityRole="radiogroup">
+              {LOCALES.map((l) => (
+                <Chip
+                  key={l}
+                  size="md"
+                  role="radio"
+                  label={LANG_NAMES[l]}
+                  selected={s.locale === l}
+                  onPress={() => A.updateSettings({ locale: l })}
+                />
+              ))}
+            </View>
+          </FormRow>
           {s.design === 'auf' && (
             <SettingRow
               label={t('settings.ranks')}

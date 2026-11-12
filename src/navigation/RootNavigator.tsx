@@ -8,6 +8,7 @@ import {
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import React from 'react';
+import { useReducedMotion } from 'react-native-reanimated';
 import { AreasScreen } from '../features/areas/AreasScreen';
 import { GoalsScreen } from '../features/goals/GoalsScreen';
 import { HabitScreen } from '../features/habits/HabitScreen';
@@ -89,9 +90,15 @@ function Tabs({ navigation }: NativeStackScreenProps<RootStack, 'tabs'>) {
 
 export function RootNavigator() {
   const p = usePalette();
+  // Без затухания и вспышек между экранами (a11y); при «уменьшить движение» — без анимации.
+  const reduce = useReducedMotion();
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: p.bg } }}
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: p.bg },
+        animation: reduce ? 'none' : 'slide_from_right',
+      }}
     >
       <Stack.Screen name="tabs" component={Tabs} />
       <Stack.Screen name="habit">
@@ -107,7 +114,7 @@ export function RootNavigator() {
           />
         )}
       </Stack.Screen>
-      <Stack.Screen name="closed" options={{ animation: 'fade' }}>
+      <Stack.Screen name="closed">
         {({ navigation }) => <ClosedScreen onDone={() => navigation.popToTop()} />}
       </Stack.Screen>
       <Stack.Screen name="settings">

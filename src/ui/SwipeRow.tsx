@@ -16,7 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
-import { usePalette } from '../store/themeStore';
+import { usePalette, usePlain } from '../store/themeStore';
 import { SPACE } from '../theme/metrics';
 import { TYPE } from '../theme/type';
 import { Icon, type UiIconName } from './icons';
@@ -37,6 +37,7 @@ type Props = {
 
 export function SwipeRow({ children, label, icon = 'delete', onSwipe }: Props) {
   const p = usePalette();
+  const plain = usePlain();
   const [width, setWidth] = useState(0);
   const x = useSharedValue(0);
   const dragged = useRef(false);
@@ -92,7 +93,7 @@ export function SwipeRow({ children, label, icon = 'delete', onSwipe }: Props) {
         <Text style={[TYPE.label, { color: p.text }]}>{label}</Text>
       </View>
       <GestureDetector gesture={pan}>
-        <Animated.View style={[{ backgroundColor: p.surface }, rowStyle]}>
+        <Animated.View style={[{ backgroundColor: plain ? p.bg : p.surface }, rowStyle]}>
           {children(guard)}
         </Animated.View>
       </GestureDetector>

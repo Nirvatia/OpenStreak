@@ -256,11 +256,20 @@ function NewSheetForm() {
                   selected={date === null}
                   onPress={() => setDate(null)}
                 />
+                {custom && (
+                  <Chip
+                    size="md"
+                    role="radio"
+                    label={dayMonth(t, date)}
+                    selected
+                    onPress={() => setPicker('date')}
+                  />
+                )}
                 {HAS_PICKER && (
                   <Chip
                     size="md"
-                    dashed
-                    label={custom ? dayMonth(t, date) : t('when.pick')}
+                    icon="calendar"
+                    label={t('form.otherDate')}
                     onPress={() => setPicker('date')}
                   />
                 )}
@@ -365,11 +374,20 @@ function NewSheetForm() {
                   selected={date === null}
                   onPress={() => setDate(null)}
                 />
+                {date !== null && (
+                  <Chip
+                    size="md"
+                    role="radio"
+                    label={dayMonth(t, date)}
+                    selected
+                    onPress={() => setPicker('date')}
+                  />
+                )}
                 {HAS_PICKER && (
                   <Chip
                     size="md"
-                    dashed
-                    label={date !== null ? dayMonth(t, date) : t('when.pick')}
+                    icon="calendar"
+                    label={t('form.otherDate')}
                     onPress={() => setPicker('date')}
                   />
                 )}
@@ -467,7 +485,12 @@ function NewSheetForm() {
             onPress={() => toggleRow('remind')}
           >
             <View style={styles.chips}>
-              <Chip size="md" dashed label={t('form.pickTime')} onPress={() => setPicker('time')} />
+              <Chip
+                size="md"
+                icon="remind"
+                label={t('form.pickTime')}
+                onPress={() => setPicker('time')}
+              />
               {!!remindAt && (
                 <Chip size="md" label={t('form.clear')} onPress={() => setRemindAt('')} />
               )}
@@ -765,7 +788,7 @@ const styles = StyleSheet.create({
   footer: { flexDirection: 'row', gap: SPACE.md },
   grow: { flex: 1 },
   group: { gap: SPACE.sm },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.tight, alignItems: 'center' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACE.sm, alignItems: 'center' },
   titleInput: {
     paddingVertical: 8,
     borderBottomWidth: 1,

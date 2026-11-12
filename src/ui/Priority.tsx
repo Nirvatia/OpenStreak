@@ -1,4 +1,4 @@
-/** Важность ромбиками с обводкой: 0 — нет, 1–2 — жёлтые, 3 — красные. */
+/** Важность: ромбики с обводкой в «АУФ» (0 — нет, 1–2 — жёлтые, 3 — красные), столбики в «Обычном». */
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useT } from '../store/prefsStore';
@@ -14,6 +14,28 @@ export function PriorityMarks({ level, size = 10 }: { level: PriorityLevel; size
   const plain = usePlain();
   const t = useT();
   if (!level) return null;
+  if (plain) {
+    // «Обычный»: три столбика, как уровень сигнала; заполнено столько, какая важность.
+    return (
+      <View
+        accessible
+        accessibilityLabel={t('a11y.priority', { count: level })}
+        style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 3, height: 16, marginLeft: 8 }}
+      >
+        {[6, 10, 14].map((h, i) => (
+          <View
+            key={i}
+            style={{
+              width: 4,
+              height: h,
+              borderRadius: 1,
+              backgroundColor: i < level ? p.text : p.divider,
+            }}
+          />
+        ))}
+      </View>
+    );
+  }
   return (
     <View
       accessible

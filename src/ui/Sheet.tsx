@@ -26,8 +26,8 @@ import {
 import Animated, {
   Easing,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -66,21 +66,25 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
 
   const y = useSharedValue(height);
   const shade = useSharedValue(0);
+  // Системная настройка «уменьшить движение»: шторка появляется сразу, без выезда.
+  const reduce = useReducedMotion();
+  const slide = reduce ? 0 : 240;
 
   useEffect(() => {
     if (!mounted) return;
     if (visible) {
-      y.set(withSpring(0, { damping: 26, stiffness: 320 }));
-      shade.set(withTiming(1, { duration: 200 }));
+      // Просто выезжает: без пружины и отскока.
+      y.set(withTiming(0, { duration: slide, easing: Easing.out(Easing.cubic) }));
+      shade.set(withTiming(1, { duration: slide }));
     } else {
-      shade.set(withTiming(0, { duration: 180 }));
+      shade.set(withTiming(0, { duration: slide }));
       y.set(
-        withTiming(height, { duration: 220, easing: Easing.in(Easing.quad) }, (done) => {
+        withTiming(height, { duration: slide, easing: Easing.in(Easing.cubic) }, (done) => {
           if (done) scheduleOnRN(setMounted, false);
         })
       );
     }
-  }, [visible, mounted, height, y, shade]);
+  }, [visible, mounted, height, y, shade, slide]);
 
   const drag = usePanGesture({
     activeOffsetY: 8,
@@ -91,7 +95,7 @@ export function Sheet({ visible, onClose, title, children, footer }: Props) {
       if (e.translationY > CLOSE_DISTANCE || e.velocityY > CLOSE_VELOCITY) {
         scheduleOnRN(onClose);
       } else {
-        y.set(withSpring(0, { damping: 26, stiffness: 320 }));
+        y.set(withTiming(0, { duration: 160, easing: Easing.out(Easing.cubic) }));
       }
     },
   });

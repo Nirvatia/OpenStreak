@@ -45,7 +45,7 @@ export function MoonRow(props: Props) {
       style={[
         styles.row,
         plain
-          ? { backgroundColor: 'transparent', paddingLeft: 0, paddingRight: 0 }
+          ? { backgroundColor: 'transparent', paddingLeft: 0, paddingRight: 4 }
           : { backgroundColor: p.surface },
         !props.last &&
           (plain
